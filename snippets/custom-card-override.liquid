@@ -552,6 +552,56 @@
   background: transparent !important;
 }
 
+/* Keep price inputs inside dropdown panel */
+.facets--horizontal floating-panel-component.facets__panel-content:has(.price-facet),
+.facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
+  box-sizing: border-box !important;
+  overflow: hidden !important;
+  padding: 18px 16px 14px !important;
+}
+
+.facets--horizontal .price-facet--horizontal,
+.facets--drawer .price-facet {
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.facets--horizontal .price-facet .facets__inputs-wrapper--row,
+.facets--horizontal .price-facet .facets__inputs-wrapper,
+.facets--drawer .price-facet .facets__inputs-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  gap: 8px !important;
+}
+
+.facets--horizontal .price-facet__field,
+.facets--drawer .price-facet__field {
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  max-width: calc(50% - 18px) !important;
+}
+
+.facets--horizontal .price-facet__input,
+.facets--drawer .price-facet__input,
+.facets--horizontal .price-facet__field .field__input,
+.facets--drawer .price-facet__field .field__input {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+  padding-left: 28px !important;
+  padding-right: 8px !important;
+  font-size: 13px !important;
+}
+
+.facets--horizontal .price-facet__separator,
+.facets--drawer .price-facet__separator {
+  flex: 0 0 auto !important;
+  white-space: nowrap !important;
+}
+
 .facets--horizontal .facets__clear,
 .facets--horizontal .clear-filter {
   color: #afc1ca !important;
@@ -882,11 +932,11 @@
   padding: 20px 0 16px;
 }
 
-/* Row 1 — Title + star rating */
+/* Row 1 — Title */
 .iab-card-row-1 {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 8px;
   margin-bottom: 9px;
 }
@@ -910,29 +960,6 @@
 .iab-card-title:hover {
   color: #dddddd;
   text-decoration: none;
-}
-
-.iab-card-rating {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-shrink: 0;
-  font-size: 16px;
-  color: #7D909E;
-  white-space: nowrap;
-  font-family: var(--font);
-}
-
-.iab-card-rating svg {
-  width: 24px;
-  height: 24px;
-  fill: #7D909E;
-  flex-shrink: 0;
-}
-
-.iab-card-rating-count {
-  color: rgba(255,255,255,0.5);
-  margin-top: 2px;
 }
 
 /* Row 2 — Price */
@@ -991,18 +1018,6 @@
 .iab-card-title {
   font-size: 16px;
   font-weight: 400;
-}
-
-
-.iab-card-rating {
-  font-size: 12px;
-}
-
-.iab-card-rating svg {
-  width: 14px;
-  height: 14px;
-  fill: #7D909E;
-  flex-shrink: 0;
 }
 
 .iab-card-price {
@@ -1291,6 +1306,13 @@
     var content = card.querySelector('.product-card__content');
     if (!content) return;
 
+    var existingInfo = content.querySelector('.iab-card-info');
+    if (existingInfo) {
+      existingInfo.querySelectorAll('.iab-card-rating').forEach(function (el) {
+        el.remove();
+      });
+    }
+
     /* After filter morph, cards may keep data-iabDone but lose custom UI */
     var needsCustomUi = !content.querySelector('.iab-card-info');
     if (!needsCustomUi) return;
@@ -1343,26 +1365,6 @@
       if (regularEl) price = regularEl.textContent.trim();
     }
 
-    /* Review count — try common review apps first, fallback to 297 Reviews */
-    var reviewCount = '';
-    var reviewSelectors = [
-      '.jdgm-prev-badge__text',
-      '[data-rating-count]',
-      '.stamped-badge-caption',
-      '.spr-badge-caption',
-      '.loox-rating-count',
-      '.rstr-number-of-reviews'
-    ];
-    for (var s = 0; s < reviewSelectors.length; s++) {
-      var rEl = content.querySelector(reviewSelectors[s]) || card.querySelector(reviewSelectors[s]);
-      if (rEl && rEl.textContent.trim()) {
-        reviewCount = rEl.textContent.trim();
-        break;
-      }
-    }
-    if (!reviewCount) reviewCount = '297 Reviews';
-    if (/^\d+$/.test(reviewCount)) reviewCount = reviewCount + ' Reviews';
-
     var productImage = '';
     var imgEl = content.querySelector('.product-media__image');
     if (imgEl) productImage = imgEl.getAttribute('src') || '';
@@ -1398,15 +1400,9 @@
     var info = document.createElement('div');
     info.className = 'iab-card-info';
 
-    var starSvg = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'
-      + '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/>'
-      + '</svg>';
-
     var comparePriceHtml = comparePrice
       ? '<span class="iab-card-compare">' + comparePrice + '</span>'
       : '';
-
-    var ratingHtml = '<span class="iab-card-rating">' + starSvg + '<span class="iab-card-rating-count">' + reviewCount + '</span></span>';
 
     var variantId = '';
     var variantInput = content.querySelector('form[data-type="add-to-cart-form"] input[name="id"]');
@@ -1424,7 +1420,6 @@
     info.innerHTML =
       '<div class="iab-card-row-1">'
         + '<a href="' + productUrl + '" class="iab-card-title">' + (title || 'Product') + '</a>'
-        + ratingHtml
       + '</div>'
       + '<div class="iab-card-row-2">'
         + '<span class="iab-card-price">' + (price || '') + '</span>'
