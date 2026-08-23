@@ -1,0 +1,303 @@
+{% liquid
+  assign section_id = 'custom-login-' | append: section.id
+%}
+
+{{ 'custom-login.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'custom-login.js' | asset_url }}" defer></script>
+
+<section id="{{ section_id }}" class="custom-login">
+  <div class="custom-login__container">
+
+    <!-- Left Image -->
+    <div class="custom-login__media">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | image_url: width: 1200 }}"
+          alt="{{ section.settings.image.alt | escape }}"
+          class="custom-login__image"
+          loading="lazy"
+          width="{{ section.settings.image.width }}"
+          height="{{ section.settings.image.height }}"
+        >
+      {% else %}
+        {{ 'lifestyle-2' | placeholder_svg_tag: 'custom-login__image placeholder-svg' }}
+      {% endif %}
+    </div>
+
+    <!-- Right Content -->
+    <div class="custom-login__content">
+
+      <div class="custom-login__card">
+
+        {% if section.settings.subtitle != blank %}
+          <div class="custom-login__subtitle">
+            {{ section.settings.subtitle }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.title != blank %}
+          <h2 class="custom-login__title">
+            {{ section.settings.title }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.description != blank %}
+          <div class="custom-login__description">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+
+        {% form 'customer_login', class: 'login-form' %}
+
+          {% if form.errors %}
+            <div class="login-message error">
+              {{ form.errors | default_errors }}
+            </div>
+          {% endif %}
+
+          <div class="login-form__group">
+            <label for="CustomerEmail">
+              Email Address <span>*</span>
+            </label>
+
+            <input
+              type="email"
+              name="customer[email]"
+              id="CustomerEmail"
+              autocomplete="email"
+              autocorrect="off"
+              autocapitalize="off"
+              placeholder="Enter your email"
+              required
+            >
+          </div>
+
+          {% if form.password_needed %}
+
+            <div class="login-form__group">
+              <label for="CustomerPassword">
+                Password <span>*</span>
+              </label>
+
+              <input
+                type="password"
+                name="customer[password]"
+                id="CustomerPassword"
+                autocomplete="current-password"
+                placeholder="Enter your password"
+                required
+              >
+            </div>
+
+          {% endif %}
+
+          <button
+            type="submit"
+            class="login-form__submit"
+          >
+            LOGIN
+          </button>
+
+          <a
+            href="#recover"
+            class="login-forgot"
+            id="RecoverPasswordLink"
+          >
+            Forgot your password?
+          </a>
+
+          <a
+            href="{{ routes.account_register_url }}"
+            class="login-register"
+          >
+            CREATE AN ACCOUNT
+          </a>
+
+        {% endform %}
+        <!-- Recover Password Form -->
+        <div
+          id="recover-password"
+          class="login-recover"
+          style="display:none;"
+        >
+
+          <h3 class="custom-login__title h4">
+            Reset your password
+          </h3>
+
+          <p class="custom-login__description">
+            Enter your email address and we'll send you a password reset link.
+          </p>
+
+          {% form 'recover_customer_password', class: 'login-form' %}
+
+            {% if form.posted_successfully? %}
+              <div class="login-message success">
+                We've sent you an email with a link to update your password.
+              </div>
+            {% endif %}
+
+            {% if form.errors %}
+              <div class="login-message error">
+                {{ form.errors | default_errors }}
+              </div>
+            {% endif %}
+
+            <div class="login-form__group">
+
+              <label for="RecoverEmail">
+                Email Address
+              </label>
+
+              <input
+                type="email"
+                id="RecoverEmail"
+                name="email"
+                placeholder="Enter your email"
+                autocomplete="email"
+                required
+              >
+
+            </div>
+
+            <button
+              type="submit"
+              class="login-form__submit"
+            >
+              Send Reset Link
+            </button>
+
+          {% endform %}
+
+          <div class="mt-20 text-center">
+            <a
+              href="#"
+              class="login-forgot"
+              data-login-toggle
+            >
+              ← Back to Login
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Divider -->
+
+        <!-- Footer -->
+
+        <div class="login-footer">
+
+          {% if shop.customer_accounts_enabled %}
+
+            Don't have an account?
+
+            <a href="{{ routes.account_register_url }}">
+              Register Now
+            </a>
+
+          {% endif %}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+{% schema %}
+{
+  "name": "Custom Login",
+  "tag": "section",
+  "class": "section-custom-login",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Left Image"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Welcome Back"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Login to Your Account"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Sign in to access your account, manage orders, view your purchase history, and update your profile information."
+    },
+    {
+      "type": "header",
+      "content": "Section Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Padding Top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Padding Bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#0f172a"
+    },
+    {
+      "type": "color",
+      "id": "card_color",
+      "label": "Card Background",
+      "default": "#111827"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Button",
+      "default": "#f97316"
+    },
+    {
+      "type": "color",
+      "id": "primary_hover",
+      "label": "Button Hover",
+      "default": "#ea580c"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_register",
+      "label": "Show Register Button",
+      "default": true
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Login"
+    }
+  ]
+}
+{% endschema %}

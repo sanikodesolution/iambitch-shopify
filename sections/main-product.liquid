@@ -1,0 +1,818 @@
+{% comment %}
+  ============================================================
+  MORE PRODUCTS — "I AM BITCH" Style
+  Shopify Horizon Theme Compatible
+  File: sections/more-products.liquid
+  Card design now matches the main collection page card style
+  ============================================================
+{% endcomment %}
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+    :root {
+    --font: 'glory', sans-serif;
+  }
+
+  .mprod-section.color-{{ section.settings.color_scheme }} {
+    background: #000;
+    padding: 80px 0;
+  }
+
+  .mprod-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0px;
+    box-sizing: border-box;
+  }
+
+  /* ---- Heading ---- */
+  .mprod-header {
+    text-align: center;
+    margin-bottom: 56px;
+  }
+
+  .mprod-heading {
+    font-size: 64px;
+    font-weight: 400;
+    color: #ffffff;
+    letter-spacing: 0.01em;
+    margin: 0 0 16px;
+    font-family: var(--font);
+  }
+
+  .mprod-subheading {
+    font-size: 16px;
+    font-weight: 400;
+    color: #AFC1CA;
+    max-width: 520px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-family: var(--font);
+  }
+
+  /* ---- Grid ---- */
+  .mprod-grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.products_per_row }}, 1fr);
+    gap: 24px;
+  }
+
+  /* ---- Card — matches main collection card style ---- */
+  .mprod-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #111111;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .mprod-media {
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 0;
+  }
+
+  .mprod-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease, opacity 0.35s ease;
+  }
+
+  /* Primary / secondary (hover) images stacked in the same frame */
+  .mprod-media .mprod-img-primary {
+    position: relative;
+    z-index: 1;
+  }
+
+  .mprod-media .mprod-img-secondary {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    opacity: 0;
+  }
+
+  .mprod-card:hover .mprod-media img {
+    transform: scale(1.08);
+  }
+
+  .mprod-card:hover .mprod-img-secondary {
+    opacity: 1;
+  }
+
+  .mprod-media a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Wishlist heart — matches main collection card heart */
+  .mprod-wish-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: transparent;
+    /* backdrop-filter: blur(6px); */
+    /* -webkit-backdrop-filter: blur(6px); */
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    z-index: 3;
+    padding: 0;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  
+
+  .mprod-wish-btn svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .mprod-wish-btn.is-active svg {
+    fill: #red;
+  }
+
+  /* ---- Info area — same padding rhythm as main collection card ---- */
+  .mprod-info {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 14px 16px;
+    background-color: black;
+    gap: 0;
+  }
+
+  .mprod-info-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  .mprod-title {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    font-family: var(--font);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  .mprod-title:hover {
+    color: #dddddd;
+    text-decoration: none;
+  }
+
+  .mprod-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  .mprod-rating svg {
+    width: 24px;
+    height: 24px;
+    fill: #AFC1CA;
+    flex-shrink: 0;
+  }
+
+  .mprod-rating-count {
+    font-size: 16px;
+    color: #7D909E;
+    font-family: var(--font);
+  }
+
+  .mprod-price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+    font-family: var(--font);
+  }
+
+  .mprod-price {
+    font-size: 24px;
+    font-weight: 500;
+    color: #fff;
+    font-family: var(--font);
+    margin: 0;
+  }
+
+  .mprod-compare-price {
+    font-size: 18px;
+    font-weight: 300;
+    color: #888888;
+    text-decoration: line-through;
+    font-family: var(--font-body-family);
+    margin: 0;
+    font-family: var(--font);
+  }
+
+  /* ---- Shop Now button — same style as main collection card button ---- */
+  .mprod-shop-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: 1px solid #AFC1CA;
+    color: #AFC1CA;
+    padding: 18px 0;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 2px;
+    box-sizing: border-box;
+    transition: background 0.2s, border-color 0.2s;
+    cursor: pointer;
+    line-height: 1;
+    font-family: var(--font);
+
+  }
+
+  .mprod-shop-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  .mprod-shop-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .mprod-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 14px;
+    padding: 40px 0;
+    font-family: var(--font-body-family);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .mprod-container { padding: 0 24px; }
+    .mprod-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .mprod-heading { font-size: 32px; }
+  }
+
+  @media screen and (max-width: 749px) {
+    .mprod-section.color-{{ section.settings.color_scheme }} { padding: 56px 0; }
+    .mprod-container { padding: 0 20px; }
+    .mprod-header { margin-bottom: 36px; }
+    .mprod-heading { font-size: 28px; }
+    .mprod-subheading { font-size: 14px; }
+    .mprod-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+
+  /* Wishlist heart two-state */
+  .mprod-wish-btn .mprod-wish-filled {
+    display: none;
+  }
+
+  .mprod-wish-btn.is-active .mprod-wish-empty {
+    display: none;
+  }
+
+  .mprod-wish-btn.is-active .mprod-wish-filled {
+    display: block;
+  }
+
+  /* ============================================================
+     ADD TO CART — success toast + flying animation
+  ============================================================ */
+  .mprod-toast {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    background: #111111;
+    color: #fff;
+    border: 1px solid #AFC1CA;
+    padding: 14px 22px;
+    border-radius: 4px;
+    font-family: var(--font);
+    font-size: 15px;
+    letter-spacing: 0.02em;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(-14px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .mprod-toast.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .mprod-fly-item {
+    position: fixed;
+    z-index: 9998;
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+    transition: left 0.85s cubic-bezier(0.35,0,0.25,1),
+                top 0.85s cubic-bezier(0.35,0,0.25,1),
+                width 0.85s ease,
+                height 0.85s ease,
+                opacity 0.85s ease;
+  }
+
+  .mprod-fly-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ============================================================
+     WOW.js animation base state
+     (WOW.js adds "animated" class when element scrolls into view;
+     until then it stays hidden/offset so fadeInUp can play)
+  ============================================================ */
+  .mprod-card.wow {
+    visibility: hidden;
+  }
+
+{% endstyle %}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<section class="mprod-section color-{{ section.settings.color_scheme }}">
+  <div class="mprod-container">
+
+    <div class="mprod-header">
+      {% if section.settings.heading != blank %}
+        <h2 class="mprod-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+      {% if section.settings.subheading != blank %}
+        <p class="mprod-subheading">{{ section.settings.subheading }}</p>
+      {% endif %}
+    </div>
+
+    {% assign mprod_collection = collections[section.settings.collection] %}
+
+    {% if mprod_collection != blank and mprod_collection.products.size > 0 %}
+      <div class="mprod-grid">
+        {% for product in mprod_collection.products limit: section.settings.products_to_show %}
+          {% assign mprod_compare = product.compare_at_price %}
+          {% assign mprod_price   = product.price %}
+          {% assign mprod_wow_delay = forloop.index | times: 100 %}
+          {% assign mprod_secondary_image = product.images[1] | default: product.featured_image %}
+
+          <div class="mprod-card wow fadeInUp" data-wow-delay="{{ mprod_wow_delay }}ms">
+            <div class="mprod-media">
+              <a href="{{ product.url }}" aria-label="{{ product.title }}">
+                {% if product.featured_image %}
+                  <img
+                    class="mprod-img-primary"
+                    src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
+                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    loading="lazy"
+                    width="600" height="600">
+                  {% if mprod_secondary_image %}
+                    <img
+                      class="mprod-img-secondary"
+                      src="{{ mprod_secondary_image | img_url: '600x600', crop: 'center' }}"
+                      alt="{{ mprod_secondary_image.alt | default: product.title | escape }}"
+                      loading="lazy"
+                      width="600" height="600">
+                  {% endif %}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'mprod-placeholder' }}
+                {% endif %}
+              </a>
+
+              <button
+                class="mprod-wish-btn"
+                type="button"
+                data-product-id="{{ product.id }}"
+                data-product-title="{{ product.title | escape }}"
+                data-product-image="{{ product.featured_image | img_url: '300x300', crop: 'center' }}"
+                data-product-price="{{ product.price | money_without_currency | remove: ',' }}"
+                aria-label="Add {{ product.title | escape }} to wishlist">
+                <!-- Empty heart -->
+                <svg class="mprod-wish-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+                <!-- Filled heart -->
+                <svg class="mprod-wish-filled" viewBox="0 0 24 24" fill="#ff4d6d" stroke="#ff4d6d" stroke-width="1.6">
+                  <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="mprod-info">
+              <div class="mprod-info-row">
+                <a href="{{ product.url }}" class="mprod-title">{{ product.title | split: ' ' | slice: 0, 2 | join: ' ' }}</a>
+              </div>
+
+              <div class="mprod-price-row">
+                <span class="mprod-price">{{ mprod_price | money }}</span>
+                {% if mprod_compare > mprod_price %}
+                  <span class="mprod-compare-price">{{ mprod_compare | money }}</span>
+                {% endif %}
+              </div>
+
+              {% if product.available %}
+                <button
+                  type="button"
+                  class="mprod-shop-btn"
+                  data-mprod-add-to-cart
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                  data-product-title="{{ product.title | escape }}">{{ section.settings.button_label | default: 'Shop Now' }}</button>
+              {% else %}
+                <span class="mprod-shop-btn" style="opacity:0.5;cursor:not-allowed;">{{ section.settings.sold_out_label | default: 'Sold Out' }}</span>
+              {% endif %}
+            </div>
+          </div>
+
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="mprod-empty">Select a collection with products to display this section.</p>
+    {% endif %}
+
+  </div>
+</section>
+
+<script>
+  /* ============================================================
+     WOW.js is already loaded and initialized globally in theme.liquid.
+     This just re-runs .init() for cards rendered after that initial
+     run (e.g. section re-rendered via the theme editor / AJAX cart),
+     so the wow fadeInUp animation still fires on this section's cards.
+  ============================================================ */
+  document.addEventListener('DOMContentLoaded', function () {
+    if (window.WOW) {
+      try {
+        new WOW().init();
+      } catch (e) {
+        console.warn('WOW.js re-init failed:', e);
+      }
+    } else {
+      console.warn('WOW.js not found — make sure animate.css and wow.js are included in theme.liquid.');
+    }
+  });
+
+  /* ============================================================
+     Wishlist — synced with both storage keys used across the site
+     (shopify_wishlist from product page + cnav_wishlist from header)
+     Now uses event delegation, no inline onclick.
+  ============================================================ */
+  window.MprodWishlist = window.MprodWishlist || (function () {
+
+    var WISH_KEY = 'shopify_wishlist';
+
+    function getList() {
+      try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
+    }
+
+    function saveList(list) {
+      try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch(e) {}
+      var ev = new CustomEvent('wishlist:updated', { detail: { wishlist: list } });
+      document.dispatchEvent(ev);
+      window.dispatchEvent(ev);
+    }
+
+    function isInList(id) {
+      return getList().some(function(item) { return item.id === id; });
+    }
+
+    function toggle(btnEl) {
+      var id = parseInt(btnEl.getAttribute('data-product-id'), 10);
+      var title = btnEl.getAttribute('data-product-title');
+      var image = btnEl.getAttribute('data-product-image');
+      var price = parseFloat(btnEl.getAttribute('data-product-price')) || 0;
+
+      var currentlyWishlisted = isInList(id);
+      var list = getList();
+
+      if (currentlyWishlisted) {
+        list = list.filter(function(item) { return item.id !== id; });
+        saveList(list);
+        btnEl.classList.remove('is-active');
+        btnEl.setAttribute('aria-label', 'Add ' + title + ' to wishlist');
+
+        if (window.CustomMenu && typeof window.CustomMenu.removeFromWishlist === 'function') {
+          window.CustomMenu.removeFromWishlist(id);
+        }
+      } else {
+        var product = {
+          id:    id,
+          title: title,
+          image: image,
+          price: Math.round(price),
+          url:   window.location.origin + '/products/' + id  // note: this uses ID, not handle
+        };
+        list.push(product);
+        saveList(list);
+        btnEl.classList.add('is-active');
+        btnEl.setAttribute('aria-label', 'Remove ' + title + ' from wishlist');
+
+        if (window.CustomMenu && typeof window.CustomMenu.addToWishlist === 'function') {
+          window.CustomMenu.addToWishlist(product);
+        }
+      }
+    }
+
+    function syncAll() {
+      document.querySelectorAll('.mprod-wish-btn').forEach(function(btn) {
+        var id = parseInt(btn.getAttribute('data-product-id'), 10);
+        if (isInList(id)) {
+          btn.classList.add('is-active');
+          var title = btn.getAttribute('data-product-title') || '';
+          btn.setAttribute('aria-label', 'Remove ' + title + ' from wishlist');
+        } else {
+          btn.classList.remove('is-active');
+        }
+      });
+    }
+
+    // Attach click events using delegation (works for dynamically added buttons)
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('.mprod-wish-btn');
+      if (btn) {
+        e.preventDefault();
+        toggle(btn);
+      }
+    });
+
+    return {
+      syncAll: syncAll,
+      // keep toggle accessible for any legacy calls (optional)
+      toggle: toggle
+    };
+
+  })();
+
+  document.addEventListener('DOMContentLoaded', function() {
+    window.MprodWishlist.syncAll();
+  });
+
+  window.addEventListener('wishlist:updated', function() {
+    window.MprodWishlist.syncAll();
+  });
+
+  /* ============================================================
+     Add to cart — AJAX (no page reload) + success toast +
+     "bird-flight" animation from the product image to the cart icon
+  ============================================================ */
+  window.MprodAddToCart = window.MprodAddToCart || (function () {
+
+    function getToast() {
+      var toast = document.querySelector('.mprod-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'mprod-toast';
+        document.body.appendChild(toast);
+      }
+      return toast;
+    }
+
+    function showToast(message) {
+      var toast = getToast();
+      toast.textContent = message;
+      requestAnimationFrame(function () {
+        toast.classList.add('is-visible');
+      });
+      clearTimeout(toast._hideTimer);
+      toast._hideTimer = setTimeout(function () {
+        toast.classList.remove('is-visible');
+      }, 2200);
+    }
+
+    function findCartIcon() {
+      return document.querySelector(
+        '[data-cart-icon], [data-cart-icon-bubble], .cart-icon, #cart-icon-bubble, .header-cart, #cart-icon, a[href="/cart"]'
+      );
+    }
+
+    function flyToCart(sourceImgEl) {
+      var cartTarget = findCartIcon();
+      if (!sourceImgEl || !cartTarget) return;
+
+      var startRect = sourceImgEl.getBoundingClientRect();
+      var endRect = cartTarget.getBoundingClientRect();
+
+      var flyer = document.createElement('div');
+      flyer.className = 'mprod-fly-item';
+      flyer.style.left = startRect.left + 'px';
+      flyer.style.top = startRect.top + 'px';
+      flyer.style.width = startRect.width + 'px';
+      flyer.style.height = startRect.height + 'px';
+      flyer.style.opacity = '1';
+
+      var flyerImg = document.createElement('img');
+      flyerImg.src = sourceImgEl.src;
+      flyer.appendChild(flyerImg);
+      document.body.appendChild(flyer);
+
+      // slight upward arc before heading to the cart, like a bird taking off
+      requestAnimationFrame(function () {
+        flyer.style.left = (startRect.left + (endRect.left - startRect.left) * 0.5) + 'px';
+        flyer.style.top = (startRect.top - 60) + 'px';
+        flyer.style.width = (startRect.width * 0.5) + 'px';
+        flyer.style.height = (startRect.height * 0.5) + 'px';
+      });
+
+      setTimeout(function () {
+        flyer.style.left = (endRect.left + endRect.width / 2 - 12) + 'px';
+        flyer.style.top = (endRect.top + endRect.height / 2 - 12) + 'px';
+        flyer.style.width = '24px';
+        flyer.style.height = '24px';
+        flyer.style.opacity = '0.25';
+      }, 350);
+
+      setTimeout(function () {
+        flyer.remove();
+        cartTarget.style.transition = 'transform 0.25s ease';
+        cartTarget.style.transform = 'scale(1.18)';
+        setTimeout(function () {
+          cartTarget.style.transform = 'scale(1)';
+        }, 200);
+      }, 1250);
+    }
+
+    function updateCartCount(cart) {
+      if (!cart) return;
+      var bubbles = document.querySelectorAll('[data-cart-count], .cart-count-bubble, .cart-count');
+      bubbles.forEach(function (el) {
+        el.textContent = cart.item_count;
+      });
+    }
+
+    function cartAddUrl() {
+      var root = (window.Shopify && Shopify.routes && Shopify.routes.root) ? Shopify.routes.root : '/';
+      return root + 'cart/add.js';
+    }
+
+    function cartUrl() {
+      var root = (window.Shopify && Shopify.routes && Shopify.routes.root) ? Shopify.routes.root : '/';
+      return root + 'cart.js';
+    }
+
+    function addToCart(btn) {
+      if (btn.disabled) return;
+
+      var variantId = btn.getAttribute('data-variant-id');
+      if (!variantId) return;
+
+      var card = btn.closest('.mprod-card');
+      var sourceImgEl = card ? card.querySelector('.mprod-media img') : null;
+
+      var originalText = btn.textContent;
+      btn.disabled = true;
+      btn.textContent = 'Adding...';
+
+      fetch(cartAddUrl(), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ items: [{ id: variantId, quantity: 1 }] })
+      })
+        .then(function (res) {
+          if (!res.ok) {
+            return res.json().then(function (err) {
+              throw new Error(err && err.description ? err.description : 'Could not add to cart');
+            });
+          }
+          return res.json();
+        })
+        .then(function () {
+          flyToCart(sourceImgEl);
+          showToast((btn.getAttribute('data-product-title') || 'Product') + ' added to cart');
+          return fetch(cartUrl());
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (cart) {
+          updateCartCount(cart);
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+        })
+        .catch(function (err) {
+          showToast(err && err.message ? err.message : 'Could not add to cart');
+        })
+        .finally(function () {
+          btn.disabled = false;
+          btn.textContent = originalText;
+        });
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-mprod-add-to-cart]');
+      if (btn) {
+        e.preventDefault();
+        addToCart(btn);
+      }
+    });
+
+    return { addToCart: addToCart };
+
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "More Products",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "More Products"
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Stay ahead of the rest, get the new and now. Shop our newest arrivals."
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Number of products to show",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "products_per_row",
+      "label": "Products per row (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "header",
+      "content": "Card content"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    }
+  ],
+  "presets": [
+    {
+      "name": "More Products",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

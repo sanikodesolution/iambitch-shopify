@@ -1,0 +1,1472 @@
+{% comment %}
+  Product Information Section for Horizon Theme
+  Section name: product-information
+{% endcomment %}
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+
+{% comment %} ── Animation settings (theme-controllable) ── {% endcomment %}
+{% assign anim_enabled = section.settings.enable_animations %}
+{% assign anim_style = section.settings.animation_style %}
+{% assign anim_duration = section.settings.animation_duration %}
+{% assign anim_stagger = section.settings.animation_delay_stagger %}
+{% assign anim_easing = section.settings.animation_easing %}
+
+<section
+  class="product__area"
+  data-animate-enabled="{{ anim_enabled }}"
+  data-animate-style="{{ anim_style }}"
+  style="--anim-duration: {{ anim_duration }}ms; --anim-delay-stagger: {{ anim_stagger }}ms; --anim-easing: {{ anim_easing }};"
+>
+  <!-- Social Icons - Left Side -->
+<div class="product__social animate-item" data-animate-order="0">
+  <a href="{{ section.settings.social_facebook }}" class="social__icon" target="_blank" aria-label="Facebook">
+    <img src="{{ 'facebook-02.svg' | asset_url }}" alt="Facebook">
+  </a>
+
+  <a href="{{ section.settings.social_twitter }}" class="social__icon" target="_blank" aria-label="Twitter/X">
+    <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram">
+  </a>
+
+  <a href="{{ section.settings.social_youtube }}" class="social__icon" target="_blank" aria-label="YouTube">
+    <img src="{{ 'youtube.svg' | asset_url }}" alt="YouTube">
+  </a>
+
+  <a href="{{ section.settings.social_tiktok }}" class="social__icon" target="_blank" aria-label="TikTok">
+    <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok">
+  </a>
+</div>
+
+  <div class="container">
+    <div class="product__flex">
+      <!-- Product Images - Left Side -->
+      <div class="product__left">
+        <div class="product__wrapper">
+          <div class="product__image__container animate-item" data-animate-order="1">
+            <div class="product__full__image">
+              {% if product.featured_image %}
+                <img 
+                  src="{{ product.featured_image | image_url: width: 700 }}" 
+                  alt="{{ product.featured_image.alt }}"
+                  id="mainProductImage"
+                >
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Image Thumbnails — desktop grid / mobile slider -->
+          <div class="product__thumb__wrapper animate-item" data-animate-order="2">
+            <div class="product__image__thumb__track">
+              <div class="product__image__thumb" id="thumbTrack">
+                {% for image in product.images %}
+                  <a href="#" class="product-thumb-link" data-src="{{ image | image_url: width: 700 }}" data-index="{{ forloop.index0 }}">
+                    <img 
+                      src="{{ image | image_url: width: 120 }}" 
+                      alt="{{ image.alt }}"
+                    >
+                  </a>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Details - Right Side -->
+      <div class="product__right">
+        <div class="product__detail">
+          <!-- Product Top Section -->
+          <div class="product__detail__top animate-item" data-animate-order="1">
+            
+              <div class="product__tag">
+                <svg width="16" height="16" viewBox="0 0 14 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M6.09478 0.345482C6.24446 -0.115174 6.89616 -0.115172 7.04584 0.345483L8.25417 4.06433C8.32111 4.27034 8.51308 4.40982 8.7297 4.40982H12.6399C13.1243 4.40982 13.3257 5.02963 12.9338 5.31433L9.77037 7.6127C9.59513 7.74003 9.5218 7.96571 9.58874 8.17172L10.7971 11.8906C10.9467 12.3512 10.4195 12.7343 10.0276 12.4496L6.8642 10.1512C6.68896 10.0239 6.45166 10.0239 6.27642 10.1512L3.11298 12.4496C2.72112 12.7343 2.19388 12.3512 2.34356 11.8906L3.55189 8.17172C3.61882 7.96571 3.54549 7.74003 3.37025 7.6127L0.206808 5.31433C-0.185049 5.02963 0.0163404 4.40982 0.500702 4.40982H4.41093C4.62754 4.40982 4.81952 4.27034 4.88646 4.06433L6.09478 0.345482Z" fill="#B5D2E0"/>
+                </svg>
+                <span>BEST SELLER</span>
+              </div>
+            
+
+            <h2>{{ product.title }}</h2>
+
+            <div class="product__rating">
+              <ul>
+                {% for i in (1..5) %}
+                  <li>
+                    <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7.69401 0.414556C7.87363 -0.138231 8.65567 -0.138231 8.83528 0.414556L10.3751 5.15357C10.4554 5.40078 10.6858 5.56816 10.9457 5.56816H15.9286C16.5098 5.56816 16.7515 6.31192 16.2813 6.65357L12.25 9.58243C12.0397 9.73522 11.9517 10.006 12.0321 10.2533L13.5719 14.9923C13.7515 15.5451 13.1188 16.0047 12.6486 15.6631L8.61732 12.7342C8.40703 12.5814 8.12227 12.5814 7.91198 12.7342L3.88073 15.6631C3.41051 16.0047 2.77782 15.5451 2.95743 14.9923L4.49723 10.2533C4.57755 10.006 4.48956 9.73522 4.27926 9.58243L0.248022 6.65357C-0.222206 6.31192 0.0194595 5.56816 0.600693 5.56816H5.58358C5.84352 5.56816 6.07389 5.40078 6.15422 5.15357L7.69401 0.414556Z" fill="#B2B192"/>
+                    </svg>
+                  </li>
+                {% endfor %}
+              </ul>
+              <span class="rating__star">{{ section.settings.product_rating }}</span>
+              <p>({{ product.reviews_count }} Reviews)</p>
+            </div>
+
+            <div class="product__price">
+              {% if product.compare_at_price %}
+                <del>{{ product.compare_at_price | money }}</del>
+              {% endif %}
+              <span>{{ product.price | money }}</span>
+            </div>
+          </div>
+
+          <!-- Color Selection -->
+          {% if product.options_by_name['Color'] %}
+            {% assign color_option_index = 0 %}
+            {% for option in product.options %}
+              {% if option == 'Color' %}
+                {% assign color_option_index = forloop.index0 %}
+              {% endif %}
+            {% endfor %}
+
+            {% assign reds_count = 0 %}
+            {% assign pinks_count = 0 %}
+            {% assign nudes_count = 0 %}
+            {% assign purples_count = 0 %}
+            {% assign blues_count = 0 %}
+
+            {% assign red_keywords = 'red,scarlet,crimson,ruby,cherry,coral,tomato,rose,bordeaux,burgundy,wine,brick' | split: ',' %}
+            {% assign pink_keywords = 'pink,blush,salmon,flamingo,fuchsia,magenta,rose,bubblegum,hot pink,baby pink,dusty pink' | split: ',' %}
+            {% assign nude_keywords = 'nude,beige,sand,skin,natural,tan,caramel,latte,coffee,mocha,champagne,cream,ivory,bare,naked' | split: ',' %}
+            {% assign purple_keywords = 'purple,violet,lavender,lilac,plum,mauve,grape,orchid,amethyst,mulberry,eggplant' | split: ',' %}
+            {% assign blue_keywords = 'blue,navy,cobalt,teal,cerulean,sapphire,sky,denim,midnight,steel,powder,aqua,turquoise,indigo' | split: ',' %}
+
+            {% for variant in product.variants %}
+              {% assign color_name = variant.options[color_option_index] | downcase %}
+              {% assign is_red = false %}
+              {% for kw in red_keywords %}{% if color_name contains kw %}{% assign is_red = true %}{% endif %}{% endfor %}
+              {% assign is_pink = false %}
+              {% for kw in pink_keywords %}{% if color_name contains kw %}{% assign is_pink = true %}{% endif %}{% endfor %}
+              {% assign is_nude = false %}
+              {% for kw in nude_keywords %}{% if color_name contains kw %}{% assign is_nude = true %}{% endif %}{% endfor %}
+              {% assign is_purple = false %}
+              {% for kw in purple_keywords %}{% if color_name contains kw %}{% assign is_purple = true %}{% endif %}{% endfor %}
+              {% assign is_blue = false %}
+              {% for kw in blue_keywords %}{% if color_name contains kw %}{% assign is_blue = true %}{% endif %}{% endfor %}
+              {% if is_red %}{% assign reds_count = reds_count | plus: 1 %}{% endif %}
+              {% if is_pink %}{% assign pinks_count = pinks_count | plus: 1 %}{% endif %}
+              {% if is_nude %}{% assign nudes_count = nudes_count | plus: 1 %}{% endif %}
+              {% if is_purple %}{% assign purples_count = purples_count | plus: 1 %}{% endif %}
+              {% if is_blue %}{% assign blues_count = blues_count | plus: 1 %}{% endif %}
+            {% endfor %}
+
+            <div class="product__color__selection animate-item" data-animate-order="2">
+              <h3>Choose Color ({{ product.variants.size }} available)</h3>
+              <div class="product__color__tablist">
+                <button type="button" class="color-tab active" data-family="all">All</button>
+                <button type="button" class="color-tab" data-family="reds">Reds ({{ reds_count }})</button>
+                <button type="button" class="color-tab" data-family="pinks">Pinks ({{ pinks_count }})</button>
+                <button type="button" class="color-tab" data-family="nudes">Nudes ({{ nudes_count }})</button>
+                <button type="button" class="color-tab" data-family="purples">Purples ({{ purples_count }})</button>
+                <button type="button" class="color-tab" data-family="blues">Blues ({{ blues_count }})</button>
+              </div>
+              <div class="porduct__tab__content">
+                <div class="product__color__container">
+                  <div class="all__color__container">
+                    <ul id="colorSwatchList">
+                      {% for variant in product.variants %}
+                        {% assign color_val = variant.options[color_option_index] | downcase %}
+                        {% assign v_families = '' %}
+                        {% assign v_is_red = false %}
+                        {% for kw in red_keywords %}{% if color_val contains kw %}{% assign v_is_red = true %}{% endif %}{% endfor %}
+                        {% if v_is_red %}{% assign v_families = v_families | append: 'reds,' %}{% endif %}
+                        {% assign v_is_pink = false %}
+                        {% for kw in pink_keywords %}{% if color_val contains kw %}{% assign v_is_pink = true %}{% endif %}{% endfor %}
+                        {% if v_is_pink %}{% assign v_families = v_families | append: 'pinks,' %}{% endif %}
+                        {% assign v_is_nude = false %}
+                        {% for kw in nude_keywords %}{% if color_val contains kw %}{% assign v_is_nude = true %}{% endif %}{% endfor %}
+                        {% if v_is_nude %}{% assign v_families = v_families | append: 'nudes,' %}{% endif %}
+                        {% assign v_is_purple = false %}
+                        {% for kw in purple_keywords %}{% if color_val contains kw %}{% assign v_is_purple = true %}{% endif %}{% endfor %}
+                        {% if v_is_purple %}{% assign v_families = v_families | append: 'purples,' %}{% endif %}
+                        {% assign v_is_blue = false %}
+                        {% for kw in blue_keywords %}{% if color_val contains kw %}{% assign v_is_blue = true %}{% endif %}{% endfor %}
+                        {% if v_is_blue %}{% assign v_families = v_families | append: 'blues,' %}{% endif %}
+                        {% assign swatch_color = variant.metafields.custom.swatch_color | default: variant.options[color_option_index] %}
+                        <li 
+                          class="color__fill" 
+                          data-families="{{ v_families }}"
+                          data-variant-id="{{ variant.id }}"
+                          data-color-name="{{ variant.options[color_option_index] | escape }}"
+                          title="{{ variant.options[color_option_index] }}"
+                        >
+                          <label for="color-variant-{{ variant.id }}" style="background-color: {{ swatch_color }};"></label>
+                          <input id="color-variant-{{ variant.id }}" type="radio" name="color-select" value="{{ variant.id }}">
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                  <a href="#" class="product__all__color" id="showAllColors">SHOW ALL</a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          <!-- Quantity and Add to Cart -->
+          <form action="/cart/add" method="post" enctype="multipart/form-data">
+            <div class="product__item__buy animate-item" data-animate-order="3">
+              <div class="product__item__count">
+                <button type="button" class="count-minus">
+                  <svg width="12" height="3" viewBox="0 0 12 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.000429869 2.04799V-1.33514e-05H11.5204V2.04799H0.000429869Z" fill="#AFC1CA"/>
+                  </svg>
+                </button>
+                <span class="item__count">1</span>
+                <button type="button" class="count-plus">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M13.4401 5.69604V7.74404H7.74408V13.44H5.69608V7.74404H7.82013e-05V5.69604H5.69608V4.3869e-05H7.74408V5.69604H13.4401Z" fill="#AFC1CA"/>
+                  </svg>
+                </button>
+              </div>
+              <input type="hidden" name="quantity" class="quantity-input" value="1">
+              <input type="hidden" name="id" class="variant-id-input" value="{{ product.selected_or_first_available_variant.id }}">
+              <div class="product__buy">
+                <button type="submit" class="add-to-cart-btn">{{ section.settings.add_to_cart_text }}</button>
+              </div>
+
+              <!-- Wishlist Button -->
+              <div class="product__favourite">
+                <button
+                  type="button"
+                  class="wishlist-btn"
+                  id="wishlistBtn"
+                  aria-label="Add to wishlist"
+                  data-product-id="{{ product.id }}"
+                  data-product-title="{{ product.title | escape }}"
+                  data-product-price="{{ product.price }}"
+                  data-product-image="{{ product.featured_image | image_url: width: 300 }}"
+                  data-product-url="{{ product.url }}"
+                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
+                >
+                  <svg class="wish-icon-empty" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853ZM18.827 6.1701C17.3279 4.66794 14.9076 4.60701 13.337 6.01687L12.0019 7.21524L10.6661 6.01781C9.09098 4.60597 6.67506 4.66808 5.17157 6.17157C3.68183 7.66131 3.60704 10.0473 4.97993 11.6232L11.9999 18.6543L19.0201 11.6232C20.3935 10.0467 20.319 7.66525 18.827 6.1701Z" fill="#AEC1CA"/>
+                  </svg>
+                  <svg class="wish-icon-filled" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:none">
+                    <path d="M12.001 4.52853C14.35 2.42 17.98 2.49 20.2426 4.75736C22.5053 7.02472 22.583 10.637 20.4786 12.993L11.9999 21.485L3.52138 12.993C1.41705 10.637 1.49571 7.01901 3.75736 4.75736C6.02157 2.49315 9.64519 2.41687 12.001 4.52853Z" fill="#ff4d6d"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Product Information Collapse Sections -->
+            <div class="product__information animate-item" data-animate-order="4">
+              <div class="product__collapse">
+                <div class="product__feature collapse__button">
+                  <button type="button">
+                    <span>Features</span>
+                    <div class="collapse__icon__toggle">
+                      <div class="icon__plus">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5V19.002" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M19.002 12.002H5" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      <div class="icon__cross">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15 5L5.00068 14.9993M14.9993 15L5 5.00071" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                  <div class="product__collapse__content">
+                    <div class="product__feature__flex">
+                      <ul>
+  {% if section.settings.feature_1 %}
+    <li>
+      <img src="{{ 'time-04.svg' | asset_url }}" width="24" height="24" alt="Feature 1">
+      <span>{{ section.settings.feature_1 }}</span>
+    </li>
+  {% endif %}
+
+  {% if section.settings.feature_2 %}
+    <li>
+      <img src="{{ 'layer.svg' | asset_url }}" width="24px" height="24px" alt="Feature 2">
+      <span>{{ section.settings.feature_2 }}</span>
+    </li>
+  {% endif %}
+
+  {% if section.settings.feature_3 %}
+    <li>
+      <img src="{{ 'arrow-all-direction.svg' | asset_url }}" width="24px" height="24px" alt="Feature 3">
+      <span>{{ section.settings.feature_3 }}</span>
+    </li>
+  {% endif %}
+
+  {% if section.settings.feature_4 %}
+    <li>
+      <img src="{{ 'droplet.svg' | asset_url }}" width="24px" height="24px" alt="Feature 4">
+      <span>{{ section.settings.feature_4 }}</span>
+    </li>
+  {% endif %}
+</ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="product__collapse">
+                <div class="product__detail__text collapse__button">
+                  <button type="button">
+                    <span>Details</span>
+                    <div class="collapse__icon__toggle">
+                      <div class="icon__plus">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 5V19.002" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                          <path d="M19.002 12.002H5" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                      <div class="icon__cross">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M15 5L5.00068 14.9993M14.9993 15L5 5.00071" stroke="#AFC1CA" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </div>
+                    </div>
+                  </button>
+                  <div class="product__collapse__content">
+                    <article class="product__detail__article">
+                      {{ product.description }}
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  :root {
+    --font: 'glory', sans-serif;
+  }
+  .product__area {
+    font-family: var(--font);
+    padding: 32px 0px 28px 0px;
+    background-color: #04060B;
+    letter-spacing: -1.6%;
+    position: relative;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  ul { padding: 0; margin: 0; list-style: none; }
+
+  .container {
+    max-width: 1232px;
+    margin-inline: auto;
+    padding-inline: 16px;
+  }
+
+  /* ── Social Icons ── */
+  .product__social {
+    position: fixed;
+    left: 10%;
+    top: 40%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    background:#263D48;
+    z-index: 10;
+  }
+
+  .social__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: #0D1117;
+    border: 1px solid #1E2A32;
+    transition: background .3s;
+    text-decoration: none;
+  }
+  .social__icon:hover { background: #1A2530; }
+  .social__icon svg { flex-shrink: 0; }
+
+  /* ── Layout ── */
+  .product__flex {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .product__full__image img {
+    width: 100%;
+    transition: opacity .3s;
+    object-fit: cover;
+    height:697px;
+  }
+
+  .product__left { width: 48%; }
+  .product__right { width: 49%; }
+
+  .product__detail {
+    position: sticky;
+    top: 40px;
+  }
+
+  .product__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .product__full__image {
+    display: flex;
+    min-height: 697px;
+  }
+
+  /* ── Badge ── */
+  .product__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #1A5470;
+    border-radius: 100px;
+    padding: 6px 10px;
+    text-transform: uppercase;
+    color: #B5D2E0;
+    font-size: 14px;
+    line-height: 16px;
+    font-weight: 500;
+    font-family:var(--font);
+  }
+
+  .product__detail__top {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: start;
+  }
+
+  .product__detail__top h2 {
+    font-size: 32px;
+    line-height: 48px;
+    font-weight: 600;
+    color: #fff;
+    font-family:var(--font);
+  }
+
+  /* ── Rating ── */
+  .product__rating ul { display: flex; gap: 1px; }
+  .product__rating { display: flex; align-items: center; gap: 8px; }
+  .product__rating .rating__star { font-size: 14px; line-height: 16px; color: #fff; font-weight: 600; font-family:var(--font);}
+  .product__rating p { font-size: 14px; line-height: 16px; color: #AFC1CA; font-family:var(--font);}
+
+  /* ── Price ── */
+  .product__price del { display: block; color: #686667; font-size: 14px; line-height: 16px; }
+  .product__price span { font-size: 48px; line-height: 56px; color: #fff; display: block; margin-top: 8px;font-family:var(--font);}
+
+  /* ── Color Selection ── */
+  .product__color__selection { padding-top: 56px; }
+  .product__color__selection h3 { font-size: 16px; line-height: 24px; color: #FFF7F2; font-weight: 500; }
+
+  .product__color__tablist {
+    display: flex;
+    margin-block: 24px;
+    border-bottom: 1px solid #434C53;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .product__color__tablist::-webkit-scrollbar { display: none; }
+
+  .product__color__tablist button {
+    font-size: 16px;
+    line-height: 150%;
+    color: #AFC1CA;
+    padding: 8px 16px;
+    border-radius: 0;
+    white-space: nowrap;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: .3s;
+    background: transparent;
+    cursor: pointer;
+    font-family: var(--font);
+  }
+  .product__color__tablist button:hover { background: #263D48; }
+  .product__color__tablist button.active { border-bottom: 2px solid #AFC1CA; color: #fff; background-color:#263D48;}
+
+  /* ── Swatches ── */
+  .product__color__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .all__color__container ul { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  .color__fill { transition: opacity .2s, transform .2s; }
+  .color__fill.hidden { display: none; }
+  .product__color__container .color__fill input { display: none; }
+
+  .product__color__container .color__fill label {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 100%;
+    position: relative;
+    cursor: pointer;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .product__color__container .color__fill label:hover {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+  }
+  .product__color__container .color__fill:has(input:checked) label {
+    border-color: #fff;
+    box-shadow: 0 0 0 2px #AFC1CA;
+  }
+  .product__color__container .color__fill label::after {
+    position: absolute;
+    content: '';
+    width: 8px;
+    height: 8px;
+    background-color: rgba(255,255,255,0.85);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    border-radius: 100%;
+    opacity: 0;
+    visibility: hidden;
+    transition: .3s;
+  }
+  .product__color__container .color__fill:has(input:checked) label::after {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .product__all__color {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    line-height: 24px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-family:var(--font);
+  }
+  .product__all__color:hover { color: #AFC1CA; }
+
+  /* ── Buy Area ── */
+  .product__item__buy {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-block: 48px;
+  }
+
+  .product__buy { flex-grow: 1; }
+
+  .add-to-cart-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    font-size: 16px;
+    line-height: 150%;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #030407;
+    transition: .3s;
+    background: #AFC1CA;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    font-family: var(--font);
+  }
+  .add-to-cart-btn:hover { background: #fff; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(175,193,202,0.25); }
+  .add-to-cart-btn:active { transform: translateY(0); }
+
+  .product__item__count {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px;
+    border: 1px solid #6F7A82;
+  }
+  .product__item__count button { background: transparent; border: none; padding: 0; cursor: pointer; transition: transform .15s ease; }
+  .product__item__count button:active { transform: scale(0.85); }
+  .product__item__count .item__count {
+    width: 48px;
+    font-size: 16px;
+    line-height: 150%;
+    color: #AFC1CA;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    transition: transform .2s ease;
+  }
+  .product__item__count .item__count.bump { animation: countBump .25s ease; }
+  @keyframes countBump {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── Wishlist Button ── */
+  .product__favourite {
+    display: flex;
+    align-items: center;
+  }
+
+  .wishlist-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 56px;
+    border: 1px solid #99AAB2;
+    background: transparent;
+    cursor: pointer;
+    transition: border-color .3s, background .3s, transform .2s ease;
+    padding: 0;
+  }
+  .wishlist-btn:hover { background: #1A2530; border-color: #fff; }
+  .wishlist-btn.is-wishlisted { border-color: #ff4d6d; }
+  .wishlist-btn.is-wishlisted .wish-icon-empty { display: none; }
+  .wishlist-btn.is-wishlisted .wish-icon-filled { display: block !important; }
+  .wishlist-btn.pop { animation: wishPop .35s ease; }
+  @keyframes wishPop {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.25); }
+    100% { transform: scale(1); }
+  }
+
+  /* ── Collapse ── */
+  .collapse__button button {
+    display: flex;
+    align-items: center;
+    background: 0;
+    border: none;
+    font-size: 16px;
+    line-height: 150%;
+    font-weight: 500;
+    color: #FFF7F2;
+    gap: 10px;
+    font-family: var(--font);
+    cursor: pointer;
+  }
+  .collapse__button button .collapse__icon__toggle div { display: flex; align-items: center; }
+  .collapse__icon__toggle { position: relative; }
+
+  .product__information { display: flex; flex-direction: column; gap: 48px; }
+  .product__collapse__content { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+  .collapse__button.active .product__collapse__content { max-height: 1000px; }
+
+  .product__detail__article { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; }
+  .product__detail__article p { color: #AFC1CA; font-size: 14px; line-height: 20px; }
+
+  .product__feature__flex ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 16px;
+    row-gap: 16px;
+  }
+  .product__feature__flex ul li {
+    width: 48%;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #AFC1CA;
+    font-size: 16px;
+    line-height: 150%;
+    font-family:var(--font);
+  }
+
+  .icon__plus, .icon__cross { transition: .35s ease; }
+  .icon__cross { opacity: 0; transform: rotate(-90deg); position: absolute; }
+  .collapse__button.active .icon__plus { opacity: 0; transform: rotate(90deg); }
+  .collapse__button.active .icon__cross { opacity: 1; transform: rotate(0); margin-top:-22px;}
+
+
+
+    @media (max-width: 1600px) {
+    .product__social { left: 0; }
+      .product__social {
+    left: 5%;
+
+  }
+  }
+
+
+  /* ── Responsive ── */
+  @media (max-width: 1430px) {
+    .product__social { left: 0; }
+      .product__social {
+    left: 2%;
+  }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1335px) {
+      .product__social {
+    left: 1%;
+  }
+  }
+
+  @media (max-width: 992px) and (min-width: 768px) {
+    .product__full__image { min-height: 520px; }
+  }
+
+  @media (max-width: 768px) {
+    .product__social { display: flex; top: 50%; transform: translateY(0); }
+    .product__left { width: 100%; }
+    .product__right { width: 100%; }
+    .product__full__image { min-height: auto; }
+    .product__flex { gap: 24px; }
+    .product__tag { font-size: 12px; }
+    .product__detail__top { gap: 12px; }
+    .product__detail__top h2 { font-size: 24px; }
+    .product__price span { font-size: 32px; margin-top: 0; }
+    .product__color__selection { padding-top: 40px; }
+    .product__item__count { width: 100%; }
+    .product__item__count .item__count { flex-grow: 1; }
+    .product__item__buy { margin-block: 24px; }
+    .product__information { gap: 24px; }
+    .product__feature__flex ul { flex-direction: column; gap: 10px; }
+    .product__feature__flex ul li { width: 100%; }
+  }
+
+  /* Replace ALL thumb-related CSS with this */
+
+.product__thumb__wrapper {
+  display: block; /* no more flex with arrows */
+}
+
+/* Desktop: normal 4-col grid */
+.product__image__thumb__track {
+  overflow: hidden;
+}
+
+.product__image__thumb {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.product__image__thumb img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+}
+
+.product__image__thumb a {
+  display: flex;
+  opacity: 0.5;
+  transition: opacity .3s;
+}
+
+
+.product__image__thumb a.active { opacity: 1; }
+
+img{
+height:auto;
+width:auto;
+}
+
+/* ── Mobile: drag-scroll strip ── */
+@media (max-width: 768px) {
+  .product__image__thumb__track {
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;        /* Firefox */
+    -webkit-overflow-scrolling: touch;
+    cursor: grab;
+  }
+
+  .product__full__image img {
+    width: 100%;
+    transition: opacity .3s;
+    object-fit: cover;
+    height: 497px;
+}
+
+
+  .product__image__thumb__track::-webkit-scrollbar {
+    display: none;                /* Chrome/Safari */
+  }
+
+  .product__image__thumb__track.is-dragging {
+    cursor: grabbing;
+  }
+
+  .product__image__thumb {
+    display: flex;                /* horizontal strip */
+    gap: 10px;
+    width: max-content;           /* don't wrap */
+  }
+
+  .product__image__thumb a {
+    flex: 0 0 calc((100vw - 32px) / 3); /* exactly 3 visible */
+    width: calc((100vw - 32px) / 3);
+  }
+
+  .product__image__thumb img {
+    height: 90px;
+    width: 100%;
+  }
+}
+
+@media (max-width:520px){
+.product__full__image img{
+  max-height:400px;
+}
+.product__social{
+    top: 40%;
+}
+}
+
+.product__area { 
+  color: white !important;
+}
+.product__social .social__icon img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ══════════════════════════════════════════
+   THEME-CONTROLLABLE ENTRANCE ANIMATIONS
+   Controlled via section settings:
+   --anim-duration, --anim-delay-stagger, --anim-easing
+   and [data-animate-style] / [data-animate-enabled]
+   ══════════════════════════════════════════ */
+
+@keyframes anim-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes anim-slide-up {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes anim-slide-left {
+  from { opacity: 0; transform: translateX(-48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes anim-slide-right {
+  from { opacity: 0; transform: translateX(48px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes anim-zoom {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* Default state: hidden until JS marks it in-view */
+.product__area .animate-item {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.product__area .animate-item.in-view {
+  animation-duration: var(--anim-duration, 600ms);
+  animation-timing-function: var(--anim-easing, ease-out);
+  animation-fill-mode: both;
+}
+
+.product__area[data-animate-style="fade"] .animate-item.in-view { animation-name: anim-fade; }
+.product__area[data-animate-style="slide-up"] .animate-item.in-view { animation-name: anim-slide-up; }
+.product__area[data-animate-style="slide-left"] .animate-item.in-view { animation-name: anim-slide-left; }
+.product__area[data-animate-style="slide-right"] .animate-item.in-view { animation-name: anim-slide-right; }
+.product__area[data-animate-style="zoom"] .animate-item.in-view { animation-name: anim-zoom; }
+
+/* Animations turned off from theme editor: show everything immediately */
+.product__area[data-animate-enabled="false"] .animate-item {
+  opacity: 1 !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Respect user's OS-level reduced motion preference regardless of theme setting */
+@media (prefers-reduced-motion: reduce) {
+  .product__area .animate-item {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+</style>
+
+<script>
+  /* ══════════════════════════════════════════
+     FIX: এই সেকশনটি "dynamic product section" হিসেবে
+     পেজ প্রথম লোডের পরেও (Section Rendering API / AJAX /
+     quick-view ইত্যাদির মাধ্যমে) DOM-এ inject হতে পারে।
+     আগের কোডে সবকিছু শুধু 'DOMContentLoaded' ইভেন্টের ভেতরে
+     ছিল, যেটা পেজে একবারই ফায়ার হয়। ফলে dynamic ভাবে
+     section লোড হলে এই স্ক্রিপ্ট আর রান হতো না এবং
+     .animate-item (opacity:0) কখনো visible হতো না —
+     তাই প্রোডাক্ট "দেখা যাচ্ছিল না"।
+
+     সমাধান: পুরো ইনিশিয়ালাইজেশন লজিককে একটা ফাংশনে
+     (initProductInformationSection) বের করা হয়েছে, যেটা:
+       1) normal page load এ চলবে (DOMContentLoaded বা readyState চেক করে)
+       2) Shopify section re-render ইভেন্টে আবার চলবে
+       3) একটা safety-timeout ফলব্যাক থাকবে, যাতে কোনো কারণে
+          animation JS না চললেও প্রোডাক্ট অন্তত visible থাকে।
+     ডিজাইন/CSS/HTML কিছুই পরিবর্তন করা হয়নি — শুধু এই
+     initialization টাইমিং ফিক্স করা হয়েছে।
+     ══════════════════════════════════════════ */
+
+  function initProductInformationSection(root) {
+    root = root || document;
+
+    // এই সেকশন আগে থেকেই init হয়ে থাকলে দ্বিতীয়বার init আটকাও
+    const areaEl = root.classList && root.classList.contains('product__area')
+      ? root
+      : root.querySelector ? root.querySelector('.product__area') : null;
+
+    if (areaEl && areaEl.dataset.jsInitDone === 'true') return;
+    if (areaEl) areaEl.dataset.jsInitDone = 'true';
+
+    // ══════════════════════════════════════════
+    // COLOR MAP → HEX
+    // ══════════════════════════════════════════
+    const colorMap = {
+      'red':'#FF0000','scarlet':'#FF2400','crimson':'#DC143C','ruby':'#9B111E',
+      'cherry':'#DE3163','coral':'#FF6B6B','tomato':'#FF6347','bordeaux':'#5C0120',
+      'burgundy':'#800020','wine':'#722F37','brick':'#CB4154',
+      'pink':'#FFB6C1','blush':'#FFB7C5','salmon':'#FA8072','flamingo':'#FC8EAC',
+      'fuchsia':'#FF77FF','magenta':'#FF00FF','bubblegum':'#FFC1CC','hot pink':'#FF69B4',
+      'baby pink':'#F4C2C2','dusty pink':'#DCAE96','nude pink':'#C68B77','soft pink':'#FFD1DC',
+      'nude':'#E8C4A0','beige':'#F5F5DC','sand':'#C2B280','skin':'#FFDBAC',
+      'natural':'#D4A574','tan':'#D2B48C','caramel':'#C68642','latte':'#C09A6B',
+      'coffee':'#6F4E37','mocha':'#967259','champagne':'#F7E7CE','cream':'#FFFDD0',
+      'ivory':'#FFFFF0','bare':'#E8C4A0','naked':'#F2D2BD','nude beige':'#D4A96A',
+      'milky white':'#F5F0EB',
+      'purple':'#800080','violet':'#EE82EE','lavender':'#E6E6FA','lilac':'#C8A2C8',
+      'plum':'#8E4585','mauve':'#E0B0FF','grape':'#6F2DA8','orchid':'#DA70D6',
+      'amethyst':'#9966CC','mulberry':'#C54B8C','eggplant':'#614051',
+      'blue':'#4169E1','navy':'#000080','cobalt':'#0047AB','teal':'#008080',
+      'cerulean':'#007BA7','sapphire':'#0F52BA','sky':'#87CEEB','denim':'#1560BD',
+      'midnight':'#191970','steel':'#4682B4','powder':'#B0E0E6','aqua':'#00FFFF',
+      'turquoise':'#40E0D0','indigo':'#4B0082',
+      'black':'#1A1A1A','white':'#FFFFFF','clear':'#E8E8E8','off white':'#FAF9F6',
+      'pearl':'#F0EAD6','gold':'#FFD700','silver':'#C0C0C0','bronze':'#CD7F32','glitter':'#E8D5B7',
+    };
+
+    function resolveSwatchColor(colorName) {
+      if (!colorName) return '#ccc';
+      const lower = colorName.toLowerCase().trim();
+      if (colorMap[lower]) return colorMap[lower];
+      for (const [key, hex] of Object.entries(colorMap)) {
+        if (lower.includes(key) || key.includes(lower)) return hex;
+      }
+      return lower;
+    }
+
+    root.querySelectorAll('#colorSwatchList .color__fill').forEach(sw => {
+      sw.querySelector('label').style.backgroundColor = resolveSwatchColor(sw.dataset.colorName);
+    });
+
+    // ══════════════════════════════════════════
+    // WISHLIST FIX — check BEFORE modifying
+    // ══════════════════════════════════════════
+    const wishlistBtn = root.querySelector('#wishlistBtn');
+
+    if (wishlistBtn) {
+      const productId = parseInt(wishlistBtn.dataset.productId);
+      const WISH_KEY  = 'shopify_wishlist';
+
+      function getWishlist() {
+        try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch(e) { return []; }
+      }
+
+      function saveWishlist(list) {
+        try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch(e) {}
+        const ev = new CustomEvent('wishlist:updated', { detail: { wishlist: list } });
+        document.dispatchEvent(ev);
+        window.dispatchEvent(ev);
+      }
+
+      function isWishlisted() {
+        return getWishlist().some(item => item.id === productId);
+      }
+
+      function syncBtn() {
+        const wishlisted = isWishlisted();
+        wishlistBtn.classList.toggle('is-wishlisted', wishlisted);
+        wishlistBtn.setAttribute('aria-label', wishlisted ? 'Remove from wishlist' : 'Add to wishlist');
+      }
+
+      // Set correct state on page load
+      syncBtn();
+
+      wishlistBtn.addEventListener('click', () => {
+        // ✅ Check current state FIRST before any modification
+        const currentlyWishlisted = isWishlisted();
+        let list = getWishlist();
+
+        if (currentlyWishlisted) {
+          // Was in wishlist → remove it
+          list = list.filter(item => item.id !== productId);
+
+          if (window.CustomMenu) {
+            window.CustomMenu.removeFromWishlist(productId);
+          }
+        } else {
+          // Was not in wishlist → add it
+          const product = {
+            id:    productId,
+            title: wishlistBtn.dataset.productTitle,
+            price: parseInt(wishlistBtn.dataset.productPrice),
+            image: wishlistBtn.dataset.productImage,
+            url:   wishlistBtn.dataset.productUrl,
+          };
+          list.push(product);
+
+          if (window.CustomMenu) {
+            window.CustomMenu.addToWishlist(product);
+          }
+        }
+
+        saveWishlist(list);
+        // ✅ Sync button AFTER saving
+        syncBtn();
+
+        // small pop animation for feedback
+        wishlistBtn.classList.remove('pop');
+        void wishlistBtn.offsetWidth; // restart animation
+        wishlistBtn.classList.add('pop');
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // THUMBNAIL DRAG SLIDER (no arrows)
+    // ══════════════════════════════════════════
+    const track      = root.querySelector('#thumbTrack');
+    const thumbLinks = track ? Array.from(track.querySelectorAll('.product-thumb-link')) : [];
+
+    if (track) {
+      // Make the track itself scrollable via CSS scroll on mobile
+      // We'll use native scroll with drag support
+
+      let isDragging  = false;
+      let startX      = 0;
+      let scrollStart = 0;
+      let dragMoved   = false;
+
+      // ── Touch events (mobile) ──
+      track.addEventListener('touchstart', e => {
+        startX      = e.touches[0].clientX;
+        scrollStart = track.scrollLeft;
+        dragMoved   = false;
+      }, { passive: true });
+
+      track.addEventListener('touchmove', e => {
+        const dx = startX - e.touches[0].clientX;
+        track.scrollLeft = scrollStart + dx;
+        if (Math.abs(dx) > 5) dragMoved = true;
+      }, { passive: true });
+
+      // ── Mouse drag events (desktop / emulated) ──
+      track.addEventListener('mousedown', e => {
+        isDragging  = true;
+        startX      = e.clientX;
+        scrollStart = track.scrollLeft;
+        dragMoved   = false;
+        track.style.cursor = 'grabbing';
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = startX - e.clientX;
+        track.scrollLeft = scrollStart + dx;
+        if (Math.abs(dx) > 5) dragMoved = true;
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDragging) {
+          isDragging = false;
+          track.style.cursor = 'grab';
+        }
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // THUMBNAIL GALLERY (main image swap)
+    // ══════════════════════════════════════════
+    const mainImage = root.querySelector('#mainProductImage');
+
+    thumbLinks.forEach((thumb, index) => {
+      if (index === 0) thumb.classList.add('active');
+
+      thumb.addEventListener('click', e => {
+        e.preventDefault();
+        // Don't swap if user was dragging
+        if (track && Math.abs(track.scrollLeft - (track._scrollAtClick || 0)) > 5) return;
+
+        const img = thumb.querySelector('img');
+        thumbLinks.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+
+        if (mainImage) {
+          mainImage.style.opacity = '0';
+          const changeImage = () => {
+            mainImage.src = thumb.dataset.src || img.src;
+            mainImage.alt = img.alt;
+            mainImage.style.opacity = '1';
+            mainImage.removeEventListener('transitionend', changeImage);
+          };
+          mainImage.addEventListener('transitionend', changeImage);
+        }
+      });
+
+      // Record scroll position at mousedown so click handler can detect drag
+      thumb.addEventListener('mousedown', () => {
+        if (track) track._scrollAtClick = track.scrollLeft;
+      });
+    });
+
+    // ══════════════════════════════════════════
+    // QUANTITY COUNTER
+    // ══════════════════════════════════════════
+    const countEl       = root.querySelector('.item__count');
+    const minusBtn      = root.querySelector('.count-minus');
+    const plusBtn       = root.querySelector('.count-plus');
+    const quantityInput = root.querySelector('.quantity-input');
+    let count = 1;
+
+    function bumpCount() {
+      if (!countEl) return;
+      countEl.classList.remove('bump');
+      void countEl.offsetWidth;
+      countEl.classList.add('bump');
+    }
+
+    if (plusBtn) plusBtn.addEventListener('click', () => {
+      count++; countEl.textContent = count; quantityInput.value = count; bumpCount();
+    });
+    if (minusBtn) minusBtn.addEventListener('click', () => {
+      if (count > 1) { count--; countEl.textContent = count; quantityInput.value = count; bumpCount(); }
+    });
+
+    // ══════════════════════════════════════════
+    // AJAX ADD TO CART (no redirect)
+    // ══════════════════════════════════════════
+    const addToCartBtn = root.querySelector('.add-to-cart-btn');
+
+    if (addToCartBtn) {
+      addToCartBtn.addEventListener('click', async (e) => {
+        e.preventDefault(); // form submit বন্ধ করো
+
+        const variantId = root.querySelector('.variant-id-input')?.value;
+        const quantity  = root.querySelector('.quantity-input')?.value || 1;
+
+        if (!variantId) return;
+
+        // বাটনে loading state দেখাও
+        const originalText = addToCartBtn.textContent;
+        addToCartBtn.textContent = 'Adding…';
+        addToCartBtn.disabled = true;
+
+        try {
+          const res = await fetch('/cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: parseInt(variantId),
+              quantity: parseInt(quantity)
+            })
+          });
+
+          if (!res.ok) throw new Error('Cart add failed');
+
+          // Cart count আপডেট করো (theme এর bubble/count badge)
+          const cartRes  = await fetch('/cart.js');
+          const cartData = await cartRes.json();
+          const itemCount = cartData.item_count;
+
+          // Horizon theme এর cart count badge আপডেট
+          document.querySelectorAll('[data-cart-count], .cart-count, .header-cart-count').forEach(el => {
+            el.textContent = itemCount;
+          });
+
+          // Cart update event fire করো (theme এর cart drawer খুলতে পারে)
+          document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
+          window.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cartData } }));
+
+          // Success state
+          addToCartBtn.textContent = 'Added ✓';
+          setTimeout(() => {
+            addToCartBtn.textContent = originalText;
+            addToCartBtn.disabled = false;
+          }, 2000);
+
+        } catch (err) {
+          console.error('Add to cart error:', err);
+          addToCartBtn.textContent = 'Failed – Try Again';
+          setTimeout(() => {
+            addToCartBtn.textContent = originalText;
+            addToCartBtn.disabled = false;
+          }, 2000);
+        }
+      });
+    }
+
+    // ══════════════════════════════════════════
+    // COLLAPSE
+    // ══════════════════════════════════════════
+    root.querySelectorAll('.collapse__button > button').forEach(button => {
+      const parent  = button.parentElement;
+      const content = parent.querySelector('.product__collapse__content');
+
+      // Open all by default
+      parent.classList.add('active');
+      content.style.maxHeight = content.scrollHeight + 'px';
+
+      button.addEventListener('click', () => {
+        parent.classList.toggle('active');
+        content.style.maxHeight = parent.classList.contains('active')
+          ? content.scrollHeight + 'px' : '0px';
+      });
+    });
+
+    // ══════════════════════════════════════════
+    // COLOR SWATCH TABS
+    // ══════════════════════════════════════════
+    const tabs          = root.querySelectorAll('.color-tab');
+    const swatches      = root.querySelectorAll('#colorSwatchList .color__fill');
+    const VISIBLE_LIMIT = 9;
+    let currentFamily   = 'all';
+    let showingAll      = false;
+
+    function getVisibleSwatches(family) {
+      return Array.from(swatches).filter(sw =>
+        family === 'all' ? true : (sw.dataset.families || '').includes(family)
+      );
+    }
+
+    function renderSwatches(family, forceAll) {
+      const matching = getVisibleSwatches(family);
+      const showAll  = forceAll || matching.length <= VISIBLE_LIMIT;
+      const limit    = showAll ? matching.length : VISIBLE_LIMIT;
+      swatches.forEach(sw => sw.classList.add('hidden'));
+      matching.slice(0, limit).forEach(sw => sw.classList.remove('hidden'));
+      const showAllBtn = root.querySelector('#showAllColors');
+      if (!showAllBtn) return;
+      if (matching.length > VISIBLE_LIMIT && !showAll) {
+        showAllBtn.style.display = 'inline'; showAllBtn.textContent = 'SHOW ALL';
+      } else if (matching.length > VISIBLE_LIMIT && showAll) {
+        showAllBtn.style.display = 'inline'; showAllBtn.textContent = 'SHOW LESS';
+      } else {
+        showAllBtn.style.display = 'none';
+      }
+    }
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentFamily = tab.dataset.family;
+        showingAll    = false;
+        renderSwatches(currentFamily, false);
+      });
+    });
+
+    const showAllBtn = root.querySelector('#showAllColors');
+    if (showAllBtn) {
+      showAllBtn.addEventListener('click', e => {
+        e.preventDefault();
+        showingAll = !showingAll;
+        renderSwatches(currentFamily, showingAll);
+      });
+    }
+
+    renderSwatches('all', false);
+
+    // ══════════════════════════════════════════
+    // VARIANT SELECTION VIA SWATCH
+    // ══════════════════════════════════════════
+    const variantInput = root.querySelector('.variant-id-input');
+
+    swatches.forEach(sw => {
+      sw.querySelector('label').addEventListener('click', () => {
+        swatches.forEach(s => s.querySelector('input').checked = false);
+        const radio = sw.querySelector('input[type="radio"]');
+        radio.checked = true;
+        if (variantInput) variantInput.value = radio.value;
+        if (wishlistBtn) wishlistBtn.dataset.variantId = radio.value;
+      });
+    });
+
+    // ══════════════════════════════════════════
+    // THEME-CONTROLLABLE SCROLL-REVEAL ANIMATIONS
+    // Reads settings baked into the section via
+    // data-animate-enabled / data-animate-style / --anim-delay-stagger
+    // ══════════════════════════════════════════
+    const productArea = areaEl || root.querySelector('.product__area');
+
+    if (productArea) {
+      const animEnabled = productArea.dataset.animateEnabled !== 'false';
+      const animItems    = Array.from(productArea.querySelectorAll('.animate-item'));
+      const staggerMs = parseInt(
+        getComputedStyle(productArea).getPropertyValue('--anim-delay-stagger')
+      ) || 0;
+
+      if (animEnabled && animItems.length && 'IntersectionObserver' in window) {
+        // Stagger delay per item based on its order group (image col vs detail col
+        // animate together; items share order via data-animate-order)
+        animItems.forEach((el, i) => {
+          const order = parseInt(el.dataset.animateOrder || i, 10);
+          el.style.animationDelay = (order * staggerMs) + 'ms';
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        animItems.forEach(el => observer.observe(el));
+
+        // ── Safety fallback ──
+        // যদি কোনো কারণে (layout/geometry quirk, iframe context,
+        // অথবা সেকশন প্রথমেই viewport-এ থাকা সত্ত্বেও observer দেরি
+        // করে ফায়ার করে) কিছু আইটেম observer মিস করে যায়, একটা
+        // সময়সীমার পর জোর করে দেখিয়ে দাও — যাতে প্রোডাক্ট কখনো
+        // চিরস্থায়ীভাবে অদৃশ্য না থাকে।
+        setTimeout(() => {
+          animItems.forEach(el => {
+            if (!el.classList.contains('in-view')) el.classList.add('in-view');
+          });
+        }, (anim_stagger_safety_ms(staggerMs, animItems.length)));
+      } else {
+        // Animations disabled from theme settings (or no IO support): show immediately
+        animItems.forEach(el => el.classList.add('in-view'));
+      }
+    }
+
+    function anim_stagger_safety_ms(staggerMs, itemCount) {
+      // মোট stagger delay + কিছুটা বাফার টাইম, সর্বনিম্ন ২৫০০ms
+      return Math.max(2500, (staggerMs * itemCount) + 2000);
+    }
+  }
+
+  // ── ১) সাধারণ পেজ লোডে ──
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => initProductInformationSection(document));
+  } else {
+    // readyState ইতিমধ্যে 'interactive' বা 'complete' —
+    // অর্থাৎ এই স্ক্রিপ্ট DOMContentLoaded এর পরে রান হচ্ছে
+    // (dynamic injection এর ক্ষেত্রে এটাই ঘটে)। সাথে সাথে init করো।
+    initProductInformationSection(document);
+  }
+
+  // ── ২) Shopify Section Rendering API দিয়ে সেকশন re-render/inject হলে ──
+  document.addEventListener('shopify:section:load', (e) => {
+    const scope = (e.target && e.target.querySelector) ? e.target : document;
+    initProductInformationSection(scope);
+  });
+
+  // ── ৩) কোনো কারণে উপরের কোনোটাই না ধরলে (কাস্টম AJAX/quick-view),
+  //       MutationObserver দিয়ে নতুন .product__area যোগ হওয়া মাত্র init করো ──
+  const __productAreaWatcher = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      m.addedNodes && m.addedNodes.forEach(node => {
+        if (node.nodeType !== 1) return;
+        if (node.classList && node.classList.contains('product__area')) {
+          initProductInformationSection(node);
+        } else if (node.querySelector) {
+          const found = node.querySelector('.product__area');
+          if (found) initProductInformationSection(found);
+        }
+      });
+    }
+  });
+
+  if (document.body) {
+    __productAreaWatcher.observe(document.body, { childList: true, subtree: true });
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      __productAreaWatcher.observe(document.body, { childList: true, subtree: true });
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Information",
+  "settings": [
+    { "type": "text", "id": "badge_text", "label": "Badge Text", "default": "Best Seller" },
+    { "type": "text", "id": "product_rating", "label": "Product Rating", "default": "4.9" },
+    { "type": "text", "id": "add_to_cart_text", "label": "Add to Cart Button Text", "default": "Add to Cart" },
+    { "type": "text", "id": "feature_1", "label": "Feature 1", "default": "Cure Time: 60 seconds" },
+    { "type": "text", "id": "feature_2", "label": "Feature 2", "default": "Requires 1-2 Thin Coats" },
+    { "type": "text", "id": "feature_3", "label": "Feature 3", "default": "Size: 15ML (0.5 oz)" },
+    { "type": "text", "id": "feature_4", "label": "Feature 4", "default": "Highly Pigmented Formula" },
+    { "type": "url", "id": "social_facebook", "label": "Facebook URL" },
+    { "type": "url", "id": "social_twitter", "label": "Twitter/X URL" },
+    { "type": "url", "id": "social_youtube", "label": "YouTube URL" },
+    { "type": "url", "id": "social_tiktok", "label": "TikTok URL" },
+    { "type": "header", "content": "Animation Settings" },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Enable Animations",
+      "info": "Turn all entrance animations on/off for this section.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation_style",
+      "label": "Animation Style",
+      "options": [
+        { "value": "fade", "label": "Fade In" },
+        { "value": "slide-up", "label": "Slide Up" },
+        { "value": "slide-left", "label": "Slide In From Left" },
+        { "value": "slide-right", "label": "Slide In From Right" },
+        { "value": "zoom", "label": "Zoom In" }
+      ],
+      "default": "slide-up"
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation Easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-out", "label": "Ease Out" },
+        { "value": "ease-in-out", "label": "Ease In-Out" },
+        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Smooth (Expo Out)" }
+      ],
+      "default": "ease-out"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation Duration (ms)",
+      "min": 200,
+      "max": 1500,
+      "step": 50,
+      "default": 600
+    },
+    {
+      "type": "range",
+      "id": "animation_delay_stagger",
+      "label": "Stagger Delay Between Elements (ms)",
+      "min": 0,
+      "max": 300,
+      "step": 10,
+      "default": 100
+    }
+  ],
+  "presets": [{ "name": "Product Information" }]
+}
+{% endschema %}

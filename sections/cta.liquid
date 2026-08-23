@@ -1,0 +1,222 @@
+<style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .cta {
+      font-family: "Questrial", sans-serif;
+      background-color: #030407;
+      color: #fff;
+    }
+
+    .container-custom {
+      max-width: calc(1200px + ((100vw - 1200px) / 2));
+      margin-left: auto;
+      padding-left: 20px;
+    }
+
+    .cta__flex {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .cta__text h2 {
+      font-size: 64px;
+      line-height: 72px;
+      letter-spacing: -1.6%;
+      font-weight: 300;
+    }
+
+    .cta__text p {
+      margin-top: 16px;
+      font-size: 24px;
+      line-height: 150%;
+      color: #7D909C;
+    }
+
+    .cta__field {
+      display: flex;
+      margin-top: 40px;
+      border: 1.5px solid #849299;
+    }
+
+    .cta__field input {
+      padding: 18.5px 16px;
+      background: transparent;
+      border: 1px solid transparent;
+      font-size: 16px;
+      width: 409px;
+      color: #AFC1CA;
+    }
+
+    .cta__field input::placeholder {
+      opacity: 1;
+      color: #AFC1CA;
+    }
+
+    .cta__field button {
+      padding: 16px;
+      font-weight: 600;
+      line-height: 150%;
+      color: #131215;
+      border: none;
+      background: #AFC1CA;
+      min-width: 191px;
+      cursor: pointer;
+    }
+
+    .cta__field input:focus {
+      outline: none;
+    }
+
+    .cta__left {
+      padding-block: 100px;
+    }
+
+    .cta__right img {
+      width: 100%;
+    }
+
+    .cta__right {
+      width: 50%;
+      flex-grow: 1;
+    }
+
+    @media (max-width: 1449px) {
+      .cta__field input {
+        width: 370px;
+      }
+
+      .cta__field button {
+        min-width: 160px;
+      }
+    }
+
+    @media (max-width: 1200px) {
+      .cta__text h2 {
+        font-size: 50px;
+        line-height: 40px;
+      }
+
+      .cta__text p {
+        margin-top: 10px;
+        font-size: 20px;
+      }
+
+      .cta__field {
+        margin-top: 25px;
+      }
+
+      .cta__field input {
+        width: 340px;
+      }
+    }
+
+    @media (max-width: 1024px) {
+      .container-custom {
+        padding: 0;
+      }
+
+      .cta__right {
+        width: 100%;
+        flex-grow: 1;
+      }
+
+      .cta__left {
+        padding-block: 0;
+        padding-inline: 20px;
+        margin-inline: auto;
+      }
+
+      .cta__text {
+        text-align: center;
+      }
+
+      .cta__flex {
+        gap: 24px;
+        flex-direction: column;
+      }
+
+      .cta {
+        padding-block: 60px 0;
+      }
+
+      .cta__field input {
+        width: 263px;
+      }
+
+      .cta__text h2 {
+        font-size: 32px;
+        line-height: 36px;
+      }
+
+      .cta__text p {
+        margin-top: 16px;
+        font-size: 14px;
+      }
+
+      .cta__field button {
+        min-width: 90px;
+      }
+    }
+  </style>
+
+  <section class="cta">
+    <div class="container-custom">
+      <div class="cta__flex">
+        <div class="cta__left">
+          <div class="cta__text">
+            <h2>{{ section.settings.heading }}</h2>
+            <p>{{ section.settings.subheading }}</p>
+          </div>
+          <div class="cta__field">
+            <input type="email" placeholder="Enter your email">
+            <button type="submit" class="join__btn">Join</button>
+          </div>
+        </div>
+        <div class="cta__right">
+          <div class="cta__image">
+            {% if section.settings.image %}
+              <img src="{{ section.settings.image | image_url: width: 1500 }}" alt="{{ section.settings.image.alt | default: section.settings.heading }}">
+            {% else %}
+              <img src="product.png" alt="Product-Image">
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+{% schema %}
+{
+  "name": "CTA Subscribe",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Never run out of you essentials again"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "CTA Subscribe"
+    }
+  ]
+}
+{% endschema %}

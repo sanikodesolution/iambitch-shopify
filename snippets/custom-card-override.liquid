@@ -1,0 +1,1431 @@
+{% comment %}
+  custom-card-override.liquid
+  ─────────────────────────────────────────────────────────────
+  INSTALL:
+  1. Upload this file into snippets/custom-card-override.liquid
+  2. Open layout/theme.liquid, find </head>, add just before it:
+       {% render 'custom-card-override' %}
+  ─────────────────────────────────────────────────────────────
+{% endcomment %}
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+
+<style>
+  :root {
+    --font: 'glory', sans-serif;
+  }
+
+/* ═══════════════════════════════════════════════════════════
+   HIDE THEME ELEMENTS — exact class names from DevTools
+═══════════════════════════════════════════════════════════ */
+
+.product-grid product-card a[ref="productTitleLink"] {
+  display: none !important;
+}
+.product-grid product-card product-price {
+  display: none !important;
+}
+.product-grid product-card .buy-buttons-block {
+  display: none !important;
+}
+.product-grid product-card local-pickup {
+  display: none !important;
+}
+.product-grid product-card .product-grid-view-zoom-out--details {
+  display: none !important;
+}
+.product-grid product-card quick-add-component {
+  display: none !important;
+}
+/* Hide the theme's own product-badges div (we build our own heart) */
+.product-grid product-card .product-badges {
+  display: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PRODUCT CARDS — staggered fadeInUp (one by one)
+═══════════════════════════════════════════════════════════ */
+@keyframes iab-fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 48px, 0) scale(0.94);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+/* Only product cards — never filters / facets */
+.product-grid > .product-grid__item {
+  opacity: 0;
+  animation: iab-fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: calc(var(--iab-stagger, 0) * 0.1s);
+  will-change: opacity, transform;
+  transform-origin: center bottom;
+}
+
+/* Stagger first 24 cards via nth-child (covers typical page size) */
+.product-grid > .product-grid__item:nth-child(1)  { --iab-stagger: 0; }
+.product-grid > .product-grid__item:nth-child(2)  { --iab-stagger: 1; }
+.product-grid > .product-grid__item:nth-child(3)  { --iab-stagger: 2; }
+.product-grid > .product-grid__item:nth-child(4)  { --iab-stagger: 3; }
+.product-grid > .product-grid__item:nth-child(5)  { --iab-stagger: 4; }
+.product-grid > .product-grid__item:nth-child(6)  { --iab-stagger: 5; }
+.product-grid > .product-grid__item:nth-child(7)  { --iab-stagger: 6; }
+.product-grid > .product-grid__item:nth-child(8)  { --iab-stagger: 7; }
+.product-grid > .product-grid__item:nth-child(9)  { --iab-stagger: 8; }
+.product-grid > .product-grid__item:nth-child(10) { --iab-stagger: 9; }
+.product-grid > .product-grid__item:nth-child(11) { --iab-stagger: 10; }
+.product-grid > .product-grid__item:nth-child(12) { --iab-stagger: 11; }
+.product-grid > .product-grid__item:nth-child(13) { --iab-stagger: 12; }
+.product-grid > .product-grid__item:nth-child(14) { --iab-stagger: 13; }
+.product-grid > .product-grid__item:nth-child(15) { --iab-stagger: 14; }
+.product-grid > .product-grid__item:nth-child(16) { --iab-stagger: 15; }
+.product-grid > .product-grid__item:nth-child(17) { --iab-stagger: 16; }
+.product-grid > .product-grid__item:nth-child(18) { --iab-stagger: 17; }
+.product-grid > .product-grid__item:nth-child(19) { --iab-stagger: 18; }
+.product-grid > .product-grid__item:nth-child(20) { --iab-stagger: 19; }
+.product-grid > .product-grid__item:nth-child(21) { --iab-stagger: 20; }
+.product-grid > .product-grid__item:nth-child(22) { --iab-stagger: 21; }
+.product-grid > .product-grid__item:nth-child(23) { --iab-stagger: 22; }
+.product-grid > .product-grid__item:nth-child(24) { --iab-stagger: 23; }
+
+@media (prefers-reduced-motion: reduce) {
+  .product-grid > .product-grid__item {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+}
+
+/* Filters / facets — no fadeInUp or entrance motion */
+.collection-wrapper .facets,
+.collection-wrapper .facets--horizontal,
+.collection-wrapper .facets-controls-wrapper,
+.collection-wrapper .facets__summary,
+.collection-wrapper .facets__label,
+.collection-wrapper .facets__form-wrapper,
+.collection-wrapper .facets__filters-wrapper,
+.collection-wrapper .facets-mobile-wrapper,
+.collection-wrapper .facets-toggle,
+.collection-wrapper .product-count,
+.collection-wrapper floating-panel-component.facets__inputs,
+.facets-block-wrapper {
+  animation: none !important;
+  opacity: 1 !important;
+  transform: none !important;
+  filter: none !important;
+}
+
+/* Theme view-transition must not fade filter panels with product-grid */
+:root:active-view-transition-type(product-grid) details[open] floating-panel-component {
+  view-transition-name: none !important;
+}
+
+::view-transition-old(panel-content),
+::view-transition-new(panel-content) {
+  animation: none !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FILTERS — closed underline triggers + dark accordion panels
+   (design: closed bar + Frame 113 / 114)
+═══════════════════════════════════════════════════════════ */
+
+/* —— Closed trigger row (Product Type | Color Family) —— */
+.facets--horizontal .facets__filters-wrapper {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: flex-end !important;
+  column-gap: 48px !important;
+  row-gap: 16px !important;
+}
+
+.facets--horizontal .facets__panel {
+  min-width: 0 !important;
+}
+
+.facets--horizontal .facets__summary {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  padding: 0 2px 10px !important;
+  border-bottom: 1px solid rgba(175, 193, 202, 0.45) !important;
+  color: #c8d0d6 !important;
+  cursor: pointer !important;
+  list-style: none !important;
+  opacity: 1 !important;
+}
+
+.facets--horizontal .facets__summary::-webkit-details-marker {
+  display: none !important;
+}
+
+.facets--horizontal .facets__label,
+.facets--horizontal .facets__clear-all-link {
+  color: #c8d0d6 !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.01em !important;
+  line-height: 1.2 !important;
+}
+
+.facets--horizontal .facets__status-wrapper {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  margin: 0 !important;
+}
+
+/* Clean closed look — hide selected status chips in the trigger */
+.facets--horizontal .facets__status,
+.facets--horizontal .facets__bubble {
+  display: none !important;
+}
+
+.facets--horizontal .facets__summary .icon-caret {
+  width: 12px !important;
+  height: 12px !important;
+  margin: 0 !important;
+  color: #c8d0d6 !important;
+  opacity: 1 !important;
+  flex-shrink: 0 !important;
+  transition: transform 0.2s ease !important;
+}
+
+.facets--horizontal .facets__panel[open] .facets__summary {
+  color: #ffffff !important;
+  border-bottom-color: rgba(175, 193, 202, 0.65) !important;
+  opacity: 1 !important;
+}
+
+.facets--horizontal .facets__panel[open] .facets__label {
+  color: #ffffff !important;
+}
+
+.facets--horizontal .facets__panel[open] .facets__summary .icon-caret {
+  color: #ffffff !important;
+  transform: rotate(180deg) !important;
+}
+
+.facets--horizontal .facets__filters-wrapper:hover .facets__summary,
+.facets--horizontal .facets__filters-wrapper:has(.facets__panel[open]) .facets__summary {
+  opacity: 1 !important;
+}
+
+/* —— Open dropdown panel (Frame 113 / 114) —— */
+.facets--horizontal .facets__panel-content,
+.facets--horizontal floating-panel-component.facets__inputs,
+.facets-mobile-wrapper .facets__panel-content {
+  background: #05080c !important;
+  background-color: #05080c !important;
+  border: 1px solid rgba(175, 193, 202, 0.16) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+  color: #afc1ca !important;
+  min-width: 280px !important;
+  max-width: 340px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  margin-top: 8px !important;
+}
+
+/* Panel header inside dropdown */
+.iab-facet-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(175, 193, 202, 0.28);
+}
+
+.iab-facet-panel-title {
+  color: #ffffff;
+  font-family: var(--font, 'glory', sans-serif);
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+}
+
+.iab-facet-panel-head .icon-caret {
+  width: 14px;
+  height: 14px;
+  color: #ffffff;
+  transform: rotate(180deg);
+  flex-shrink: 0;
+}
+
+.facets--horizontal .facets__panel-content::before {
+  display: none !important;
+}
+
+.facets--horizontal .facets__inputs-wrapper,
+.facets--drawer .facets__inputs-wrapper {
+  padding: 10px 8px 12px !important;
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 0 !important;
+}
+
+/* Force vertical list (not multi-column swatch grid) */
+.facets--horizontal .facets__inputs-wrapper .facets__inputs-list,
+.facets--horizontal .facets__inputs-wrapper .facets__inputs-list--swatches,
+.facets--horizontal .facets__inputs-wrapper .facets__inputs-list--swatches-grid,
+.facets--horizontal .facets__inputs-wrapper .facets__inputs-list--grid,
+.facets--drawer .facets__inputs-wrapper .facets__inputs-list--swatches-grid {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  grid-template-columns: none !important;
+  width: 100% !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.facets--horizontal .facets__inputs-list-item,
+.facets--drawer .facets__inputs-list-item {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+/* Text options — Product Type (Frame 113) */
+.facets--horizontal .checkbox,
+.facets--drawer .checkbox {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 12px 14px !important;
+  border-radius: 2px !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease;
+}
+
+.facets--horizontal .checkbox:hover,
+.facets--drawer .checkbox:hover {
+  background: rgba(125, 144, 158, 0.28) !important;
+}
+
+.facets--horizontal .checkbox:has(.checkbox__input:checked),
+.facets--drawer .checkbox:has(.checkbox__input:checked) {
+  background: #2d3e46 !important;
+}
+
+.facets--horizontal .checkbox__input,
+.facets--drawer .checkbox__input {
+  position: absolute !important;
+  opacity: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
+.facets--horizontal .checkbox__label,
+.facets--drawer .checkbox__label {
+  display: flex !important;
+  align-items: center !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.facets--horizontal .checkbox__label-text,
+.facets--drawer .checkbox__label-text {
+  color: #afc1ca !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+}
+
+.facets--horizontal .checkbox:has(.checkbox__input:checked) .checkbox__label-text,
+.facets--drawer .checkbox:has(.checkbox__input:checked) .checkbox__label-text {
+  color: #ffffff !important;
+}
+
+.facets--horizontal .checkbox__label > *:not(.checkbox__label-text),
+.facets--drawer .checkbox__label > *:not(.checkbox__label-text) {
+  display: none !important;
+}
+
+/* Color Family / swatch rows — circular swatch + label (Frame 114) */
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option--swatches,
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option--swatches {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch,
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 46px !important;
+  margin: 0 !important;
+  padding: 10px 14px !important;
+  border-radius: 2px !important;
+  border: none !important;
+  background: transparent !important;
+  box-sizing: border-box !important;
+  cursor: pointer !important;
+  transition: background 0.15s ease;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:hover,
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:hover {
+  background: rgba(125, 144, 158, 0.28) !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:has(:checked),
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:has(:checked) {
+  background: #2d3e46 !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option__swatch-wrapper,
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option__swatch-wrapper {
+  width: 28px !important;
+  height: 28px !important;
+  flex: 0 0 28px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  border: 1px solid rgba(175, 193, 202, 0.35) !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .swatch,
+.facets--drawer .facets__inputs-list--swatches-grid .swatch,
+.facets--horizontal .facets__inputs-list--swatches-grid .swatch--filter,
+.facets--drawer .facets__inputs-list--swatches-grid .swatch--filter {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .facets__swatch-label,
+.facets--drawer .facets__inputs-list--swatches-grid .facets__swatch-label {
+  display: inline-block !important;
+  color: #afc1ca !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 15px !important;
+  font-weight: 400 !important;
+  line-height: 1.3 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: left !important;
+  white-space: nowrap !important;
+}
+
+.facets--horizontal .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:has(:checked) .facets__swatch-label,
+.facets--drawer .facets__inputs-list--swatches-grid .variant-option__button-label--has-swatch:has(:checked) .facets__swatch-label {
+  color: #ffffff !important;
+}
+
+/* Image presentation filters — circular thumbs + label */
+.facets--horizontal .facets__inputs-list--images,
+.facets--drawer .facets__inputs-list--images {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+}
+
+.facets--horizontal .variant-option--images,
+.facets--drawer .variant-option--images {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  width: 100% !important;
+  min-height: 46px !important;
+  padding: 10px 14px !important;
+  border-radius: 2px !important;
+  box-sizing: border-box !important;
+}
+
+.facets--horizontal .variant-option--images:hover,
+.facets--drawer .variant-option--images:hover {
+  background: rgba(125, 144, 158, 0.28) !important;
+}
+
+.facets--horizontal .variant-option--images:has(input:checked),
+.facets--drawer .variant-option--images:has(input:checked) {
+  background: #2d3e46 !important;
+}
+
+.facets--horizontal .facets__image-wrapper,
+.facets--drawer .facets__image-wrapper {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 50% !important;
+  overflow: hidden !important;
+  flex: 0 0 28px !important;
+}
+
+.facets--horizontal .facets__image-wrapper img,
+.facets--drawer .facets__image-wrapper img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+.facets--horizontal .facets__image-label,
+.facets--drawer .facets__image-label {
+  color: #afc1ca !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 15px !important;
+}
+
+/* Clear button inside dropdown */
+.facets--horizontal .facets__clear,
+.facets--horizontal .clear-filter {
+  color: #afc1ca !important;
+  background: transparent !important;
+  border-color: rgba(175, 193, 202, 0.35) !important;
+}
+
+.facets--horizontal .facets__clear {
+  padding: 8px 14px 12px !important;
+}
+
+/* Drawer / mobile panel — same dark language */
+.facets--drawer {
+  background: #05080c !important;
+  color: #afc1ca !important;
+}
+
+.facets--drawer .facets-drawer__title,
+.facets--drawer .facets__summary,
+.facets--drawer .facets__label {
+  color: #afc1ca !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+}
+
+.facets--drawer .facets__item::before,
+.facets--drawer .sorting-filter::before {
+  border-top-color: rgba(175, 193, 202, 0.22) !important;
+}
+
+/* Products count — keep light, no motion */
+.facets--horizontal .products-count-wrapper,
+.facets--horizontal .products-count {
+  color: #afc1ca !important;
+  opacity: 1 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   FIX: drawer wrapper gap after AJAX filter morph
+═══════════════════════════════════════════════════════════ */
+.collection-wrapper > #filters-drawer,
+.collection-wrapper > dialog-component.facets-block-wrapper {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+}
+
+@media screen and (min-width: 750px) {
+  .collection-wrapper > .facets-toggle {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+  }
+
+  .collection-wrapper .facets--horizontal {
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .collection-wrapper {
+    row-gap: 0 !important;
+  }
+
+  .collection-wrapper .main-collection-grid {
+    margin-top: 0 !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   TABLET / MOBILE (≤767px) — taller square gallery so product
+   photos stay readable from 767px down through ~425px
+═══════════════════════════════════════════════════════════ */
+@media screen and (max-width: 767px) {
+  .product-grid product-card .product-card__content {
+    height: auto !important;
+  }
+
+  .product-grid product-card .card-gallery {
+    height: auto !important;
+    flex: 0 0 auto !important;
+    aspect-ratio: 1 / 1 !important;
+    min-height: 380px !important;
+    overflow: hidden !important;
+  }
+
+  .product-grid product-card .card-gallery slideshow-component,
+  .product-grid product-card .card-gallery slideshow-container,
+  .product-grid product-card .card-gallery slideshow-slides,
+  .product-grid product-card .card-gallery slideshow-slide,
+  .product-grid product-card .card-gallery .product-media-container,
+  .product-grid product-card .card-gallery .product-media {
+    height: 100% !important;
+    min-height: 100% !important;
+    aspect-ratio: unset !important;
+  }
+
+  .product-grid product-card .card-gallery .product-media__image,
+  .product-grid product-card .card-gallery img {
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  /* Theme switches to contain in this range — keep cover so crop fills the square */
+  .product-grid .card-gallery .product-media-container.media-fit {
+    --product-media-fit: cover !important;
+  }
+}
+
+@media screen and (max-width: 489px) {
+  .product-grid product-card .card-gallery {
+    min-height: 340px !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NOTE: 3-column grid is already handled correctly by Horizon's
+   own per-section rule:
+     .product-grid--{{section.id}}:is(.product-grid--grid) {
+       --product-grid-columns-desktop: repeat(3, 1fr) !important;
+     }
+   No override needed here.
+═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════
+   LIMIT SECTION WIDTH TO 1200px, CENTERED
+   (constrains only the inner content div of THIS grid,
+   not the global --centered variable used elsewhere)
+═══════════════════════════════════════════════════════════ */
+@media screen and (min-width: 750px) {
+  .main-collection-grid > div {
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    width: 100% !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CARD WRAPPER — fixed height on desktop, auto on mobile
+═══════════════════════════════════════════════════════════ */
+.product-grid product-card .product-card__content {
+  background-color: #111111 !important;
+  border: none !important;
+  border-radius: 4px !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: hidden !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+@media screen and (min-width: 750px) {
+  .product-grid product-card .product-card__content {
+    height: 553px !important;
+  }
+}
+
+.product-grid product-card .card-gallery {
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.product-grid product-card .card-gallery slideshow-component,
+.product-grid product-card .card-gallery slideshow-container,
+.product-grid product-card .card-gallery slideshow-slides,
+.product-grid product-card .card-gallery slideshow-slide,
+.product-grid product-card .card-gallery .product-media-container,
+.product-grid product-card .card-gallery .product-media {
+  height: 100% !important;
+  overflow: hidden !important;
+}
+
+.product-grid product-card .card-gallery .product-media__image {
+  height: 100% !important;
+  object-fit: cover !important;
+  transform: scale(1);
+  transform-origin: 50% 50%;
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+}
+
+/* Disable theme card zoom so mouse-pan zoom is the only hover motion */
+@media (hover: hover) {
+  .card-hover-effect-subtle-zoom .product-grid product-card:hover .card-gallery {
+    transform: none !important;
+  }
+}
+
+.iab-card-info {
+  flex: 0 0 auto !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GALLERY — must be relative so heart sits on top
+═══════════════════════════════════════════════════════════ */
+.product-grid product-card .card-gallery {
+  position: relative !important;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   HEART / WISHLIST BUTTON — top-right of image
+═══════════════════════════════════════════════════════════ */
+.iab-wish-btn {
+  position: absolute;
+  top: 16px;
+  right: 20px;
+  z-index: 10;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  {% comment %} backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px); {% endcomment %}
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  padding: 0;
+  transition: background 0.2s, transform 0.15s;
+}
+
+{% comment %} .iab-wish-btn:hover {
+  background: rgba(0, 0, 0, 0.6);
+  transform: scale(1.06);
+} {% endcomment %}
+
+/* Empty heart — shown by default */
+.iab-wish-btn .iab-wish-empty {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+/* Filled heart — hidden by default */
+.iab-wish-btn .iab-wish-filled {
+  display: none;
+  width: 24px;
+  height: 24px;
+}
+
+/* When active: swap icons */
+.iab-wish-btn.is-active .iab-wish-empty {
+  display: none;
+}
+.iab-wish-btn.is-active .iab-wish-filled {
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CUSTOM INFO BLOCK
+═══════════════════════════════════════════════════════════ */
+.iab-card-info {
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 20px 0 16px;
+}
+
+/* Row 1 — Title + star rating */
+.iab-card-row-1 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+
+.iab-card-title {
+  font-family: var(--font);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: -1.6%;
+  line-height: 2.02rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.iab-card-title:hover {
+  color: #dddddd;
+  text-decoration: none;
+}
+
+.iab-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+  font-size: 16px;
+  color: #7D909E;
+  white-space: nowrap;
+  font-family: var(--font);
+}
+
+.iab-card-rating svg {
+  width: 24px;
+  height: 24px;
+  fill: #7D909E;
+  flex-shrink: 0;
+}
+
+.iab-card-rating-count {
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+/* Row 2 — Price */
+.iab-card-row-2 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.iab-card-price {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #AFC1CA;
+  margin: 0;
+  font-family: var(--font);
+}
+
+.iab-card-compare {
+  font-size: 1rem;
+  color: #AFC1CA;
+  text-decoration: line-through;
+  margin: 0;
+  font-family: var(--font);
+}
+
+/* Shop Now button */
+.iab-card-btn {
+  display: block;
+  width: 100%;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #AFC1CA;
+  background: transparent;
+  border: 1px solid #AFC1CA;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  box-sizing: border-box;
+  font-family: var(--font);
+  letter-spacing: -1.6%;
+  line-height: 1.5rem;
+}
+
+.iab-card-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.6);
+  text-decoration: none;
+}
+
+@media (max-width:768px){
+.iab-card-title {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+
+.iab-card-rating {
+  font-size: 12px;
+}
+
+.iab-card-rating svg {
+  width: 14px;
+  height: 14px;
+  fill: #7D909E;
+  flex-shrink: 0;
+}
+
+.iab-card-price {
+  font-size: 16px;
+  font-weight: 500;
+  color: #AFC1CA;
+  margin: 0;
+  font-family: var(--font);
+}
+
+.iab-card-compare {
+  font-size: 12px;
+  color: #AFC1CA;
+  text-decoration: line-through;
+  margin: 0;
+  font-family: var(--font);
+}
+
+/* Shop Now button */
+.iab-card-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #AFC1CA;
+  background: transparent;
+  border: 1px solid #AFC1CA;
+  border-radius: 2px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+  box-sizing: border-box;
+  font-family: var(--font);
+  line-height: 1;
+}
+
+.iab-card-btn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.6);
+  text-decoration: none;
+}
+
+}
+</style>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════════════════
+     WISHLIST — same localStorage key & event as your
+     more-products section (shopify_wishlist)
+  ══════════════════════════════════════════════════════ */
+  var WISH_KEY = 'shopify_wishlist';
+
+  function getWishlist() {
+    try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; }
+  }
+
+  function saveWishlist(list) {
+    try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch (e) {}
+    var ev = new CustomEvent('wishlist:updated', { detail: { wishlist: list } });
+    document.dispatchEvent(ev);
+    window.dispatchEvent(ev);
+  }
+
+  function isWishlisted(id) {
+    return getWishlist().some(function (item) { return item.id === id; });
+  }
+
+  function toggleWishlist(btn) {
+    var id    = parseInt(btn.dataset.productId, 10);
+    var title = btn.dataset.productTitle || '';
+    var image = btn.dataset.productImage || '';
+    var price = parseFloat(btn.dataset.productPrice) || 0;
+    var url   = btn.dataset.productUrl || '';
+
+    var list = getWishlist();
+
+    if (isWishlisted(id)) {
+      list = list.filter(function (item) { return item.id !== id; });
+      saveWishlist(list);
+      btn.classList.remove('is-active');
+      btn.setAttribute('aria-label', 'Add ' + title + ' to wishlist');
+      if (window.CustomMenu && typeof window.CustomMenu.removeFromWishlist === 'function') {
+        window.CustomMenu.removeFromWishlist(id);
+      }
+    } else {
+      list.push({ id: id, title: title, image: image, price: Math.round(price), url: url });
+      saveWishlist(list);
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-label', 'Remove ' + title + ' from wishlist');
+      if (window.CustomMenu && typeof window.CustomMenu.addToWishlist === 'function') {
+        window.CustomMenu.addToWishlist({ id: id, title: title, image: image, price: Math.round(price), url: url });
+      }
+    }
+  }
+
+  function syncWishlistButtons() {
+    document.querySelectorAll('.iab-wish-btn').forEach(function (btn) {
+      var id = parseInt(btn.dataset.productId, 10);
+      if (isWishlisted(id)) {
+        btn.classList.add('is-active');
+        btn.setAttribute('aria-label', 'Remove ' + (btn.dataset.productTitle || '') + ' from wishlist');
+      } else {
+        btn.classList.remove('is-active');
+        btn.setAttribute('aria-label', 'Add ' + (btn.dataset.productTitle || '') + ' to wishlist');
+      }
+    });
+  }
+
+  /* Click delegation — works for dynamically loaded cards too */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.iab-wish-btn');
+    if (btn) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleWishlist(btn);
+    }
+
+    var shopBtn = e.target.closest('.iab-card-btn[data-variant-id]');
+    if (shopBtn) {
+      e.preventDefault();
+      e.stopPropagation();
+      addToCart(shopBtn);
+    }
+  });
+
+  function cartAddUrl() {
+    var root = (window.Shopify && Shopify.routes && Shopify.routes.root) ? Shopify.routes.root : '/';
+    return root + 'cart/add.js';
+  }
+
+  function cartUrl() {
+    var root = (window.Shopify && Shopify.routes && Shopify.routes.root) ? Shopify.routes.root : '/';
+    return root + 'cart.js';
+  }
+
+  function findCartIcon() {
+    return document.querySelector(
+      '[data-cart-icon], [data-cart-icon-bubble], .cart-icon, #cart-icon-bubble, .header-cart, #cart-icon, a[href="/cart"]'
+    );
+  }
+
+  function showToast(message) {
+    var toast = document.querySelector('.hz-atc-toast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.className = 'hz-atc-toast';
+      document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    requestAnimationFrame(function () {
+      toast.classList.add('is-visible');
+    });
+    clearTimeout(toast._hideTimer);
+    toast._hideTimer = setTimeout(function () {
+      toast.classList.remove('is-visible');
+    }, 2200);
+  }
+
+  function flyToCart(sourceImgEl) {
+    var cartTarget = findCartIcon();
+    if (!sourceImgEl || !cartTarget) return;
+
+    var startRect = sourceImgEl.getBoundingClientRect();
+    var endRect = cartTarget.getBoundingClientRect();
+    if (startRect.width === 0 || startRect.height === 0) return;
+
+    var flyer = document.createElement('div');
+    flyer.className = 'hz-atc-fly';
+    flyer.style.left = startRect.left + 'px';
+    flyer.style.top = startRect.top + 'px';
+    flyer.style.width = startRect.width + 'px';
+    flyer.style.height = startRect.height + 'px';
+    flyer.style.opacity = '1';
+
+    var flyerImg = document.createElement('img');
+    flyerImg.src = sourceImgEl.currentSrc || sourceImgEl.src;
+    flyer.appendChild(flyerImg);
+    document.body.appendChild(flyer);
+
+    requestAnimationFrame(function () {
+      flyer.style.left = (startRect.left + (endRect.left - startRect.left) * 0.5) + 'px';
+      flyer.style.top = (startRect.top - 60) + 'px';
+      flyer.style.width = (startRect.width * 0.5) + 'px';
+      flyer.style.height = (startRect.height * 0.5) + 'px';
+    });
+
+    setTimeout(function () {
+      flyer.style.left = (endRect.left + endRect.width / 2 - 12) + 'px';
+      flyer.style.top = (endRect.top + endRect.height / 2 - 12) + 'px';
+      flyer.style.width = '24px';
+      flyer.style.height = '24px';
+      flyer.style.opacity = '0.25';
+    }, 350);
+
+    setTimeout(function () {
+      flyer.remove();
+      cartTarget.style.transition = 'transform 0.25s ease';
+      cartTarget.style.transform = 'scale(1.18)';
+      setTimeout(function () {
+        cartTarget.style.transform = 'scale(1)';
+      }, 200);
+    }, 1250);
+  }
+
+  function updateCartCount(cart) {
+    if (!cart) return;
+    document.querySelectorAll('[data-cart-count], .cart-count-bubble, .cart-count').forEach(function (el) {
+      el.textContent = cart.item_count;
+    });
+  }
+
+  function openCartDrawer() {
+    if (window.CustomMenu && typeof window.CustomMenu.openCart === 'function') {
+      window.CustomMenu.openCart();
+      return;
+    }
+    var drawer = document.querySelector('cart-drawer-component');
+    if (drawer && typeof drawer.open === 'function') {
+      drawer.open();
+    }
+  }
+
+  function addToCart(btn) {
+    if (btn.disabled || btn.dataset.iabSubmitting === 'true') return;
+
+    var variantId = btn.getAttribute('data-variant-id');
+    if (!variantId) return;
+
+    var card = btn.closest('product-card');
+    var sourceImgEl = card
+      ? (card.querySelector('.product-media__image') || card.querySelector('img'))
+      : null;
+    var originalText = btn.textContent;
+    btn.disabled = true;
+    btn.dataset.iabSubmitting = 'true';
+    btn.textContent = 'Adding...';
+
+    fetch(cartAddUrl(), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
+    })
+      .then(function (res) {
+        if (!res.ok) {
+          return res.json().then(function (err) {
+            throw new Error(err && err.description ? err.description : 'Could not add to cart');
+          });
+        }
+        return res.json();
+      })
+      .then(function () {
+        flyToCart(sourceImgEl);
+        return fetch(cartUrl());
+      })
+      .then(function (res) { return res.json(); })
+      .then(function (cart) {
+        updateCartCount(cart);
+        document.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart: cart } }));
+        document.dispatchEvent(new CustomEvent('cart:item-added', { detail: { cart: cart } }));
+        openCartDrawer();
+      })
+      .catch(function (err) {
+        showToast(err && err.message ? err.message : 'Could not add to cart');
+      })
+      .finally(function () {
+        btn.disabled = false;
+        btn.dataset.iabSubmitting = 'false';
+        btn.textContent = originalText;
+      });
+  }
+
+  /* Keep in sync when other sections update the wishlist */
+  window.addEventListener('wishlist:updated', syncWishlistButtons);
+  document.addEventListener('wishlist:updated', syncWishlistButtons);
+
+  /* ══════════════════════════════════════════════════════
+     CARD INJECTION
+  ══════════════════════════════════════════════════════ */
+  function injectCard(card) {
+    var content = card.querySelector('.product-card__content');
+    if (!content) return;
+
+    /* After filter morph, cards may keep data-iabDone but lose custom UI */
+    var needsCustomUi = !content.querySelector('.iab-card-info');
+    if (!needsCustomUi) return;
+
+    /* Strip stale custom UI leftovers before rebuild */
+    content.querySelectorAll('.iab-card-info, .iab-wish-btn').forEach(function (el) {
+      el.remove();
+    });
+    delete card.dataset.iabDone;
+    card.dataset.iabDone = '1';
+
+    /* Product URL */
+    var productUrl = '#';
+    var linkEl = card.querySelector('a.product-card__link');
+    if (linkEl) productUrl = linkEl.getAttribute('href') || '#';
+
+    /* Product ID & handle for wishlist */
+    var productId = card.dataset.productId || '';
+
+    /* Title — from visually-hidden span */
+    var title = '';
+    var hiddenSpan = linkEl ? linkEl.querySelector('.visually-hidden') : null;
+    if (hiddenSpan) title = hiddenSpan.textContent.trim();
+    if (!title) {
+      var titleP = content.querySelector('a[ref="productTitleLink"] p');
+      if (titleP) title = titleP.textContent.trim();
+    }
+
+    /* Limit title to first 2 words */
+    if (title) {
+      var titleWords = title.split(/\s+/);
+      if (titleWords.length > 2) {
+        title = titleWords.slice(0, 2).join(' ');
+      }
+    }
+
+    /* Price — read before CSS hides product-price */
+    var price = '';
+    var comparePrice = '';
+    var salePriceBlock    = content.querySelector('.price__sale');
+    var regularPriceBlock = content.querySelector('.price__regular');
+
+    if (salePriceBlock && !salePriceBlock.classList.contains('price__hidden')) {
+      var salePriceEl    = salePriceBlock.querySelector('.price-item--sale');
+      var comparePriceEl = salePriceBlock.querySelector('.price-item--regular.compare-at-price');
+      if (salePriceEl)    price        = salePriceEl.textContent.trim();
+      if (comparePriceEl) comparePrice = comparePriceEl.textContent.trim();
+    } else if (regularPriceBlock) {
+      var regularEl = regularPriceBlock.querySelector('.price');
+      if (regularEl) price = regularEl.textContent.trim();
+    }
+
+    /* Review count — try common review apps first, fallback to 297 Reviews */
+    var reviewCount = '';
+    var reviewSelectors = [
+      '.jdgm-prev-badge__text',
+      '[data-rating-count]',
+      '.stamped-badge-caption',
+      '.spr-badge-caption',
+      '.loox-rating-count',
+      '.rstr-number-of-reviews'
+    ];
+    for (var s = 0; s < reviewSelectors.length; s++) {
+      var rEl = content.querySelector(reviewSelectors[s]) || card.querySelector(reviewSelectors[s]);
+      if (rEl && rEl.textContent.trim()) {
+        reviewCount = rEl.textContent.trim();
+        break;
+      }
+    }
+    if (!reviewCount) reviewCount = '297 Reviews';
+    if (/^\d+$/.test(reviewCount)) reviewCount = reviewCount + ' Reviews';
+
+    var productImage = '';
+    var imgEl = content.querySelector('.product-media__image');
+    if (imgEl) productImage = imgEl.getAttribute('src') || '';
+
+    /* Raw price number for wishlist storage */
+    var rawPrice = price.replace(/[^0-9.]/g, '') || '0';
+
+    /* ── Heart button into gallery ─────────────────── */
+    var gallery = content.querySelector('.card-gallery');
+    if (gallery && !gallery.querySelector('.iab-wish-btn')) {
+      var heartBtn = document.createElement('button');
+      heartBtn.className            = 'iab-wish-btn';
+      heartBtn.type                 = 'button';
+      heartBtn.dataset.productId    = productId;
+      heartBtn.dataset.productTitle = title;
+      heartBtn.dataset.productImage = productImage;
+      heartBtn.dataset.productPrice = rawPrice;
+      heartBtn.dataset.productUrl   = productUrl;
+      heartBtn.setAttribute('aria-label', 'Add ' + title + ' to wishlist');
+
+      heartBtn.innerHTML =
+        '<svg class="iab-wish-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">'
+        + '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'
+        + '</svg>'
+        + '<svg class="iab-wish-filled" viewBox="0 0 24 24" fill="#ff4d6d" stroke="#ff4d6d" stroke-width="1.6">'
+        + '<path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>'
+        + '</svg>';
+
+      gallery.appendChild(heartBtn);
+    }
+
+    /* ── Info block ────────────────────────────────── */
+    var info = document.createElement('div');
+    info.className = 'iab-card-info';
+
+    var starSvg = '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">'
+      + '<path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/>'
+      + '</svg>';
+
+    var comparePriceHtml = comparePrice
+      ? '<span class="iab-card-compare">' + comparePrice + '</span>'
+      : '';
+
+    var ratingHtml = '<span class="iab-card-rating">' + starSvg + '<span class="iab-card-rating-count">' + reviewCount + '</span></span>';
+
+    var variantId = '';
+    var variantInput = content.querySelector('form[data-type="add-to-cart-form"] input[name="id"]');
+    if (variantInput) variantId = variantInput.value;
+
+    var addToCartDisabled = false;
+    var hiddenSubmit = content.querySelector('form[data-type="add-to-cart-form"] button[type="submit"][name="add"]');
+    if (hiddenSubmit && hiddenSubmit.disabled) addToCartDisabled = true;
+
+    var safeTitle = (title || 'Product').replace(/"/g, '&quot;');
+    var shopNowHtml = variantId && !addToCartDisabled
+      ? '<button type="button" class="iab-card-btn" data-variant-id="' + variantId + '" data-product-title="' + safeTitle + '">Shop Now</button>'
+      : '<span class="iab-card-btn" style="opacity:0.5;cursor:not-allowed;">Sold Out</span>';
+
+    info.innerHTML =
+      '<div class="iab-card-row-1">'
+        + '<a href="' + productUrl + '" class="iab-card-title">' + (title || 'Product') + '</a>'
+        + ratingHtml
+      + '</div>'
+      + '<div class="iab-card-row-2">'
+        + '<span class="iab-card-price">' + (price || '') + '</span>'
+        + comparePriceHtml
+      + '</div>'
+      + shopNowHtml;
+
+    content.appendChild(info);
+  }
+
+  /* ══════════════════════════════════════════════════════
+     IMAGE PAN ZOOM — scale + follow mouse left/right
+  ══════════════════════════════════════════════════════ */
+  function bindImagePanZoom(gallery) {
+    if (!gallery || gallery.dataset.iabPanZoom === '1') return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    gallery.dataset.iabPanZoom = '1';
+
+    function images() {
+      return gallery.querySelectorAll('.product-media__image');
+    }
+
+    gallery.addEventListener('mousemove', function (e) {
+      var rect = gallery.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var x = ((e.clientX - rect.left) / rect.width) * 100;
+      var y = ((e.clientY - rect.top) / rect.height) * 100;
+      images().forEach(function (img) {
+        img.style.transformOrigin = x + '% ' + y + '%';
+        img.style.transform = 'scale(1.28)';
+      });
+    });
+
+    gallery.addEventListener('mouseleave', function () {
+      images().forEach(function (img) {
+        img.style.transformOrigin = '50% 50%';
+        img.style.transform = 'scale(1)';
+      });
+    });
+  }
+
+  function processAll() {
+    document.querySelectorAll('.product-grid product-card, results-list product-card').forEach(function (card) {
+      injectCard(card);
+      var gallery = card.querySelector('.card-gallery');
+      if (gallery) bindImagePanZoom(gallery);
+    });
+    syncWishlistButtons();
+  }
+
+  function staggerFadeInCards() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    var items = document.querySelectorAll('.product-grid > .product-grid__item');
+    items.forEach(function (item, index) {
+      item.style.setProperty('--iab-stagger', String(index));
+      item.style.animation = 'none';
+      void item.offsetWidth;
+      item.style.animation = '';
+    });
+  }
+
+  var processAllTimers = [];
+  var staggerTimer = null;
+  function scheduleProcessAll(extraDelays, replayStagger) {
+    /* filter:update fires BEFORE section morph finishes — retry several times */
+    var delays = extraDelays || [0, 50, 150, 350, 700, 1200];
+    processAllTimers.forEach(clearTimeout);
+    processAllTimers = delays.map(function (ms) {
+      return setTimeout(processAll, ms);
+    });
+    if (replayStagger) {
+      clearTimeout(staggerTimer);
+      staggerTimer = setTimeout(staggerFadeInCards, 400);
+    }
+  }
+
+  function watchForGridUpdates() {
+    document.addEventListener('filter:update', function () {
+      scheduleProcessAll(null, true);
+    });
+
+    /* Also catch Clear all / back-forward URL changes */
+    window.addEventListener('popstate', function () {
+      scheduleProcessAll(null, true);
+    });
+
+    /*
+      Observe a STABLE ancestor — .product-grid itself is replaced on filter
+      morph, which disconnects any observer attached only to that node.
+    */
+    var observeRoot =
+      document.querySelector('results-list') ||
+      document.querySelector('.product-grid-container') ||
+      document.querySelector('.shopify-section') ||
+      document.body;
+
+    if (observeRoot) {
+      new MutationObserver(function (mutations) {
+        var shouldRefresh = false;
+        for (var i = 0; i < mutations.length; i++) {
+          var m = mutations[i];
+          if (m.type !== 'childList') continue;
+          if (m.addedNodes.length || m.removedNodes.length) {
+            shouldRefresh = true;
+            break;
+          }
+        }
+        if (shouldRefresh) scheduleProcessAll([0, 80, 250, 500], false);
+      }).observe(observeRoot, { childList: true, subtree: true });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () {
+      processAll();
+      watchForGridUpdates();
+    });
+  } else {
+    processAll();
+    watchForGridUpdates();
+  }
+
+})();
+</script>

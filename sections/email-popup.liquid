@@ -1,0 +1,608 @@
+{{ 'component-email-popup.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign popup_id = 'email-popup-' | append: section.id
+  assign delay_seconds = section.settings.delay_seconds | times: 1000
+  assign frequency_days = section.settings.frequency_days
+-%}
+
+{%- if section.settings.enabled -%}
+
+<style>
+  #{{ popup_id }} {
+    /* Overlay & popup surface colors */
+    --overlay-color: {{ section.settings.overlay_color.red }}, {{ section.settings.overlay_color.green }}, {{ section.settings.overlay_color.blue }};
+    --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --popup-background: {{ section.settings.background_color }};
+    --popup-text-color: {{ section.settings.text_color }};
+    --popup-heading-color: {{ section.settings.heading_color }};
+    --popup-button-background: {{ section.settings.button_background }};
+    --popup-button-text-color: {{ section.settings.button_text_color }};
+
+    /* Fonts */
+    --heading-font-family: {{ section.settings.heading_font_family }};
+    --subheading-font-family: {{ section.settings.subheading_font_family }};
+    --body-font-family: {{ section.settings.body_font_family }};
+    --input-button-font-size: {{ section.settings.input_button_font_size }}px;
+
+    /* Desktop & tablet sizing (matches design spec) */
+    --popup-width: {{ section.settings.popup_width_desktop }}px;
+    --popup-height: {{ section.settings.popup_height_desktop }}px;
+    --heading-font-size: {{ section.settings.heading_font_size_desktop }}px;
+    --heading-line-height: 0.9;
+    --heading-letter-spacing: 0.01em;
+    --subheading-font-size: {{ section.settings.subheading_font_size_desktop }}px;
+    --subheading-line-height: 1.3;
+    --subheading-letter-spacing: 0.01em;
+    --form-width: {{ section.settings.form_width_desktop }}px;
+    --form-height: {{ section.settings.form_height_desktop }}px;
+    --form-gap: {{ section.settings.form_gap_desktop }}px;
+    --close-size: {{ section.settings.close_size_desktop }}px;
+    --close-offset: {{ section.settings.close_offset_desktop }}px;
+    --close-border-width: {{ section.settings.close_border_width_desktop }}px;
+    --close-padding: {{ section.settings.close_padding_desktop }}px;
+    --close-icon-size: {{ section.settings.close_icon_size_desktop }}px;
+    --input-letter-spacing: -0.016em;
+    --button-line-height: 1.5;
+  }
+
+  @media screen and (max-width: 749px) {
+    #{{ popup_id }} {
+      --popup-width: {{ section.settings.popup_width_mobile }}px;
+      --popup-height: {{ section.settings.popup_height_mobile }}px;
+      --heading-font-size: {{ section.settings.heading_font_size_mobile }}px;
+      --subheading-font-size: {{ section.settings.subheading_font_size_mobile }}px;
+      --form-width: {{ section.settings.form_width_mobile }}px;
+      --form-height: {{ section.settings.form_height_mobile }}px;
+      --form-gap: {{ section.settings.form_gap_mobile }}px;
+      --close-size: {{ section.settings.close_size_mobile }}px;
+      --close-offset: {{ section.settings.close_offset_mobile }}px;
+      --close-border-width: {{ section.settings.close_border_width_mobile }}px;
+      --close-padding: {{ section.settings.close_padding_mobile }}px;
+      --close-icon-size: {{ section.settings.close_icon_size_mobile }}px;
+    }
+  }
+</style>
+
+<div
+  id="{{ popup_id }}"
+  class="email-popup"
+  data-email-popup
+  data-delay="{{ delay_seconds }}"
+  data-frequency="{{ frequency_days }}"
+  data-cookie-name="email_popup_closed_{{ section.id }}"
+  aria-hidden="true"
+>
+  <div class="email-popup__overlay" data-email-popup-overlay></div>
+
+  <div
+    class="email-popup__container"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="{{ popup_id }}-heading"
+  >
+    {%- if section.settings.image != blank -%}
+      <div class="email-popup__image-wrapper email-popup__image-wrapper--{{ section.settings.image_position }}">
+        {{
+          section.settings.image
+          | image_url: width: 1500
+          | image_tag:
+            loading: 'lazy',
+            sizes: '(min-width: 750px) 500px, 100vw',
+            widths: '375, 550, 750, 1000, 1500',
+            class: 'email-popup__image'
+        }}
+      </div>
+    {%- endif -%}
+
+    <button
+      type="button"
+      class="email-popup__close"
+      data-email-popup-close
+      aria-label="{{ 'accessibility.close' | t | default: 'Close' }}"
+    >
+      {{ 'icon-close.svg' | inline_asset_content }}
+    </button>
+
+    <div class="email-popup__content">
+      <div class="email-popup__content_wrapper">
+        {%- if section.settings.heading_line_1 != blank or section.settings.heading_line_2 != blank -%}
+          <h2 id="{{ popup_id }}-heading" class="email-popup__heading-group" style="margin: 0;">
+            {%- if section.settings.heading_line_1 != blank -%}
+              <div class="email-popup__heading">{{ section.settings.heading_line_1 }}</div>
+            {%- endif -%}
+            {%- if section.settings.heading_line_2 != blank -%}
+              <div class="email-popup__heading">{{ section.settings.heading_line_2 }}</div>
+            {%- endif -%}
+          </h2>
+        {%- endif -%}
+
+        {%- if section.settings.subheading != blank -%}
+          <div class="email-popup__subheading">
+            {{ section.settings.subheading }}
+          </div>
+        {%- endif -%}
+
+        {%- form 'customer', id: popup_id, class: 'email-popup__form' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+
+          {%- if form.posted_successfully? -%}
+            <p class="email-popup__success">
+              {{ section.settings.success_message | default: "Thanks for subscribing!" }}
+            </p>
+          {%- else -%}
+            <div class="email-popup__field-group">
+              <label for="{{ popup_id }}-email" class="visually-hidden">
+                {{ section.settings.email_placeholder }}
+              </label>
+              <input
+                id="{{ popup_id }}-email"
+                type="email"
+                name="contact[email]"
+                class="email-popup__input"
+                placeholder="{{ section.settings.email_placeholder }}"
+                autocomplete="email"
+                required
+              >
+              {%- if form.errors -%}
+                <p class="email-popup__error">
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}
+                </p>
+              {%- endif -%}
+            </div>
+
+            <button type="submit" class="email-popup__submit">
+              {{ section.settings.button_label | default: "Subscribe" }}
+            </button>
+          {%- endif -%}
+        {%- endform -%}
+
+        {%- if section.settings.disclaimer != blank -%}
+          <p class="email-popup__disclaimer">{{ section.settings.disclaimer }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'email-popup.js' | asset_url }}" defer="defer"></script>
+
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Email popup",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable popup",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Popup image"
+    },
+    {
+      "type": "select",
+      "id": "image_position",
+      "label": "Image position",
+      "options": [
+        { "value": "background", "label": "Full background" },
+        { "value": "top", "label": "Top of popup" }
+      ],
+      "default": "background"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Heading — line 1",
+      "default": "Get"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Heading — line 2",
+      "default": "10% off"
+    },
+    {
+      "type": "richtext",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "<p>Sign up with IM BITCH and be the first to know about our special offers, new drops, and all things on time.</p>"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email field placeholder",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for subscribing!"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer text"
+    },
+    {
+      "type": "header",
+      "content": "Fonts"
+    },
+    {
+      "type": "text",
+      "id": "heading_font_family",
+      "label": "Heading font family",
+      "info": "Must already be loaded in your theme (e.g. via a custom @font-face). Use the exact CSS font-family name.",
+      "default": "Degular Display, sans-serif"
+    },
+    {
+      "type": "text",
+      "id": "subheading_font_family",
+      "label": "Subheading font family",
+      "default": "Degular Display, sans-serif"
+    },
+    {
+      "type": "text",
+      "id": "body_font_family",
+      "label": "Email field, button & fine print font family",
+      "info": "Applies to the email input, subscribe button, disclaimer, and success/error messages.",
+      "default": "Gilroy, sans-serif"
+    },
+    {
+      "type": "range",
+      "id": "input_button_font_size",
+      "label": "Email field & button font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Desktop & tablet sizing"
+    },
+    {
+      "type": "range",
+      "id": "popup_width_desktop",
+      "label": "Popup width",
+      "min": 453,
+      "max": 553,
+      "step": 1,
+      "unit": "px",
+      "default": 503
+    },
+    {
+      "type": "range",
+      "id": "popup_height_desktop",
+      "label": "Popup height",
+      "min": 510,
+      "max": 610,
+      "step": 1,
+      "unit": "px",
+      "default": 560
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_desktop",
+      "label": "Heading font size",
+      "min": 60,
+      "max": 110,
+      "step": 0.5,
+      "unit": "px",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_desktop",
+      "label": "Subheading font size",
+      "min": 14,
+      "max": 32,
+      "step": 1,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "form_width_desktop",
+      "label": "Email + button block width",
+      "min": 368,
+      "max": 468,
+      "step": 1,
+      "unit": "px",
+      "default": 418
+    },
+    {
+      "type": "range",
+      "id": "form_height_desktop",
+      "label": "Email + button block height",
+      "min": 80,
+      "max": 160,
+      "step": 1,
+      "unit": "px",
+      "default": 116
+    },
+    {
+      "type": "range",
+      "id": "form_gap_desktop",
+      "label": "Gap between email field and button",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "close_size_desktop",
+      "label": "Close button size",
+      "min": 30,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "range",
+      "id": "close_offset_desktop",
+      "label": "Close button offset from top/right edge",
+      "min": 0,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "close_border_width_desktop",
+      "label": "Close button border width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "close_padding_desktop",
+      "label": "Close button padding",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "close_icon_size_desktop",
+      "label": "Close icon size",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "header",
+      "content": "Mobile sizing"
+    },
+    {
+      "type": "range",
+      "id": "popup_width_mobile",
+      "label": "Popup width",
+      "min": 300,
+      "max": 400,
+      "step": 1,
+      "unit": "px",
+      "default": 350
+    },
+    {
+      "type": "range",
+      "id": "popup_height_mobile",
+      "label": "Popup height",
+      "min": 340,
+      "max": 440,
+      "step": 1,
+      "unit": "px",
+      "default": 390
+    },
+    {
+      "type": "range",
+      "id": "heading_font_size_mobile",
+      "label": "Heading font size",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "subheading_font_size_mobile",
+      "label": "Subheading font size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "form_width_mobile",
+      "label": "Email + button block width",
+      "min": 240,
+      "max": 340,
+      "step": 1,
+      "unit": "px",
+      "default": 290
+    },
+    {
+      "type": "range",
+      "id": "form_height_mobile",
+      "label": "Email + button block height",
+      "min": 80,
+      "max": 140,
+      "step": 1,
+      "unit": "px",
+      "default": 104
+    },
+    {
+      "type": "range",
+      "id": "form_gap_mobile",
+      "label": "Gap between email field and button",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "close_size_mobile",
+      "label": "Close button size",
+      "min": 20,
+      "max": 45,
+      "step": 1,
+      "unit": "px",
+      "default": 31
+    },
+    {
+      "type": "range",
+      "id": "close_offset_mobile",
+      "label": "Close button offset from top/right edge",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "close_border_width_mobile",
+      "label": "Close button border width",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0.7
+    },
+    {
+      "type": "range",
+      "id": "close_padding_mobile",
+      "label": "Close button padding",
+      "min": 0,
+      "max": 10,
+      "step": 0.1,
+      "unit": "px",
+      "default": 7
+    },
+    {
+      "type": "range",
+      "id": "close_icon_size_mobile",
+      "label": "Close icon size",
+      "min": 10,
+      "max": 25,
+      "step": 0.5,
+      "unit": "px",
+      "default": 16.5
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "range",
+      "id": "delay_seconds",
+      "label": "Delay before showing (seconds)",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "frequency_days",
+      "label": "Don't show again for (days)",
+      "min": 0,
+      "max": 90,
+      "step": 1,
+      "default": 7
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay opacity",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 50
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Popup background",
+      "default": "#1f2f3d"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Button background",
+      "default": "#1f2f3d"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Email popup"
+    }
+  ]
+}
+{% endschema %}

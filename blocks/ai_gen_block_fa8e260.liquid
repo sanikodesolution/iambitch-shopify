@@ -1,0 +1,45 @@
+{% doc %}
+  @prompt
+    Add Gilroy font to submenu/dropdown navigation items. The main menu already uses Gilroy font but the submenu dropdown items do not. Find the correct CSS selectors for the submenu/dropdown items in the theme and add font-family: 'Gilroy', sans-serif to them. Make sure Gilroy font is properly loaded if not already. Only target submenu/dropdown items, not the entire site typography.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Gilroy:wght@400;500;600;700&display=swap');
+
+  .ai-submenu-font-override-{{ ai_gen_id }} header-drawer nav-menu .nav-menu__submenu-item,
+  .ai-submenu-font-override-{{ ai_gen_id }} header-drawer nav-menu .nav-menu__submenu-link,
+  .ai-submenu-font-override-{{ ai_gen_id }} header-drawer .nav-menu__submenu .nav-menu__link,
+  .ai-submenu-font-override-{{ ai_gen_id }} .header__menu .nav-menu__submenu-item,
+  .ai-submenu-font-override-{{ ai_gen_id }} .header__menu .nav-menu__submenu-link,
+  .ai-submenu-font-override-{{ ai_gen_id }} .header__menu .nav-menu__submenu .nav-menu__link,
+  .ai-submenu-font-override-{{ ai_gen_id }} .nav-menu__submenu a,
+  .ai-submenu-font-override-{{ ai_gen_id }} .nav-menu__submenu span,
+  .ai-submenu-font-override-{{ ai_gen_id }} .nav-menu__submenu-list a,
+  .ai-submenu-font-override-{{ ai_gen_id }} .nav-menu__submenu-list span,
+  .ai-submenu-font-override-{{ ai_gen_id }} .mega-menu a,
+  .ai-submenu-font-override-{{ ai_gen_id }} .mega-menu span,
+  .ai-submenu-font-override-{{ ai_gen_id }} details[open] > .nav-menu__submenu a,
+  .ai-submenu-font-override-{{ ai_gen_id }} details[open] > .nav-menu__submenu span {
+    font-family: 'Gilroy', sans-serif !important;
+  }
+{% endstyle %}
+
+<div class="ai-submenu-font-override-{{ ai_gen_id }}" {{ block.shopify_attributes }}></div>
+
+{% schema %}
+{
+  "name": "Submenu Gilroy font",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "This block applies Gilroy font to all submenu/dropdown navigation items. Add this block to your theme header section."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Submenu Gilroy font"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,966 @@
+{% comment %}
+  ============================================================
+  PRODUCT SLIDER TABS — "I AM BITCH" Style
+  File: sections/product-slider-tabs.liquid
+  Tabs: New Arrivals / Best Sellers (or any 2 collections)
+  Draggable slider, nav arrows, "Show All" button
+  ============================================================
+{% endcomment %}
+
+{% style %}
+  :root {
+    --font: 'glory', sans-serif;
+  }
+
+  .pst-section.color-{{ section.settings.color_scheme }} {
+    background: #000;
+    padding: 80px 0;
+    overflow: hidden;
+  }
+
+  .pst-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+  /* Slider bleeds to full viewport width, ignoring container padding */
+  .pst-slider-wrap {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    margin-left: -50vw;
+  }
+
+  /* .pst-slider-wrap .pst-track {
+    padding-left: max(20px, calc((100vw - 1200px) / 2 + 20px));
+    padding-right: 20px;
+  } */
+
+  /* ---- Header ---- */
+  .pst-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .pst-heading {
+    font-size: 64px;
+    font-weight: 400;
+    color: #fff;
+    margin: 0 0 24px;
+    letter-spacing: 0.01em;
+    font-family: var(--font);
+  }
+
+  /* ---- Tabs ---- */
+  .pst-tabs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    /* border-bottom: 1px solid rgba(255,255,255,0.15); */
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .pst-tab {
+    background: none;
+    border: none;
+    padding: 0 0 16px;
+    font-size: 24px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.45);
+    cursor: pointer;
+    font-family: var(--font);
+    position: relative;
+    transition: color 0.25s ease;
+  }
+
+  .pst-tab:hover {
+    color: rgba(255,255,255,0.75);
+  }
+
+  .pst-tab.is-active {
+    color: #fff;
+  }
+
+  .pst-tab.is-active::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: #fff;
+  }
+  .one-line{
+    display:flex;
+  }
+  /* Filters icon — right aligned, desktop only */
+  .pst-filters-btn {
+    position: absolute;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    font-family: var(--font);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .pst-filters-btn:hover {
+    color: #fff;
+  }
+
+  .pst-filters-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+  .button-show-all{
+        max-width:200px;
+        margin:0 auto;
+  }
+  /* ---- Slider viewport ---- */
+  .pst-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    cursor: grab;
+    padding-bottom: 4px;
+    scroll-snap-type: x proximate;
+  }
+
+  .pst-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pst-track.is-dragging {
+    cursor: grabbing;
+    scroll-behavior: auto;
+  }
+
+  /* ---- Card — matches main collection card style exactly ---- */
+  .pst-card {
+    flex: 0 0 calc((100% - 64px) / 3.4);
+    min-width: 0;
+    background-color: #111111;
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+  }
+
+  @media screen and (min-width: 750px) {
+    .pst-card {
+      height: 553px;
+    }
+    .pst-card-media {
+      flex: 1 1 0%;
+      min-height: 0;
+      max-height: 100%;
+      aspect-ratio: unset;
+      overflow: hidden;
+    }
+    .pst-card-info {
+      flex: 0 0 auto;
+    }
+  }
+
+  .pst-card-media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: #1a1a1a;
+    flex-shrink: 0;
+  }
+
+  .pst-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .pst-card-media a {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Wishlist heart — identical to main collection card */
+  .pst-wish-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    z-index: 2;
+    padding: 0;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .pst-wish-btn:hover {
+    background: rgba(0, 0, 0, 0.6);
+    transform: scale(1.06);
+  }
+
+  .pst-wish-btn svg {
+    width: 17px;
+    height: 17px;
+  }
+
+  .pst-wish-btn .pst-wish-filled {
+    display: none;
+  }
+
+  .pst-wish-btn.is-active .pst-wish-empty {
+    display: none;
+  }
+
+  .pst-wish-btn.is-active .pst-wish-filled {
+    display: block;
+  }
+
+  /* ---- Card info — same as main collection card ---- */
+  .pst-card-info {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 14px 16px;
+    background-color: #111111;
+    flex-shrink: 0;
+  }
+
+  .pst-card-row-1 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+
+  .pst-card-title {
+    font-size: 24px;
+    font-weight: 400;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 0;
+    line-height: 1.4;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    min-width: 0;
+    font-family:var(--font);
+  }
+
+  .pst-card-title:hover {
+    color: #dddddd;
+  }
+
+  .pst-card-rating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-shrink: 0;
+    font-size: 16px;
+    color: #7D909E;
+    white-space: nowrap;
+  }
+
+  .pst-card-rating svg {
+    width: 24px;
+    height: 24px;
+    fill: #7D909E;
+    flex-shrink: 0;
+  }
+
+  .pst-card-row-2 {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .pst-card-price {
+    font-size: 24px;
+    font-weight: 500;
+    color: #AFC1CA;
+    font-family:var(--font);
+    margin: 0;
+  }
+
+  .pst-card-compare {
+    font-size: 16px;
+    color: #7D909E;
+    text-decoration: line-through;
+    margin: 0;
+    font-family:var(--font);
+  }
+
+  .pst-card-btn {
+    display: block;
+    width: 100%;
+    padding: 18px 0;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #AFC1CA;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 2px;
+    cursor: pointer;
+    font-family:var(--font);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+    box-sizing: border-box;
+    line-height: 1;
+  }
+
+  .pst-card-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  /* ---- Nav arrows — bottom right, desktop ---- */
+  .pst-nav-arrows {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .pst-nav-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.35);
+    background: transparent;
+    font-family:var(--font);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, border-color 0.2s, opacity 0.2s;
+  }
+
+  .pst-nav-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.6);
+  }
+
+  .pst-nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .pst-nav-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  /* ---- Mobile dots ---- */
+  .pst-dots {
+    display: none;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+
+  .pst-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: background 0.2s, width 0.2s;
+  }
+
+  .pst-dot.is-active {
+    background: #fff;
+    width: 18px;
+    border-radius: 3px;
+  }
+
+  /* ---- Show All button ---- */
+  .pst-show-all-wrap {
+    margin-top: 24px;
+  }
+
+  .pst-show-all-btn {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: #111;
+    background: #AFC1CA;
+    border: none;
+    border-radius: 2px;
+    text-decoration: none;
+    cursor: pointer;
+    font-family: var(--font);
+    transition: background 0.2s;
+  }
+
+  .pst-show-all-btn:hover {
+    background: #fff;
+  }
+
+  .pst-empty {
+    text-align: center;
+    color: rgba(255,255,255,0.45);
+    font-size: 14px;
+    padding: 40px 0;
+    font-family: var(--font);
+  }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media screen and (min-width: 750px) and (max-width: 989px) {
+    .pst-card {
+      flex: 0 0 calc((100% - 16px) / 2);
+    }
+    .pst-heading { font-size: 48px; }
+  }
+
+  @media screen and (max-width: 749px) {
+    .pst-section.color-{{ section.settings.color_scheme }} {
+      padding: 56px 0;
+    }
+    .pst-container { padding: 0 20px; }
+    .pst-heading { font-size: 36px; margin-bottom: 20px; }
+    .pst-tabs { gap: 28px; margin-bottom: 24px; }
+    .pst-tab { font-size: 20px; padding-bottom: 12px; }
+    .pst-filters-btn { display: none; }
+
+    .pst-card {
+      flex: 0 0 calc(100% - 60px);
+    }
+
+    .pst-nav-arrows { display: none; }
+    .pst-dots { display: flex; }
+  }
+{% endstyle %}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<section class="pst-section color-{{ section.settings.color_scheme }}">
+  <div class="pst-container">
+
+    <div class="pst-header">
+      {% if section.settings.heading != blank %}
+        <h2 class="pst-heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <div class="pst-tabs" data-testid="pst-tabs">
+      <button type="button" class="pst-tab is-active" data-tab-index="0">
+        {{ section.settings.tab_1_label | default: 'New Arrivals' }}
+      </button>
+      <button type="button" class="pst-tab" data-tab-index="1">
+        {{ section.settings.tab_2_label | default: 'Best Sellers' }}
+      </button>
+
+      <button type="button" class="pst-filters-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6h16M7 12h10M10 18h4" stroke-linecap="round"/>
+        </svg>
+        {{ section.settings.filters_label | default: 'Filters' }}
+      </button>
+    </div>
+
+    {% assign collection_1 = collections[section.settings.collection_1] %}
+    {% assign collection_2 = collections[section.settings.collection_2] %}
+
+    {% for i in (0..1) %}
+      {% assign tab_collection = collection_1 %}
+      {% if i == 1 %}
+        {% assign tab_collection = collection_2 %}
+      {% endif %}
+
+      <div class="pst-panel" data-panel-index="{{ i }}" {% unless i == 0 %}hidden{% endunless %}>
+        {% if tab_collection != blank and tab_collection.products.size > 0 %}
+          <div class="pst-slider-wrap">
+            <div class="pst-track" data-track-index="{{ i }}">
+              {% for product in tab_collection.products limit: section.settings.products_to_show %}
+                {% assign pst_compare = product.compare_at_price %}
+                {% assign pst_price = product.price %}
+
+                <div class="pst-card">
+                  <div class="pst-card-media">
+                    <a href="{{ product.url }}" aria-label="{{ product.title }}">
+                      {% if product.featured_image %}
+                        <img
+                          src="{{ product.featured_image | img_url: '600x750', crop: 'center' }}"
+                          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                          loading="lazy"
+                          width="600" height="750">
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'pst-placeholder' }}
+                      {% endif %}
+                    </a>
+
+                    <button
+                      class="pst-wish-btn"
+                      type="button"
+                      data-product-id="{{ product.id }}"
+                      data-product-title="{{ product.title | json }}"
+                      data-product-image="{{ product.featured_image | img_url: '300x300', crop: 'center' | json }}"
+                      data-product-price="{{ product.price | money_without_currency | remove: ',' | json }}"
+                      aria-label="Add {{ product.title | escape }} to wishlist">
+                      <svg class="pst-wish-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                      </svg>
+                      <svg class="pst-wish-filled" viewBox="0 0 24 24" fill="#ff4d6d" stroke="#ff4d6d" stroke-width="1.6">
+                        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="pst-card-info">
+                    <div class="pst-card-row-1">
+                      <a href="{{ product.url }}" class="pst-card-title">{{ product.title }}</a>
+                      {% if section.settings.show_rating %}
+                        <span class="pst-card-rating">
+                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                          {{ section.settings.rating_count | default: 297 }} Reviews
+                        </span>
+                      {% endif %}
+                    </div>
+
+                    <div class="pst-card-row-2">
+                      <span class="pst-card-price">{{ pst_price | money }}</span>
+                      {% if pst_compare > pst_price %}
+                        <span class="pst-card-compare">{{ pst_compare | money }}</span>
+                      {% endif %}
+                    </div>
+
+                    {% if product.available %}
+                      <a href="{{ product.url }}" class="pst-card-btn">{{ section.settings.button_label | default: 'Shop Now' }}</a>
+                    {% else %}
+                      <span class="pst-card-btn" style="opacity:0.5;cursor:not-allowed;">{{ section.settings.sold_out_label | default: 'Sold Out' }}</span>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="one-line">
+
+             <div class="button-show-all">
+          {% if section.settings.show_all_url != blank %}
+            <div class="pst-show-all-wrap">
+              <a href="{{ section.settings.show_all_url }}" class="pst-show-all-btn">
+                {{ section.settings.show_all_label | default: 'Show All' }}
+              </a>
+            </div>
+          {% elsif tab_collection.url %}
+            <div class="pst-show-all-wrap">
+              <a href="{{ tab_collection.url }}" class="pst-show-all-btn">
+                {{ section.settings.show_all_label | default: 'Show All' }}
+              </a>
+            </div>
+          {% endif %}
+            </div>
+
+
+            <div>
+            <div class="pst-nav-arrows" data-nav-index="{{ i }}">
+            <button type="button" class="pst-nav-btn pst-nav-prev" aria-label="Previous products">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <button type="button" class="pst-nav-btn pst-nav-next" aria-label="Next products">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 18l6-6-6-6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+            </div>
+       
+          </div>
+
+
+          <div class="pst-dots" data-dots-index="{{ i }}"></div>
+
+
+        {% else %}
+          <p class="pst-empty">Select a collection with products for this tab.</p>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════════════════
+     TAB SWITCHING
+  ══════════════════════════════════════════════════════ */
+  function initTabs(section) {
+    var tabs = section.querySelectorAll('.pst-tab');
+    var panels = section.querySelectorAll('.pst-panel');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var index = tab.dataset.tabIndex;
+
+        tabs.forEach(function (t) { t.classList.remove('is-active'); });
+        tab.classList.add('is-active');
+
+        panels.forEach(function (panel) {
+          if (panel.dataset.panelIndex === index) {
+            panel.hidden = false;
+          } else {
+            panel.hidden = true;
+          }
+        });
+      });
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════
+     DRAGGABLE SLIDER + ARROWS + DOTS
+  ══════════════════════════════════════════════════════ */
+  function initSlider(panel) {
+    var track = panel.querySelector('.pst-track');
+    if (!track) return;
+
+    var navWrap = panel.querySelector('.pst-nav-arrows');
+    var prevBtn = navWrap ? navWrap.querySelector('.pst-nav-prev') : null;
+    var nextBtn = navWrap ? navWrap.querySelector('.pst-nav-next') : null;
+    var dotsWrap = panel.querySelector('.pst-dots');
+    var cards = Array.from(track.querySelectorAll('.pst-card'));
+
+    /* Build dots */
+    if (dotsWrap && cards.length > 1) {
+      cards.forEach(function (card, i) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.className = 'pst-dot' + (i === 0 ? ' is-active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', function () {
+          var cardLeft = card.offsetLeft;
+          track.scrollTo({ left: cardLeft, behavior: 'smooth' });
+        });
+        dotsWrap.appendChild(dot);
+      });
+    }
+
+    var dots = dotsWrap ? Array.from(dotsWrap.querySelectorAll('.pst-dot')) : [];
+
+    function updateDots() {
+      if (!dots.length) return;
+      var scrollLeft = track.scrollLeft;
+      var closestIndex = 0;
+      var closestDist = Infinity;
+      cards.forEach(function (card, i) {
+        var dist = Math.abs(card.offsetLeft - scrollLeft);
+        if (dist < closestDist) {
+          closestDist = dist;
+          closestIndex = i;
+        }
+      });
+      dots.forEach(function (d, i) {
+        d.classList.toggle('is-active', i === closestIndex);
+      });
+    }
+
+    function updateArrows() {
+      if (!prevBtn || !nextBtn) return;
+      var maxScroll = track.scrollWidth - track.clientWidth - 2;
+      prevBtn.disabled = track.scrollLeft <= 0;
+      nextBtn.disabled = track.scrollLeft >= maxScroll;
+    }
+
+    function scrollByCard(direction) {
+      var cardWidth = cards[0] ? cards[0].getBoundingClientRect().width : 300;
+      var gap = 16;
+      track.scrollBy({ left: direction * (cardWidth + gap), behavior: 'smooth' });
+    }
+
+    if (prevBtn) prevBtn.addEventListener('click', function () { scrollByCard(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { scrollByCard(1); });
+
+    track.addEventListener('scroll', function () {
+      updateDots();
+      updateArrows();
+    });
+
+    updateArrows();
+    updateDots();
+
+    /* ── Drag to scroll (mouse) ── */
+    var isDown = false;
+    var startX = 0;
+    var scrollStart = 0;
+
+    track.addEventListener('mousedown', function (e) {
+      isDown = true;
+      track.classList.add('is-dragging');
+      startX = e.pageX;
+      scrollStart = track.scrollLeft;
+    });
+
+    window.addEventListener('mousemove', function (e) {
+      if (!isDown) return;
+      e.preventDefault();
+      var dx = e.pageX - startX;
+      track.scrollLeft = scrollStart - dx;
+    });
+
+    window.addEventListener('mouseup', function () {
+      if (isDown) {
+        isDown = false;
+        track.classList.remove('is-dragging');
+        updateDots();
+        updateArrows();
+      }
+    });
+
+    /* Prevent click-through after a real drag */
+    track.addEventListener('click', function (e) {
+      if (Math.abs(track.scrollLeft - scrollStart) > 5 && isDown === false) {
+        // no-op; native touch scroll handles mobile
+      }
+    });
+
+    window.addEventListener('resize', function () {
+      updateArrows();
+      updateDots();
+    });
+  }
+
+  /* ══════════════════════════════════════════════════════
+     WISHLIST — same system as main collection + more-products
+  ══════════════════════════════════════════════════════ */
+  var WISH_KEY = 'shopify_wishlist';
+
+  function getList() {
+    try { return JSON.parse(localStorage.getItem(WISH_KEY) || '[]'); } catch (e) { return []; }
+  }
+
+  function saveList(list) {
+    try { localStorage.setItem(WISH_KEY, JSON.stringify(list)); } catch (e) {}
+    var ev = new CustomEvent('wishlist:updated', { detail: { wishlist: list } });
+    document.dispatchEvent(ev);
+    window.dispatchEvent(ev);
+  }
+
+  function isInList(id) {
+    return getList().some(function (item) { return item.id === id; });
+  }
+
+  function toggleWish(btn) {
+    var id = parseInt(btn.getAttribute('data-product-id'), 10);
+    var title = btn.getAttribute('data-product-title');
+    var image = btn.getAttribute('data-product-image');
+    var price = parseFloat(btn.getAttribute('data-product-price')) || 0;
+
+    var list = getList();
+
+    if (isInList(id)) {
+      list = list.filter(function (item) { return item.id !== id; });
+      saveList(list);
+      btn.classList.remove('is-active');
+      btn.setAttribute('aria-label', 'Add ' + title + ' to wishlist');
+      if (window.CustomMenu && typeof window.CustomMenu.removeFromWishlist === 'function') {
+        window.CustomMenu.removeFromWishlist(id);
+      }
+    } else {
+      var product = {
+        id: id,
+        title: title,
+        image: image,
+        price: Math.round(price),
+        url: window.location.origin + '/products/' + id
+      };
+      list.push(product);
+      saveList(list);
+      btn.classList.add('is-active');
+      btn.setAttribute('aria-label', 'Remove ' + title + ' from wishlist');
+      if (window.CustomMenu && typeof window.CustomMenu.addToWishlist === 'function') {
+        window.CustomMenu.addToWishlist(product);
+      }
+    }
+  }
+
+  function syncWishButtons() {
+    document.querySelectorAll('.pst-wish-btn').forEach(function (btn) {
+      var id = parseInt(btn.getAttribute('data-product-id'), 10);
+      btn.classList.toggle('is-active', isInList(id));
+    });
+  }
+
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest('.pst-wish-btn');
+    if (btn) {
+      e.preventDefault();
+      toggleWish(btn);
+    }
+  });
+
+  window.addEventListener('wishlist:updated', syncWishButtons);
+  document.addEventListener('wishlist:updated', syncWishButtons);
+
+  /* ══════════════════════════════════════════════════════
+     INIT
+  ══════════════════════════════════════════════════════ */
+  document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.pst-section').forEach(function (section) {
+      initTabs(section);
+      section.querySelectorAll('.pst-panel').forEach(initSlider);
+    });
+    syncWishButtons();
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Product Slider Tabs",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Nail Polish"
+    },
+    {
+      "type": "header",
+      "content": "Tabs"
+    },
+    {
+      "type": "text",
+      "id": "tab_1_label",
+      "label": "Tab 1 label",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Tab 1 collection"
+    },
+    {
+      "type": "text",
+      "id": "tab_2_label",
+      "label": "Tab 2 label",
+      "default": "Best Sellers"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Tab 2 collection"
+    },
+    {
+      "type": "text",
+      "id": "filters_label",
+      "label": "Filters button label",
+      "default": "Filters"
+    },
+    {
+      "type": "header",
+      "content": "Products"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Number of products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "header",
+      "content": "Card content"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating / review count",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "rating_count",
+      "label": "Review count to display",
+      "default": 297
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Card button label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold Out"
+    },
+    {
+      "type": "header",
+      "content": "Show All button"
+    },
+    {
+      "type": "url",
+      "id": "show_all_url",
+      "label": "Show All link (optional — defaults to tab's collection)"
+    },
+    {
+      "type": "text",
+      "id": "show_all_label",
+      "label": "Show All button label",
+      "default": "Show All"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Slider Tabs",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}

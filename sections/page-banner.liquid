@@ -1,0 +1,137 @@
+{% comment %}
+  ============================================================
+  PAGE BANNER — "Our Products" style
+  File: sections/page-banner.liquid
+  ============================================================
+{% endcomment %}
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+
+{% style %}
+:root {
+    --font: 'glory', sans-serif;
+  }
+  .pbanner-section.color-{{ section.settings.color_scheme }} {
+    background: #000;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+  }
+
+  .pbanner-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 0px;
+    box-sizing: border-box;
+  }
+
+  .pbanner-heading {
+    font-size: {{ section.settings.heading_size }}px;
+    font-weight: 300;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: 0.01em;
+    font-family: var(--font);
+  }
+
+  .pbanner-subheading {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.55);
+    margin: 14px 0 0;
+    max-width: 480px;
+    line-height: 1.6;
+    font-family: var(--font-body-family, 'Helvetica Neue', Helvetica, Arial, sans-serif);
+    display:none;
+  }
+
+  @media screen and (max-width: 749px) {
+    .pbanner-section.color-{{ section.settings.color_scheme }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+    }
+    .pbanner-heading {
+      font-size: {{ section.settings.heading_size | times: 0.65 | round }}px;
+    }
+    .pbanner-container { padding: 0 20px; }
+  }
+{% endstyle %}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<section class="pbanner-section color-{{ section.settings.color_scheme }}">
+  <div class="pbanner-container">
+    {% if section.settings.heading != blank %}
+      <h1 class="pbanner-heading">{{ section.settings.heading }}</h1>
+    {% endif %}
+    {% if section.settings.subheading != blank %}
+      <p class="pbanner-subheading">{{ section.settings.subheading }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Page Banner",
+  "tag": "section",
+  "class": "section-wrapper",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Products"
+    },
+    {
+      "type": "range",
+      "id": "heading_size",
+      "label": "Heading size",
+      "min": 24,
+      "max": 84,
+      "step": 2,
+      "unit": "px",
+      "default": 44
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "subheading"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page Banner",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}

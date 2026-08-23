@@ -1,0 +1,757 @@
+{% comment %}
+  FAQ Section — IM BITCH
+  Section: faq-section.liquid
+{% endcomment %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;700&display=swap">
+
+{%- style -%}
+  :root {
+    --font: 'gilroy', sans-serif;
+  }
+
+  #shopify-section-{{ section.id }} {
+    background-color: rgba(3, 4, 7, 1);
+    width: 100%;
+
+    /* ---- Animation timing ---- */
+    --faq-section-duration: {{ section.settings.section_animation_duration | default: 600 }}ms;
+    --faq-section-easing: {{ section.settings.section_animation_easing | default: 'ease-out' }};
+    --faq-accordion-duration: {{ section.settings.accordion_animation_duration | default: 350 }}ms;
+    --faq-accordion-easing: {{ section.settings.accordion_animation_easing | default: 'ease' }};
+
+    /* ---- Layout / spacing (desktop) ---- */
+    --faq-max-width: {{ section.settings.max_width | default: 800 }}px;
+    --faq-section-padding-v: {{ section.settings.padding_vertical | default: 120 }}px;
+    --faq-section-padding-h: {{ section.settings.padding_horizontal | default: 120 }}px;
+    --faq-content-gap: {{ section.settings.content_gap | default: 40 }}px;
+    --faq-header-gap: {{ section.settings.header_gap | default: 12 }}px;
+    --faq-list-gap: {{ section.settings.list_gap | default: 12 }}px;
+    --faq-item-padding-v: {{ section.settings.item_padding_vertical | default: 20 }}px;
+    --faq-item-padding-h: {{ section.settings.item_padding_horizontal | default: 24 }}px;
+    --faq-answer-padding: {{ section.settings.answer_padding | default: 16 }}px;
+    --faq-border-color: {{ section.settings.item_border_color | default: 'rgba(175,193,202,1)' }};
+    --faq-answer-border-color: {{ section.settings.answer_border_color | default: 'rgba(175,193,202,0.35)' }};
+  }
+
+  .faq-section__wrapper {
+    max-width: var(--faq-max-width);
+    margin: 0 auto;
+    padding: var(--faq-section-padding-v) var(--faq-section-padding-h);
+    display: flex;
+    flex-direction: column;
+    gap: var(--faq-content-gap);
+    box-sizing: border-box;
+  }
+
+  /* ---- Whole-section entrance animation ---- */
+  .faq-anim {
+    transition: opacity var(--faq-section-duration) var(--faq-section-easing),
+                transform var(--faq-section-duration) var(--faq-section-easing);
+  }
+
+  .faq-anim--none {
+    opacity: 1;
+    transform: none;
+  }
+
+  .faq-anim--fade {
+    opacity: 0;
+  }
+  .faq-anim--fade.is-in-view {
+    opacity: 1;
+  }
+
+  .faq-anim--slide-up {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  .faq-anim--slide-up.is-in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .faq-anim--slide-down {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  .faq-anim--slide-down.is-in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .faq-anim--slide-in-left {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  .faq-anim--slide-in-left.is-in-view {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .faq-anim--slide-in-right {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  .faq-anim--slide-in-right.is-in-view {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .faq-anim--zoom-in {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  .faq-anim--zoom-in.is-in-view {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .faq-section__header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--faq-header-gap);
+    text-align: center;
+  }
+
+  .faq-section__title {
+    font-family: var(--font),sans-serif;
+    font-weight: 400;
+    font-size: 64px;
+    line-height: 72px;
+    letter-spacing: -0.016em;
+    color: #ffffff;
+    margin: 0;
+    padding: 0;
+  }
+
+  .faq-section__subtitle {
+    font-family: var(--font),sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: 0%;
+    color: rgba(175, 193, 202, 1);
+    margin: 0;
+    padding: 0;
+  }
+
+  .faq-section__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--faq-list-gap);
+  }
+
+  /* ---- Whole item is the click target ---- */
+  .faq-item {
+    border: 1px solid var(--faq-border-color);
+    padding: var(--faq-item-padding-v) var(--faq-item-padding-h);
+    cursor: pointer;
+    box-sizing: border-box;
+  }
+
+  .faq-item__trigger {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    gap: 16px;
+    pointer-events: none; /* clicks are handled by the parent .faq-item, this just stays focusable/semantic */
+  }
+
+  .faq-item__question {
+    font-family: var(--font),sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 150%;
+    letter-spacing: -0.016em;
+    color: #ffffff;
+    margin: 0;
+  }
+
+  /* ---- Icon: smooth cross-fade + rotate instead of instant swap ---- */
+  .faq-item__icon {
+    position: relative;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: rgba(175, 193, 202, 1);
+  }
+
+  .faq-item__icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: rgba(175, 193, 202, 1);
+    stroke-width: 2;
+    fill: none;
+  }
+
+  .faq-item__icon--plus,
+  .faq-item__icon--minus {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity var(--faq-accordion-duration) var(--faq-accordion-easing),
+                transform var(--faq-accordion-duration) var(--faq-accordion-easing);
+  }
+
+  .faq-item__icon--plus {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  .faq-item__icon--minus {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  .faq-item.is-open .faq-item__icon--plus {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  .faq-item.is-open .faq-item__icon--minus {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  /* ---- Answer: smooth open/close using animated grid rows ---- */
+  .faq-item__answer {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--faq-accordion-duration) var(--faq-accordion-easing);
+  }
+
+  .faq-item.is-open .faq-item__answer {
+    grid-template-rows: 1fr;
+  }
+
+  /* Border appears under the question + 16px (configurable) padding on all sides, once opened */
+.faq-item__answer-inner {
+  overflow: hidden;
+  padding: var(--faq-answer-padding);
+  margin-top: 16px;
+  border-top: 1px solid transparent;
+  transition: border-color var(--faq-accordion-duration) var(--faq-accordion-easing);
+}
+
+.faq-item.is-open .faq-item__answer-inner {
+  border-top: 1px solid var(--faq-answer-border-color);
+}
+  .faq-item__answer p {
+    font-family: var(--font),sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 150%;
+    letter-spacing: -0.016em;
+    color: rgba(175, 193, 202, 1);
+    margin: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-anim,
+    .faq-item__answer,
+    .faq-item__answer-inner,
+    .faq-item__icon--plus,
+    .faq-item__icon--minus {
+      transition: none !important;
+    }
+  }
+
+  /* ---- Mobile responsive spacing (independently configurable) ---- */
+  @media screen and (max-width: 768px) {
+    #shopify-section-{{ section.id }} {
+      --faq-section-padding-v: {{ section.settings.padding_vertical_mobile | default: 60 }}px;
+      --faq-section-padding-h: {{ section.settings.padding_horizontal_mobile | default: 24 }}px;
+      --faq-content-gap: {{ section.settings.content_gap_mobile | default: 32 }}px;
+      --faq-header-gap: {{ section.settings.header_gap_mobile | default: 10 }}px;
+      --faq-list-gap: {{ section.settings.list_gap_mobile | default: 10 }}px;
+      --faq-item-padding-v: {{ section.settings.item_padding_vertical_mobile | default: 16 }}px;
+      --faq-item-padding-h: {{ section.settings.item_padding_horizontal_mobile | default: 16 }}px;
+      --faq-answer-padding: {{ section.settings.answer_padding_mobile | default: 16 }}px;
+    }
+
+    .faq-section__wrapper {
+      max-width: 100%;
+    }
+
+    .faq-section__title {
+      font-size: 36px;
+      line-height: 44px;
+    }
+  }
+{%- endstyle -%}
+
+<section id="shopify-section-{{ section.id }}" class="faq-section">
+  <div class="faq-section__wrapper faq-anim faq-anim--{{ section.settings.section_animation_style | default: 'fade' }}" data-faq-animate="{{ section.settings.section_animation_style | default: 'fade' }}">
+
+    <div class="faq-section__header">
+      <h2 class="faq-section__title">{{ section.settings.title }}</h2>
+      {%- if section.settings.subtitle != blank -%}
+        <p class="faq-section__subtitle">{{ section.settings.subtitle }}</p>
+      {%- endif -%}
+    </div>
+
+    <div class="faq-section__list">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq_item' -%}
+          <div class="faq-item {% if forloop.first %}is-open{% endif %}" {{ block.shopify_attributes }}>
+            <button class="faq-item__trigger" type="button" tabindex="-1" aria-expanded="{% if forloop.first %}true{% else %}false{% endif %}">
+              <span class="faq-item__question">{{ block.settings.question }}</span>
+              <span class="faq-item__icon" aria-hidden="true">
+                <span class="faq-item__icon--plus">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                </span>
+                <span class="faq-item__icon--minus">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                  </svg>
+                </span>
+              </span>
+            </button>
+            <div class="faq-item__answer" role="region">
+              <div class="faq-item__answer-inner">
+                <p>{{ block.settings.answer }}</p>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  (function () {
+    var section = document.querySelector('#shopify-section-{{ section.id }}');
+    if (!section) return;
+
+    // Whole faq-item (including its padding/border area) is now the click target,
+    // not just the trigger button — clicking anywhere in the block toggles it.
+    section.querySelectorAll('.faq-item').forEach(function (item) {
+      item.setAttribute('role', 'button');
+      item.setAttribute('tabindex', '0');
+
+      var trigger = item.querySelector('.faq-item__trigger');
+
+      function toggle() {
+        var isOpen = item.classList.contains('is-open');
+
+        // Close all
+        section.querySelectorAll('.faq-item').forEach(function (el) {
+          el.classList.remove('is-open');
+          var t = el.querySelector('.faq-item__trigger');
+          if (t) t.setAttribute('aria-expanded', 'false');
+        });
+
+        // Open clicked if it was closed
+        if (!isOpen) {
+          item.classList.add('is-open');
+          if (trigger) trigger.setAttribute('aria-expanded', 'true');
+        }
+      }
+
+      item.addEventListener('click', toggle);
+      item.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          toggle();
+        }
+      });
+    });
+
+    // Whole-section entrance animation, triggered once when it scrolls into view
+    var wrapper = section.querySelector('.faq-section__wrapper');
+    if (wrapper) {
+      var animStyle = wrapper.getAttribute('data-faq-animate');
+
+      if (!animStyle || animStyle === 'none' || !('IntersectionObserver' in window)) {
+        wrapper.classList.add('is-in-view');
+      } else {
+        var observer = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-in-view');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.15 });
+
+        observer.observe(wrapper);
+      }
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Section",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subheading",
+      "default": "Stay ahead of the rest, get the new and now. Shop our newest arrivals."
+    },
+    {
+      "type": "header",
+      "content": "Layout & Spacing (Desktop)"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Section width",
+      "min": 480,
+      "max": 1200,
+      "step": 10,
+      "unit": "px",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Section padding (top/bottom)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal",
+      "label": "Section padding (left/right)",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Gap between heading and list",
+      "min": 0,
+      "max": 100,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "header_gap",
+      "label": "Gap between title and subtitle",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "list_gap",
+      "label": "Gap between FAQ items",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "item_padding_vertical",
+      "label": "FAQ item padding (top/bottom)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "item_padding_horizontal",
+      "label": "FAQ item padding (left/right)",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "answer_padding",
+      "label": "Answer padding (all sides, shown on open)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "item_border_color",
+      "label": "FAQ item border color",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "answer_border_color",
+      "label": "Answer divider border color",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "header",
+      "content": "Layout & Spacing (Mobile)"
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical_mobile",
+      "label": "Section padding (top/bottom)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "unit": "px",
+      "default": 60
+    },
+    {
+      "type": "range",
+      "id": "padding_horizontal_mobile",
+      "label": "Section padding (left/right)",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "content_gap_mobile",
+      "label": "Gap between heading and list",
+      "min": 0,
+      "max": 80,
+      "step": 2,
+      "unit": "px",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "header_gap_mobile",
+      "label": "Gap between title and subtitle",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "list_gap_mobile",
+      "label": "Gap between FAQ items",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 10
+    },
+    {
+      "type": "range",
+      "id": "item_padding_vertical_mobile",
+      "label": "FAQ item padding (top/bottom)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "item_padding_horizontal_mobile",
+      "label": "FAQ item padding (left/right)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "answer_padding_mobile",
+      "label": "Answer padding (all sides, shown on open)",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Section Animation"
+    },
+    {
+      "type": "select",
+      "id": "section_animation_style",
+      "label": "Section entrance animation",
+      "options": [
+        { "value": "none", "label": "None" },
+        { "value": "fade", "label": "Fade in" },
+        { "value": "slide-up", "label": "Slide up" },
+        { "value": "slide-down", "label": "Slide down" },
+        { "value": "slide-in-left", "label": "Slide in from left" },
+        { "value": "slide-in-right", "label": "Slide in from right" },
+        { "value": "zoom-in", "label": "Zoom in" }
+      ],
+      "default": "fade"
+    },
+    {
+      "type": "range",
+      "id": "section_animation_duration",
+      "label": "Section animation duration",
+      "min": 200,
+      "max": 1500,
+      "step": 50,
+      "unit": "ms",
+      "default": 600
+    },
+    {
+      "type": "select",
+      "id": "section_animation_easing",
+      "label": "Section animation easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-in", "label": "Ease in" },
+        { "value": "ease-out", "label": "Ease out" },
+        { "value": "ease-in-out", "label": "Ease in out" },
+        { "value": "linear", "label": "Linear" },
+        { "value": "cubic-bezier(0.34, 1.56, 0.64, 1)", "label": "Bounce" }
+      ],
+      "default": "ease-out"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Animation"
+    },
+    {
+      "type": "range",
+      "id": "accordion_animation_duration",
+      "label": "Open/close animation duration",
+      "min": 150,
+      "max": 800,
+      "step": 50,
+      "unit": "ms",
+      "default": 350
+    },
+    {
+      "type": "select",
+      "id": "accordion_animation_easing",
+      "label": "Open/close animation easing",
+      "options": [
+        { "value": "ease", "label": "Ease" },
+        { "value": "ease-in", "label": "Ease in" },
+        { "value": "ease-out", "label": "Ease out" },
+        { "value": "ease-in-out", "label": "Ease in out" },
+        { "value": "linear", "label": "Linear" }
+      ],
+      "default": "ease"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "What is IM BITCH?"
+        },
+        {
+          "type": "textarea",
+          "id": "answer",
+          "label": "Answer",
+          "default": "IM BITCH is a USA-based nail polish brand created by two sisters with a passion for beauty, confidence, and self-expression. Our products are designed for people who love bold colors, premium style, and statement-making nails."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Section",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is IM BITCH?",
+            "answer": "IM BITCH is a USA-based nail polish brand created by two sisters with a passion for beauty, confidence, and self-expression. Our products are designed for people who love bold colors, premium style, and statement-making nails."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        }
+      ]
+    }
+  ],
+  "enabled_on": {
+    "templates": ["*"]
+  }
+}
+{% endschema %}

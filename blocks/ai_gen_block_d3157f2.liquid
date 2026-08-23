@@ -1,0 +1,758 @@
+{% doc %}
+  @prompt
+    Build a Shopify product information section for a luxury nail/beauty product called "Polymer gel | Sesk OR | UV/LED" using the following design and layout. The section must be a dark, premium Shopify section with custom Liquid + CSS (no external frameworks).
+    
+    Product data to display:
+    
+    Badge: "BEST SELLER" (capsule pill, dark teal background #1A5470, text #B5D2E0)
+    Title: "Polymer gel | Sesk OR | UV/LED"
+    Star rating: 5 gold stars + "4.9" + "(163 Reviews)"
+    Price: strikethrough compare-at $64.80, sale price $32.40 (large white text)
+    Color selector: heading "Choose Color (200 available)"
+    Color tabs: All, Reds (20), Pinks (20), Nudes (20), Purples (20), Blues (20)
+    Color swatches: circular 32px swatches, selected state shows a white inner dot, include a "SHOW ALL" link
+    Quantity selector: minus / number / plus inside a bordered box
+    "Add to Cart" button: wide, uppercase, bold, background #AFC1CA, text #030407, hover #ffffff
+    Wishlist/heart icon button
+    Collapsible information blocks:
+    
+    Features — two-column list of icons + text:
+    Cure Time: 60 seconds
+    Requires 1-2 Thin Coats
+    Size: 15ML (0.5 oz)
+    Highly Pigmented Formula
+    Fast Soak-Off Removal
+    Details — paragraph description + disclaimer note about color variation
+    Design requirements:
+    
+    Background: #04060B
+    Body text: #AFC1CA
+    Headings/price: #ffffff
+    Font: Montserrat
+    Section max-width: 1232px, centered
+    Responsive: stacked on mobile, two-column on desktop (image left 49%, info right 49%)
+    CSS-only collapsible accordion with plus/cross icon animation
+    Use Shopify section settings and blocks so the merchant can edit badge, title, price, features, details, and swatches from the theme editor
+{% enddoc %}
+```liquid
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+  .ai-luxury-product-{{ ai_gen_id }} {
+    display: block;
+    background-color: {{ block.settings.background_color }};
+    color: {{ block.settings.body_text_color }};
+    font-family: 'Montserrat', sans-serif;
+    padding: 60px 20px;
+  }
+
+  .ai-luxury-product-container-{{ ai_gen_id }} {
+    max-width: {{ block.settings.max_width }}px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  @media (min-width: 768px) {
+    .ai-luxury-product-container-{{ ai_gen_id }} {
+      grid-template-columns: 49% 49%;
+      gap: 2%;
+    }
+  }
+
+  .ai-luxury-product-image-{{ ai_gen_id }} {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .ai-luxury-product-info-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .ai-luxury-badge-{{ ai_gen_id }} {
+    display: inline-block;
+    background-color: {{ block.settings.badge_bg_color }};
+    color: {{ block.settings.badge_text_color }};
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    width: fit-content;
+  }
+
+  .ai-luxury-title-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .ai-luxury-rating-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .ai-luxury-stars-{{ ai_gen_id }} {
+    display: flex;
+    gap: 2px;
+    color: #FFD700;
+  }
+
+  .ai-luxury-rating-text-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    font-weight: 600;
+  }
+
+  .ai-luxury-reviews-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    opacity: 0.7;
+  }
+
+  .ai-luxury-price-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .ai-luxury-compare-price-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    font-size: 20px;
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  .ai-luxury-sale-price-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: 36px;
+    font-weight: 700;
+  }
+
+  .ai-luxury-color-section-{{ ai_gen_id }} {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ai-luxury-color-heading-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-luxury-color-tabs-{{ ai_gen_id }} {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .ai-luxury-color-tab-{{ ai_gen_id }} {
+    background: transparent;
+    border: 1px solid {{ block.settings.body_text_color }};
+    color: {{ block.settings.body_text_color }};
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-luxury-color-tab-{{ ai_gen_id }}:hover,
+  .ai-luxury-color-tab-{{ ai_gen_id }}.active {
+    background-color: {{ block.settings.heading_color }};
+    color: {{ block.settings.background_color }};
+    border-color: {{ block.settings.heading_color }};
+  }
+
+  .ai-luxury-swatches-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .ai-luxury-swatch-{{ ai_gen_id }} {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .ai-luxury-swatch-{{ ai_gen_id }}:hover {
+    transform: scale(1.1);
+  }
+
+  .ai-luxury-swatch-{{ ai_gen_id }}.selected::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 8px;
+    height: 8px;
+    background-color: {{ block.settings.heading_color }};
+    border-radius: 50%;
+  }
+
+  .ai-luxury-show-all-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .ai-luxury-actions-{{ ai_gen_id }} {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .ai-luxury-quantity-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    border: 1px solid {{ block.settings.body_text_color }};
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .ai-luxury-qty-btn-{{ ai_gen_id }} {
+    background: transparent;
+    border: none;
+    color: {{ block.settings.body_text_color }};
+    width: 40px;
+    height: 48px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s ease;
+  }
+
+  .ai-luxury-qty-btn-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .ai-luxury-qty-input-{{ ai_gen_id }} {
+    background: transparent;
+    border: none;
+    color: {{ block.settings.heading_color }};
+    width: 50px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .ai-luxury-add-to-cart-{{ ai_gen_id }} {
+    flex: 1;
+    background-color: {{ block.settings.button_bg_color }};
+    color: {{ block.settings.button_text_color }};
+    border: none;
+    padding: 16px 32px;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  .ai-luxury-add-to-cart-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};
+  }
+
+  .ai-luxury-wishlist-{{ ai_gen_id }} {
+    background: transparent;
+    border: 1px solid {{ block.settings.body_text_color }};
+    color: {{ block.settings.body_text_color }};
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .ai-luxury-wishlist-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .ai-luxury-accordion-{{ ai_gen_id }} {
+    border-top: 1px solid rgba(175, 193, 202, 0.2);
+  }
+
+  .ai-luxury-accordion-item-{{ ai_gen_id }} {
+    border-bottom: 1px solid rgba(175, 193, 202, 0.2);
+  }
+
+  .ai-luxury-accordion-header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    cursor: pointer;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+  }
+
+  .ai-luxury-accordion-title-{{ ai_gen_id }} {
+    color: {{ block.settings.heading_color }};
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  .ai-luxury-accordion-icon-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    font-size: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-luxury-accordion-content-{{ ai_gen_id }} {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .ai-luxury-accordion-content-{{ ai_gen_id }}.open {
+    max-height: 1000px;
+    padding-bottom: 20px;
+  }
+
+  .ai-luxury-accordion-icon-{{ ai_gen_id }}.open {
+    transform: rotate(45deg);
+  }
+
+  .ai-luxury-features-grid-{{ ai_gen_id }} {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    color: {{ block.settings.body_text_color }};
+  }
+
+  .ai-luxury-feature-{{ ai_gen_id }} {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 14px;
+  }
+
+  .ai-luxury-feature-icon-{{ ai_gen_id }} {
+    margin-top: 2px;
+  }
+
+  .ai-luxury-details-{{ ai_gen_id }} {
+    color: {{ block.settings.body_text_color }};
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .ai-luxury-disclaimer-{{ ai_gen_id }} {
+    margin-top: 12px;
+    font-size: 12px;
+    opacity: 0.7;
+    font-style: italic;
+  }
+{% endstyle %}
+
+<luxury-product-{{ ai_gen_id }} class="ai-luxury-product-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-luxury-product-container-{{ ai_gen_id }}">
+    <div class="ai-luxury-product-image-wrapper-{{ ai_gen_id }}">
+      {% if block.settings.product_image %}
+        <img
+          src="{{ block.settings.product_image | image_url: width: 1000 }}"
+          alt="{{ block.settings.product_image.alt | escape }}"
+          class="ai-luxury-product-image-{{ ai_gen_id }}"
+          loading="lazy"
+          width="{{ block.settings.product_image.width }}"
+          height="{{ block.settings.product_image.height }}"
+        >
+      {% else %}
+        <div style="background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="ai-luxury-product-info-{{ ai_gen_id }}">
+      {% if block.settings.show_badge %}
+        <span class="ai-luxury-badge-{{ ai_gen_id }}">{{ block.settings.badge_text }}</span>
+      {% endif %}
+
+      <h1 class="ai-luxury-title-{{ ai_gen_id }}">{{ block.settings.product_title }}</h1>
+
+      {% if block.settings.show_rating %}
+        <div class="ai-luxury-rating-{{ ai_gen_id }}">
+          <div class="ai-luxury-stars-{{ ai_gen_id }}">
+            {% for i in (1..5) %}
+              <span>★</span>
+            {% endfor %}
+          </div>
+          <span class="ai-luxury-rating-text-{{ ai_gen_id }}">{{ block.settings.rating_value }}</span>
+          <span class="ai-luxury-reviews-{{ ai_gen_id }}">({{ block.settings.review_count }} Reviews)</span>
+        </div>
+      {% endif %}
+
+      <div class="ai-luxury-price-{{ ai_gen_id }}">
+        {% if block.settings.compare_price %}
+          <span class="ai-luxury-compare-price-{{ ai_gen_id }}">${{ block.settings.compare_price }}</span>
+        {% endif %}
+        <span class="ai-luxury-sale-price-{{ ai_gen_id }}">${{ block.settings.sale_price }}</span>
+      </div>
+
+      <div class="ai-luxury-color-section-{{ ai_gen_id }}">
+        <h3 class="ai-luxury-color-heading-{{ ai_gen_id }}">{{ block.settings.color_heading }}</h3>
+        
+        <div class="ai-luxury-color-tabs-{{ ai_gen_id }}">
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }} active" data-category="all">All</button>
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }}" data-category="reds">Reds (20)</button>
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }}" data-category="pinks">Pinks (20)</button>
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }}" data-category="nudes">Nudes (20)</button>
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }}" data-category="purples">Purples (20)</button>
+          <button class="ai-luxury-color-tab-{{ ai_gen_id }}" data-category="blues">Blues (20)</button>
+        </div>
+
+        <div class="ai-luxury-swatches-{{ ai_gen_id }}">
+          {% for i in (1..12) %}
+            {% assign hue = i | times: 30 %}
+            <button 
+              class="ai-luxury-swatch-{{ ai_gen_id }} {% if i == 1 %}selected{% endif %}"
+              style="background-color: hsl({{ hue }}, 70%, 50%);"
+              aria-label="Color {{ i }}"
+            ></button>
+          {% endfor %}
+          <button class="ai-luxury-show-all-{{ ai_gen_id }}">SHOW ALL</button>
+        </div>
+      </div>
+
+      <div class="ai-luxury-actions-{{ ai_gen_id }}">
+        <div class="ai-luxury-quantity-{{ ai_gen_id }}">
+          <button class="ai-luxury-qty-btn-{{ ai_gen_id }}" data-action="decrease" aria-label="Decrease quantity">−</button>
+          <input type="number" class="ai-luxury-qty-input-{{ ai_gen_id }}" value="1" min="1" readonly>
+          <button class="ai-luxury-qty-btn-{{ ai_gen_id }}" data-action="increase" aria-label="Increase quantity">+</button>
+        </div>
+        <button class="ai-luxury-add-to-cart-{{ ai_gen_id }}">Add to Cart</button>
+        <button class="ai-luxury-wishlist-{{ ai_gen_id }}" aria-label="Add to wishlist">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div class="ai-luxury-accordion-{{ ai_gen_id }}">
+        <div class="ai-luxury-accordion-item-{{ ai_gen_id }}">
+          <button class="ai-luxury-accordion-header-{{ ai_gen_id }}" data-accordion="features">
+            <h3 class="ai-luxury-accordion-title-{{ ai_gen_id }}">Features</h3>
+            <span class="ai-luxury-accordion-icon-{{ ai_gen_id }}">+</span>
+          </button>
+          <div class="ai-luxury-accordion-content-{{ ai_gen_id }}">
+            <div class="ai-luxury-features-grid-{{ ai_gen_id }}">
+              <div class="ai-luxury-feature-{{ ai_gen_id }}">
+                <span class="ai-luxury-feature-icon-{{ ai_gen_id }}">⏱</span>
+                <span>Cure Time: 60 seconds</span>
+              </div>
+              <div class="ai-luxury-feature-{{ ai_gen_id }}">
+                <span class="ai-luxury-feature-icon-{{ ai_gen_id }}">✓</span>
+                <span>Requires 1-2 Thin Coats</span>
+              </div>
+              <div class="ai-luxury-feature-{{ ai_gen_id }}">
+                <span class="ai-luxury-feature-icon-{{ ai_gen_id }}">📏</span>
+                <span>Size: 15ML (0.5 oz)</span>
+              </div>
+              <div class="ai-luxury-feature-{{ ai_gen_id }}">
+                <span class="ai-luxury-feature-icon-{{ ai_gen_id }}">💎</span>
+                <span>Highly Pigmented Formula</span>
+              </div>
+              <div class="ai-luxury-feature-{{ ai_gen_id }}">
+                <span class="ai-luxury-feature-icon-{{ ai_gen_id }}">🧪</span>
+                <span>Fast Soak-Off Removal</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-luxury-accordion-item-{{ ai_gen_id }}">
+          <button class="ai-luxury-accordion-header-{{ ai_gen_id }}" data-accordion="details">
+            <h3 class="ai-luxury-accordion-title-{{ ai_gen_id }}">Details</h3>
+            <span class="ai-luxury-accordion-icon-{{ ai_gen_id }}">+</span>
+          </button>
+          <div class="ai-luxury-accordion-content-{{ ai_gen_id }}">
+            <div class="ai-luxury-details-{{ ai_gen_id }}">
+              {{ block.settings.product_details }}
+              <p class="ai-luxury-disclaimer-{{ ai_gen_id }}">{{ block.settings.disclaimer_text }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</luxury-product-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class LuxuryProduct{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.setupQuantityControls();
+        this.setupColorTabs();
+        this.setupSwatches();
+        this.setupAccordion();
+      }
+
+      setupQuantityControls() {
+        const decreaseBtn = this.querySelector('[data-action="decrease"]');
+        const increaseBtn = this.querySelector('[data-action="increase"]');
+        const input = this.querySelector('.ai-luxury-qty-input-{{ ai_gen_id }}');
+
+        decreaseBtn.addEventListener('click', () => {
+          const currentValue = parseInt(input.value);
+          if (currentValue > 1) {
+            input.value = currentValue - 1;
+          }
+        });
+
+        increaseBtn.addEventListener('click', () => {
+          const currentValue = parseInt(input.value);
+          input.value = currentValue + 1;
+        });
+      }
+
+      setupColorTabs() {
+        const tabs = this.querySelectorAll('.ai-luxury-color-tab-{{ ai_gen_id }}');
+        tabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+          });
+        });
+      }
+
+      setupSwatches() {
+        const swatches = this.querySelectorAll('.ai-luxury-swatch-{{ ai_gen_id }}');
+        swatches.forEach(swatch => {
+          swatch.addEventListener('click', () => {
+            swatches.forEach(s => s.classList.remove('selected'));
+            swatch.classList.add('selected');
+          });
+        });
+      }
+
+      setupAccordion() {
+        const headers = this.querySelectorAll('.ai-luxury-accordion-header-{{ ai_gen_id }}');
+        headers.forEach(header => {
+          header.addEventListener('click', () => {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.ai-luxury-accordion-icon-{{ ai_gen_id }}');
+            
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+          });
+        });
+      }
+    }
+
+    customElements.define('luxury-product-{{ ai_gen_id }}', LuxuryProduct{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Luxury product info",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Product image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product image"
+    },
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge text",
+      "default": "BEST SELLER"
+    },
+    {
+      "type": "color",
+      "id": "badge_bg_color",
+      "label": "Badge background",
+      "default": "#1A5470"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Badge text",
+      "default": "#B5D2E0"
+    },
+    {
+      "type": "header",
+      "content": "Product info"
+    },
+    {
+      "type": "text",
+      "id": "product_title",
+      "label": "Product title",
+      "default": "Polymer gel | Sesk OR | UV/LED"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating",
+      "label": "Show rating",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating_value",
+      "label": "Rating value",
+      "default": "4.9"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review count",
+      "default": "163"
+    },
+    {
+      "type": "header",
+      "content": "Pricing"
+    },
+    {
+      "type": "text",
+      "id": "compare_price",
+      "label": "Compare at price",
+      "default": "64.80"
+    },
+    {
+      "type": "text",
+      "id": "sale_price",
+      "label": "Sale price",
+      "default": "32.40"
+    },
+    {
+      "type": "header",
+      "content": "Color selector"
+    },
+    {
+      "type": "text",
+      "id": "color_heading",
+      "label": "Color heading",
+      "default": "Choose Color (200 available)"
+    },
+    {
+      "type": "header",
+      "content": "Product details"
+    },
+    {
+      "type": "richtext",
+      "id": "product_details",
+      "label": "Product details",
+      "default": "<p>Our premium polymer gel formula provides professional-quality results with exceptional durability and shine. Perfect for creating beautiful, long-lasting nail extensions and overlays.</p>"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer_text",
+      "label": "Disclaimer text",
+      "default": "Note: Colors may vary slightly from screen to actual product due to monitor settings."
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_bg_color",
+      "label": "Background",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text",
+      "default": "#030407"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#04060B"
+    },
+    {
+      "type": "color",
+      "id": "body_text_color",
+      "label": "Body text",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Headings",
+      "default": "#ffffff"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "max_width",
+      "label": "Maximum width",
+      "min": 800,
+      "max": 1600,
+      "step": 50,
+      "unit": "px",
+      "default": 1200
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury product info"
+    }
+  ]
+}
+{% endschema %}
+```

@@ -1,0 +1,1375 @@
+{% comment %}
+  ============================================================
+  CUSTOM HEADER — Pixel-Perfect "I AM BITCH" Style
+  Shopify Horizon Theme Compatible
+  File: sections/header.liquid
+  ============================================================
+{% endcomment %}
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+{% style %}
+
+  /* ============================================================
+     SUPPRESS HORIZON DEFAULT HEADER
+  ============================================================ */
+:root {
+    --font: 'glory', sans-serif;
+    /* Fallback header height; refined precisely by JS after render
+       (accounts for the top/bottom padding settings below on all devices) */
+    --cnav-header-height: {{ 64 | plus: section.settings.header_padding_top | plus: section.settings.header_padding_bottom }}px;
+  }
+  .header-wrapper,
+  header.header,
+  .shopify-section-header-sticky,
+  .shopify-section-header,
+  #shopify-section-header {
+    display: none !important;
+  }
+
+  /* ============================================================
+     REMOVE WHITE BG FROM THIS SECTION'S WRAPPER
+  ============================================================ */
+  .cnav-section,
+  .shopify-section.cnav-section {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  body {
+    --header-height: var(--cnav-header-height) !important;
+    padding-top: var(--cnav-header-height) !important;
+  }
+
+  #shopify-section-announcement-bar { display: none; }
+
+  #MainContent {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* ============================================================
+     GLOBAL RESET FOR THIS COMPONENT
+  ============================================================ */
+  .cnav * { box-sizing: border-box; }
+
+  /* ============================================================
+     HEADER ENTRANCE ANIMATION
+  ============================================================ */
+  @keyframes cnavSlideDown {
+    from {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  /* ============================================================
+     NAVBAR
+  ============================================================ */
+  .cnav-bar {
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: 64px;
+    padding-top: {{ section.settings.header_padding_top | default: 0 }}px;
+    padding-bottom: {{ section.settings.header_padding_bottom | default: 0 }}px;
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+
+    /* Sticky/fixed to top on every page and every device */
+    position: fixed;
+
+    /* Entrance animation on load */
+    animation: cnavSlideDown 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+
+    /* Smooth transition when background/shadow change on scroll */
+    transition: background 0.35s ease, backdrop-filter 0.35s ease, box-shadow 0.35s ease;
+
+    {% if request.page_type == 'index' %}
+      background: linear-gradient(180deg, rgba(5, 11, 17, 0.55), rgba(5, 11, 17, 0.25));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+    {% else %}
+      background: #04060B;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    {% endif %}
+  }
+
+  /* Scrolled state (all pages) */
+  .cnav-bar.is-scrolled {
+    background: linear-gradient(180deg, rgba(5, 11, 17, 0.55), rgba(5, 11, 17, 0.25)) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.28);
+  }
+
+  /* ============================================================
+     INNER ROW
+  ============================================================ */
+  .cnav-inner {
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    padding: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* LEFT */
+  .cnav-left {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    min-width: 200px;
+  }
+
+  .cnav-hamburger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .cnav-hamburger .hbr-line {
+    display: block;
+    width: 22px;
+    height: 1.5px;
+    background: #fff;
+    border-radius: 1px;
+    position: absolute;
+    transition: all 0.3s ease;
+  }
+  .cnav-hamburger .hbr-line:nth-child(1) { top: 7px; }
+  .cnav-hamburger .hbr-line:nth-child(2) { top: 13px; }
+  .cnav-hamburger .hbr-line:nth-child(3) { top: 19px; }
+
+  .cnav-hamburger.is-open .hbr-line:nth-child(1) {
+    top: 13px;
+    transform: rotate(45deg);
+  }
+  .cnav-hamburger.is-open .hbr-line:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  .cnav-hamburger.is-open .hbr-line:nth-child(3) {
+    top: 13px;
+    transform: rotate(-45deg);
+  }
+
+  /* ============================================================
+     CENTER BRAND / LOGO
+     Shown centered on all pages. On the homepage, desktop keeps
+     the original "hidden" behavior (hero handles branding there),
+     but mobile & tablet ALWAYS show it, centered.
+  ============================================================ */
+  .cnav-brand {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    line-height: 1;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .cnav-brand-tagline {
+    font-size: 10px;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    font-family: var(--font);
+    margin-bottom: 2px;
+  }
+  .cnav-brand-name {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    font-family: var(--font);
+  }
+  .cnav-brand-logo {
+    display: block;
+    width: {{ section.settings.logo_width | default: 140 }}px;
+    max-width: 60vw;
+    height: auto;
+  }
+
+  /* Desktop: keep homepage logo hidden (hero handles branding there) */
+  @media (min-width: 901px) {
+    .cnav-brand-home { display: none; }
+  }
+
+  /* Mobile & tablet: ALWAYS show logo, centered — including on homepage */
+  @media (max-width: 900px) {
+    .cnav-brand-home {
+      display: flex !important;
+    }
+    .cnav-brand-logo {
+      width: {{ section.settings.logo_width_mobile | default: 100 }}px;
+    }
+  }
+
+  /* RIGHT */
+  .cnav-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 200px;
+    justify-content: flex-end;
+  }
+
+  .cnav-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    padding: 4px 2px;
+    position: relative;
+    transition: opacity 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .cnav-btn:hover { opacity: 0.65; }
+
+  .cnav-badge {
+    position: absolute;
+    top: -3px; right: -5px;
+    background: #cc3333;
+    color: #fff;
+    border-radius: 50%;
+    width: 16px; height: 16px;
+    font-size: 9px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+  }
+
+  .cnav-cart-label { font-size: 16px;color:#AFC1CA; font-family:var(--font); }
+
+  /* ============================================================
+     MEGA MENU OVERLAY
+  ============================================================ */
+  .cnav-mega {
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: rgba(6, 6, 9, 0.96);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.32s ease, visibility 0.32s ease;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .cnav-mega.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .cnav-mega-blob {
+    position: fixed;
+    top: 0; right: 0;
+    width: 55%;
+    height: 55%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .cnav-mega-blob::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -80px;
+    width: 520px; height: 380px;
+    background: radial-gradient(ellipse 420px 280px at 65% 30%,
+      rgba(160, 55, 35, 0.55) 0%,
+      rgba(120, 40, 25, 0.3) 40%,
+      transparent 75%);
+    border-radius: 50%;
+  }
+  .cnav-mega-blob::after {
+    content: '';
+    position: absolute;
+    top: -30px; right: 40px;
+    width: 320px; height: 260px;
+    background: radial-gradient(ellipse 260px 200px at 55% 25%,
+      rgba(55, 35, 140, 0.4) 0%,
+      rgba(40, 25, 100, 0.2) 45%,
+      transparent 75%);
+    border-radius: 50%;
+  }
+
+  .cnav-mega-topbar {
+    position: sticky;
+    top: 0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+    z-index: 10;
+    background: transparent;
+    flex-shrink: 0;
+  }
+
+  .cnav-mega-close {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    opacity: 0.85;
+    transition: opacity 0.2s;
+    flex-shrink: 0;
+  }
+  .cnav-mega-close:hover { opacity: 1; }
+
+  .cnav-mega-topright {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 200px;
+    justify-content: flex-end;
+  }
+
+  .cnav-mega-body {
+    position: relative;
+    z-index: 1;
+    padding: 8px 0px 60px;
+    max-width: 1200px;
+    margin:0 auto;
+  }
+
+  .cnav-cat {
+    border-bottom: 1px solid rgba(255,255,255,0.11);
+  }
+  .cnav-cat:first-child {
+    border-top: 1px solid rgba(255,255,255,0.11);
+  }
+
+  .cnav-cat-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 0;
+    cursor: pointer;
+    gap: 16px;
+    user-select: none;
+    position: relative;
+  }
+
+  .cnav-cat-thumb {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #1a1a1a;
+  }
+  .cnav-cat-thumb img {
+    width: 100%; height: 100%; object-fit: cover;
+    display: block;
+  }
+
+  .cnav-cat-title {
+    flex: 1;
+    font-size: 24px;
+    font-weight: 300;
+    color: #FFFFFF;
+    letter-spacing: 0.01em;
+    font-family: var(--font);
+  }
+
+  .cnav-cat-icon {
+    width: 30px; height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.65);
+    flex-shrink: 0;
+    transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
+  }
+  .cnav-cat.is-open .cnav-cat-icon {
+    transform: rotate(45deg);
+    color: rgba(255,255,255,0.9);
+  }
+
+  .cnav-cat-header {
+    transition: background-color 0.25s ease;
+  }
+  .cnav-cat-header:hover .cnav-cat-title {
+    color: #fff;
+  }
+
+  .cnav-sub-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.42s cubic-bezier(0.65, 0, 0.35, 1);
+    padding-left: 60px;
+  }
+
+  .cnav-sub-list a {
+    display: block;
+    color: #AFC1CA;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+     font-family: var(--font);
+    padding: 11px 0;
+    letter-spacing: 0.01em;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: color 0.18s ease, opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: 0s;
+  }
+  .cnav-cat.is-open .cnav-sub-list a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(1) { transition-delay: 0.05s; }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(2) { transition-delay: 0.09s; }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(3) { transition-delay: 0.13s; }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(4) { transition-delay: 0.17s; }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(5) { transition-delay: 0.21s; }
+  .cnav-cat.is-open .cnav-sub-list a:nth-child(n+6) { transition-delay: 0.24s; }
+  .cnav-sub-list a:last-child {
+    border-bottom: none;
+    padding-bottom: 20px;
+  }
+  .cnav-sub-list a:hover { color: #fff; }
+
+  /* ============================================================
+     CART DRAWER
+  ============================================================ */
+  .cnav-cart-drawer {
+    position: fixed;
+    top: 0; right: -440px;
+    width: 420px; height: 100vh;
+    background: rgba(8, 8, 11, 0.99);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 1000002;
+    transition: right 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.09);
+    font-family: var(--font);
+  }
+  .cnav-cart-drawer.is-open { right: 0; }
+
+  .cnav-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.09);
+  }
+  .cnav-drawer-header h3 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+  .cnav-drawer-close-btn {
+    background: none; border: none;
+    color: rgba(255,255,255,0.6);
+    cursor: pointer; padding: 4px;
+    transition: color 0.2s;
+  }
+  .cnav-drawer-close-btn:hover { color: #fff; }
+
+  .cnav-cart-items {
+    flex: 1; overflow-y: auto; padding: 16px 24px;
+  }
+  .cnav-cart-items::-webkit-scrollbar { width: 3px; }
+  .cnav-cart-items::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); }
+
+  .cnav-cart-empty {
+    text-align: center; padding: 60px 0;
+    color: rgba(255,255,255,0.35); font-size: 14px;
+  }
+  .cnav-cart-item {
+    display: flex; gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+  }
+  .cnav-cart-item img {
+    width: 64px; height: 64px; border-radius: 6px;
+    object-fit: cover; background: #1a1a1a; flex-shrink: 0;
+  }
+  .cnav-cart-item-info { flex: 1; padding-right: 20px; }
+  .cnav-cart-item-info p { margin: 0; }
+  .cnav-cart-item-title { color: #fff; font-size: 13px; font-weight: 500; line-height: 1.4; margin-bottom: 4px !important; }
+  .cnav-cart-item-variant { color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 6px !important; }
+  .cnav-cart-item-price { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 10px !important; }
+
+  .cnav-cart-item-remove {
+    position: absolute;
+    top: 14px; right: 0;
+    background: none; border: none;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer; padding: 4px;
+    transition: color 0.2s;
+    line-height: 0;
+  }
+  .cnav-cart-item-remove:hover { color: #fff; }
+
+  .cnav-cart-qty {
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 3px;
+    overflow: hidden;
+    width: fit-content;
+  }
+  .cnav-cart-qty-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    width: 26px; height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    transition: background 0.2s, opacity 0.2s;
+  }
+  .cnav-cart-qty-btn:hover { background: rgba(255,255,255,0.1); }
+  .cnav-cart-qty-btn:disabled { opacity: 0.35; cursor: default; }
+  .cnav-cart-qty-btn:disabled:hover { background: none; }
+  .cnav-cart-qty-val {
+    min-width: 28px;
+    text-align: center;
+    color: #fff;
+    font-size: 12px;
+    user-select: none;
+  }
+
+  .cnav-cart-footer {
+    padding: 20px 24px;
+    border-top: 1px solid rgba(255,255,255,0.09);
+  }
+  .cnav-cart-subtotal {
+    display: flex; justify-content: space-between;
+    color: #fff; font-size: 15px; margin-bottom: 16px;
+  }
+  .cnav-checkout-btn {
+    display: block; width: 100%;
+    background: #fff; color: #000;
+    border: none; padding: 15px;
+    font-size: 13px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    cursor: pointer; text-align: center; text-decoration: none;
+    transition: background 0.2s; border-radius: 2px;
+  }
+  .cnav-checkout-btn:hover { background: rgba(255,255,255,0.88); }
+
+  /* ============================================================
+     WISHLIST DRAWER
+  ============================================================ */
+  .cnav-wish-drawer {
+    position: fixed;
+    top: 0; right: -440px;
+    width: 420px; height: 100vh;
+    background: rgba(8, 8, 11, 0.99);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    z-index: 1000002;
+    transition: right 0.38s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    display: flex; flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.09);
+    font-family: var(--font);
+  }
+  .cnav-wish-drawer.is-open { right: 0; }
+
+  .cnav-wish-items {
+    flex: 1; overflow-y: auto; padding: 16px 24px;
+  }
+  .cnav-wish-empty {
+    text-align: center; padding: 60px 0;
+    color: rgba(255,255,255,0.35); font-size: 14px;
+  }
+  .cnav-wish-item {
+    display: flex; gap: 14px; padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    align-items: center;
+  }
+  .cnav-wish-item img {
+    width: 64px; height: 64px; border-radius: 6px;
+    object-fit: cover; background: #1a1a1a; flex-shrink: 0;
+  }
+  .cnav-wish-item-info { flex: 1; }
+  .cnav-wish-item-title { color: #fff; font-size: 13px; font-weight: 500; margin: 0 0 3px; line-height: 1.4; }
+  .cnav-wish-item-price { color: rgba(255,255,255,0.5); font-size: 12px; margin: 0; }
+  .cnav-wish-remove {
+    background: none; border: none;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer; padding: 4px;
+    transition: color 0.2s;
+  }
+  .cnav-wish-remove:hover { color: #fff; }
+
+  /* ============================================================
+     BACKDROP
+  ============================================================ */
+  .cnav-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 1000001;
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+  }
+  .cnav-backdrop.is-open { opacity: 1; visibility: visible; }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 900px) {
+    .cnav-bar {
+      padding-top: {{ section.settings.header_padding_top_mobile | default: 0 }}px;
+      padding-bottom: {{ section.settings.header_padding_bottom_mobile | default: 0 }}px;
+    }
+    .cnav-inner { padding: 0 24px; }
+    .cnav-cart-label { display: none; }
+    .cnav-left { min-width: auto; }
+    .cnav-right { min-width: auto; }
+  }
+
+  @media (max-width: 640px) {
+    .cnav-inner { padding: 0 18px; }
+
+    .cnav-cart-drawer,
+    .cnav-wish-drawer {
+      width: 100vw;
+      right: -100vw;
+    }
+    .cnav-mega-topbar { padding: 0 18px; }
+    .cnav-mega-body { padding: 0 18px 60px; }
+    .cnav-mega-topright { min-width: auto; }
+    .cnav-cat-title { font-size: 19px; }
+    .cnav-brand-name { font-size: 17px; }
+  }
+
+
+
+{% endstyle %}
+
+{%- comment -%} ===== NAVBAR ===== {%- endcomment -%}
+<div class="cnav cnav-bar" id="cnavBar">
+  <div class="cnav-inner">
+
+    <!-- LEFT: Hamburger -->
+    <div class="cnav-left">
+      <button class="cnav-hamburger" id="cnavHamburger"
+              aria-label="Open menu" aria-expanded="false" aria-controls="cnavMega">
+        <span class="hbr-line"></span>
+        <span class="hbr-line"></span>
+        <span class="hbr-line"></span>
+      </button>
+    </div>
+
+    <a href="{{ routes.root_url }}"
+       class="cnav-brand{% if request.page_type == 'index' %} cnav-brand-home{% endif %}"
+       aria-label="{{ section.settings.brand_name | default: shop.name }}">
+      {%- if section.settings.brand_logo -%}
+        <img
+          src="{{ section.settings.brand_logo | img_url: '400x' }}"
+          srcset="{{ section.settings.brand_logo | img_url: '200x' }} 200w, {{ section.settings.brand_logo | img_url: '400x' }} 400w, {{ section.settings.brand_logo | img_url: '600x' }} 600w"
+          alt="{{ section.settings.brand_name | default: shop.name }}"
+          class="cnav-brand-logo"
+          width="{{ section.settings.brand_logo.width }}"
+          height="{{ section.settings.brand_logo.height }}"
+          loading="eager"
+        >
+      {%- else -%}
+        {%- if section.settings.brand_tagline != blank -%}
+          <span class="cnav-brand-tagline">{{ section.settings.brand_tagline }}</span>
+        {%- endif -%}
+        <span class="cnav-brand-name">{{ section.settings.brand_name | default: shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <!-- RIGHT: Cart, Wishlist -->
+    <div class="cnav-right">
+      <button class="cnav-btn" id="cnavCartBtn" aria-label="Open cart" style="position:relative">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="cnav-cart-label" id="cnavCartLabel"></span>
+        <span class="cnav-badge" id="cnavCartBadge">{{ cart.item_count }}</span>
+      </button>
+
+      <button class="cnav-btn" id="cnavWishBtn" aria-label="Wishlist" style="position:relative">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+        <span class="cnav-badge" id="cnavWishBadge">0</span>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+{%- comment -%} ===== MEGA MENU ===== {%- endcomment -%}
+<div class="cnav cnav-mega" id="cnavMega"
+     role="dialog" aria-modal="true" aria-label="Navigation menu">
+
+  <div class="cnav-mega-blob" aria-hidden="true"></div>
+
+  <div class="cnav-mega-topbar">
+    <div style="display:flex;align-items:center;gap:22px">
+      <button class="cnav-mega-close" id="cnavMegaClose" aria-label="Close menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="cnav-mega-topright">
+      <button class="cnav-btn" onclick="document.getElementById('cnavMega').classList.remove('is-open'); document.getElementById('cnavCartBtn').click();" aria-label="Cart" style="position:relative">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+          <line x1="3" y1="6" x2="21" y2="6"/>
+          <path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="cnav-cart-label" id="cnavMegaCartLabel"> </span>
+      </button>
+      <button class="cnav-btn" onclick="document.getElementById('cnavMega').classList.remove('is-open'); document.getElementById('cnavWishBtn').click();" aria-label="Wishlist">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+          <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="cnav-mega-body">
+
+    {%- for link in linklists[section.settings.menu].links -%}
+      <div class="cnav-cat{% if forloop.first %} is-open{% endif %}" data-index="{{ forloop.index }}">
+        <div class="cnav-cat-header"
+             role="button" tabindex="0"
+             aria-expanded="{{ forloop.first }}"
+             aria-controls="cnav-sub-{{ forloop.index }}">
+          <div class="cnav-cat-thumb">
+            {%- assign col = link.object -%}
+            {%- if col.image -%}
+              <img src="{{ col.image | img_url: '80x80', crop: 'center' }}"
+                   alt="{{ link.title }}" loading="lazy" width="44" height="44">
+            {%- elsif col.products.first and col.products.first.featured_image -%}
+              <img src="{{ col.products.first.featured_image | img_url: '80x80', crop: 'center' }}"
+                   alt="{{ link.title }}" loading="lazy" width="44" height="44">
+            {%- else -%}
+              <div style="width:44px;height:44px;background:linear-gradient(135deg,#2b2b2b,#484848);"></div>
+            {%- endif -%}
+          </div>
+          <span class="cnav-cat-title">{{ link.title }}</span>
+          <span class="cnav-cat-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </span>
+        </div>
+        <div class="cnav-sub-list" id="cnav-sub-{{ forloop.index }}" role="list">
+          {%- if link.links.size > 0 -%}
+            {%- for child in link.links -%}
+              <a href="{{ child.url }}" role="listitem">{{ child.title }}</a>
+            {%- endfor -%}
+          {%- else -%}
+            <a href="{{ link.url }}" role="listitem">View all {{ link.title }}</a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- else -%}
+      {%- assign _demo_cats = 'Beauty Gels,Poly Gels,Gel polish,Collections,Starter Kits' | split: ',' -%}
+      {%- assign _demo_subs = 'Gel Polish|Liner Gels|Hard Gel|Rubber Base|Collections|Dual Forms|Gel Prep|Gel Brushes,Poly Gel Starter|Poly Gel Colors|Poly Gel Tools,Chrome Gel|Glitter Gel|Nude Gel|Neon Gel,Summer Collection|Winter Collection|Seasonal Kits,Beginner Kit|Pro Kit|Complete Kit' | split: ',' -%}
+      {%- for cat in _demo_cats -%}
+        <div class="cnav-cat{% if forloop.first %} is-open{% endif %}">
+          <div class="cnav-cat-header" role="button" tabindex="0" aria-expanded="{{ forloop.first }}">
+            <div class="cnav-cat-thumb">
+              <div style="width:44px;height:44px;background:linear-gradient(135deg,#2a1a1a,#503030);"></div>
+            </div>
+            <span class="cnav-cat-title">{{ cat }}</span>
+            <span class="cnav-cat-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+              </svg>
+            </span>
+          </div>
+          <div class="cnav-sub-list">
+            {%- assign _subs = _demo_subs[forloop.index0] | split: '|' -%}
+            {%- for sub in _subs -%}
+              <a href="/collections/{{ sub | handleize }}">{{ sub }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    {%- endfor -%}
+
+  </div>
+</div>
+
+{%- comment -%} ===== CART DRAWER ===== {%- endcomment -%}
+<div class="cnav cnav-cart-drawer" id="cnavCartDrawer"
+     role="dialog" aria-modal="true" aria-label="Shopping cart">
+  <div class="cnav-drawer-header">
+    <h3>Cart</h3>
+    <button class="cnav-drawer-close-btn" id="cnavCartClose" aria-label="Close cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="cnav-cart-items" id="cnavCartItems">
+    <div class="cnav-cart-empty">Your cart is empty.</div>
+  </div>
+  <div class="cnav-cart-footer" id="cnavCartFooter" style="display:none">
+    <div class="cnav-cart-subtotal">
+      <span>Subtotal</span>
+      <span id="cnavCartSubtotal">$0.00</span>
+    </div>
+    <a href="/checkout" class="cnav-checkout-btn">Checkout</a>
+  </div>
+</div>
+
+{%- comment -%} ===== WISHLIST DRAWER ===== {%- endcomment -%}
+<div class="cnav cnav-wish-drawer" id="cnavWishDrawer"
+     role="dialog" aria-modal="true" aria-label="Wishlist">
+  <div class="cnav-drawer-header">
+    <h3>Wishlist</h3>
+    <button class="cnav-drawer-close-btn" id="cnavWishClose" aria-label="Close wishlist">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div class="cnav-wish-items" id="cnavWishItems">
+    <div class="cnav-wish-empty">Your wishlist is empty.</div>
+  </div>
+</div>
+
+<div class="cnav-backdrop" id="cnavBackdrop"></div>
+
+<script>
+(function () {
+  'use strict';
+
+  var IS_HOMEPAGE = {{ request.page_type | json }} === 'index';
+
+  var bar        = document.getElementById('cnavBar');
+  var hamburger  = document.getElementById('cnavHamburger');
+  var mega       = document.getElementById('cnavMega');
+  var megaClose  = document.getElementById('cnavMegaClose');
+
+  var cartBtn    = document.getElementById('cnavCartBtn');
+  var cartDrawer = document.getElementById('cnavCartDrawer');
+  var cartClose  = document.getElementById('cnavCartClose');
+  var cartItemsEl= document.getElementById('cnavCartItems');
+  var cartFooter = document.getElementById('cnavCartFooter');
+  var cartSubEl  = document.getElementById('cnavCartSubtotal');
+  var cartBadge  = document.getElementById('cnavCartBadge');
+  var cartLabel  = document.getElementById('cnavCartLabel');
+  var megaCartLbl= document.getElementById('cnavMegaCartLabel');
+
+  var wishBtn    = document.getElementById('cnavWishBtn');
+  var wishDrawer = document.getElementById('cnavWishDrawer');
+  var wishClose  = document.getElementById('cnavWishClose');
+  var wishItemsEl= document.getElementById('cnavWishItems');
+  var wishBadge  = document.getElementById('cnavWishBadge');
+
+  var backdrop   = document.getElementById('cnavBackdrop');
+
+  /* ── Keep --cnav-header-height in sync with the real, rendered
+     header height (varies by the padding settings and by device),
+     so body offset and any theme sticky elements (e.g. the product
+     media gallery) never slide underneath / into the header. ── */
+  function syncHeaderHeight() {
+    var h = bar.offsetHeight;
+    if (h > 0) {
+      document.documentElement.style.setProperty('--cnav-header-height', h + 'px');
+    }
+  }
+  syncHeaderHeight();
+  window.addEventListener('load', syncHeaderHeight);
+  var headerResizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(headerResizeTimer);
+    headerResizeTimer = setTimeout(syncHeaderHeight, 120);
+  });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(syncHeaderHeight);
+  }
+
+  /* ── Scroll handler ── */
+  /* Header is now fixed/sticky on every page & device, so the
+     "solid on scroll" treatment applies everywhere consistently. */
+  function onScroll() {
+    if (window.scrollY > 10) {
+      bar.classList.add('is-scrolled');
+    } else if (IS_HOMEPAGE) {
+      bar.classList.remove('is-scrolled');
+    } else {
+      bar.classList.add('is-scrolled');
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* ── Mega Menu ── */
+  function openMega() {
+    mega.classList.add('is-open');
+    hamburger.classList.add('is-open');
+    hamburger.setAttribute('aria-expanded', 'true');
+    hamburger.setAttribute('aria-label', 'Close menu');
+    document.body.style.overflow = 'hidden';
+    bar.classList.add('is-scrolled');
+  }
+  function closeMega() {
+    mega.classList.remove('is-open');
+    hamburger.classList.remove('is-open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    hamburger.setAttribute('aria-label', 'Open menu');
+    document.body.style.overflow = '';
+    onScroll();
+  }
+
+  hamburger.addEventListener('click', function () {
+    if (mega.classList.contains('is-open')) { closeMega(); } else { openMega(); }
+  });
+  megaClose.addEventListener('click', closeMega);
+
+  /* ── Accordion ── */
+  function setSubHeight(cat, open) {
+    var subList = cat.querySelector('.cnav-sub-list');
+    if (!subList) return;
+    if (open) {
+      subList.style.maxHeight = subList.scrollHeight + 'px';
+    } else {
+      subList.style.maxHeight = '0px';
+    }
+  }
+
+  /* Initialize any category that starts open (e.g. the first one) */
+  document.querySelectorAll('.cnav-cat.is-open').forEach(function (cat) {
+    setSubHeight(cat, true);
+  });
+
+  document.querySelectorAll('.cnav-cat-header').forEach(function (header) {
+    header.addEventListener('click', function () {
+      var cat    = this.closest('.cnav-cat');
+      var isOpen = cat.classList.contains('is-open');
+
+      document.querySelectorAll('.cnav-cat').forEach(function (c) {
+        var h = c.querySelector('.cnav-cat-header');
+        c.classList.remove('is-open');
+        setSubHeight(c, false);
+        if (h) h.setAttribute('aria-expanded', 'false');
+      });
+
+      if (!isOpen) {
+        cat.classList.add('is-open');
+        setSubHeight(cat, true);
+        this.setAttribute('aria-expanded', 'true');
+      }
+    });
+
+    header.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.click(); }
+    });
+  });
+
+  /* Recalculate open submenu height on resize (fonts/wrapping can change it) */
+  var resizeTimer;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      var openCat = document.querySelector('.cnav-cat.is-open');
+      if (openCat) setSubHeight(openCat, true);
+    }, 150);
+  });
+
+  /* ── Escape key ── */
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeMega(); closeCart(); closeWish(); }
+  });
+
+  /* ── Cart Drawer ── */
+  function openCart() {
+    closeWish();
+    cartDrawer.classList.add('is-open');
+    backdrop.classList.add('is-open');
+    fetchCart();
+  }
+  function closeCart() {
+    cartDrawer.classList.remove('is-open');
+    if (!wishDrawer.classList.contains('is-open')) backdrop.classList.remove('is-open');
+  }
+  cartBtn.addEventListener('click', openCart);
+  cartClose.addEventListener('click', closeCart);
+  backdrop.addEventListener('click', function () { closeCart(); closeWish(); });
+
+  function fetchCart() {
+    fetch('/cart.js')
+      .then(function (r) { return r.json(); })
+      .then(renderCart)
+      .catch(function () {
+        cartItemsEl.innerHTML = '<div class="cnav-cart-empty">Could not load cart.</div>';
+      });
+  }
+
+  var cartBusy = false;
+
+  function changeCartItem(key, quantity) {
+    if (cartBusy) return;
+    cartBusy = true;
+    fetch('/cart/change.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: quantity })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        cartBusy = false;
+        renderCart(data);
+        document.dispatchEvent(new CustomEvent('cart:updated'));
+      })
+      .catch(function (e) {
+        cartBusy = false;
+        console.error('[CustomMenu] changeCartItem:', e);
+      });
+  }
+
+  function renderCart(data) {
+    if (!data.items || !data.items.length) {
+      cartItemsEl.innerHTML = '<div class="cnav-cart-empty">Your cart is empty.</div>';
+      cartFooter.style.display = 'none';
+      syncCartBadge(0, 0);
+      return;
+    }
+    var html = '';
+    data.items.forEach(function (item) {
+      html += '<div class="cnav-cart-item">';
+      html += '<img src="' + (item.image || '') + '" alt="' + esc(item.title) + '" width="64" height="64" loading="lazy">';
+      html += '<div class="cnav-cart-item-info">';
+      html += '<p class="cnav-cart-item-title">' + esc(item.title) + '</p>';
+      if (item.variant_title && item.variant_title !== 'Default Title') {
+        html += '<p class="cnav-cart-item-variant">' + esc(item.variant_title) + '</p>';
+      }
+      html += '<p class="cnav-cart-item-price">' + money(item.line_price) + '</p>';
+      html += '<div class="cnav-cart-qty" data-key="' + esc(item.key) + '">';
+      html += '<button type="button" class="cnav-cart-qty-btn cnav-qty-minus" aria-label="Decrease quantity"' + (item.quantity <= 1 ? ' disabled' : '') + '>&#8722;</button>';
+      html += '<span class="cnav-cart-qty-val">' + item.quantity + '</span>';
+      html += '<button type="button" class="cnav-cart-qty-btn cnav-qty-plus" aria-label="Increase quantity">&#43;</button>';
+      html += '</div>';
+      html += '</div>';
+      html += '<button type="button" class="cnav-cart-item-remove" data-key="' + esc(item.key) + '" aria-label="Remove item">';
+      html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      html += '</button>';
+      html += '</div>';
+    });
+    cartItemsEl.innerHTML = html;
+    cartFooter.style.display = 'block';
+    cartSubEl.textContent = money(data.total_price);
+    syncCartBadge(data.item_count, data.total_price);
+
+    cartItemsEl.querySelectorAll('.cnav-qty-minus').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var wrap = this.closest('.cnav-cart-qty');
+        var key  = wrap.dataset.key;
+        var val  = parseInt(wrap.querySelector('.cnav-cart-qty-val').textContent, 10);
+        if (val > 1) changeCartItem(key, val - 1);
+      });
+    });
+    cartItemsEl.querySelectorAll('.cnav-qty-plus').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var wrap = this.closest('.cnav-cart-qty');
+        var key  = wrap.dataset.key;
+        var val  = parseInt(wrap.querySelector('.cnav-cart-qty-val').textContent, 10);
+        changeCartItem(key, val + 1);
+      });
+    });
+    cartItemsEl.querySelectorAll('.cnav-cart-item-remove').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        changeCartItem(this.dataset.key, 0);
+      });
+    });
+  }
+
+  function syncCartBadge(count, total) {
+    if (count > 0) {
+      cartBadge.textContent = count;
+      cartBadge.style.display = 'flex';
+    } else {
+      cartBadge.style.display = 'none';
+    }
+    var txt = 'Cart';
+    if (cartLabel) cartLabel.textContent = txt;
+    if (megaCartLbl) megaCartLbl.textContent = txt;
+  }
+
+  /* ── Wishlist ── */
+  var wishlist = [];
+  try { wishlist = JSON.parse(localStorage.getItem('cnav_wishlist') || '[]'); } catch (e) {}
+
+  function saveWish() {
+    try { localStorage.setItem('cnav_wishlist', JSON.stringify(wishlist)); } catch (e) {}
+  }
+
+  function openWish() {
+    closeCart();
+    wishDrawer.classList.add('is-open');
+    backdrop.classList.add('is-open');
+    renderWish();
+  }
+  function closeWish() {
+    wishDrawer.classList.remove('is-open');
+    if (!cartDrawer.classList.contains('is-open')) backdrop.classList.remove('is-open');
+  }
+  wishBtn.addEventListener('click', openWish);
+  wishClose.addEventListener('click', closeWish);
+
+  function renderWish() {
+    syncWishBadge();
+    if (!wishlist.length) {
+      wishItemsEl.innerHTML = '<div class="cnav-wish-empty">Your wishlist is empty.</div>';
+      return;
+    }
+    var html = '';
+    wishlist.forEach(function (item, i) {
+      html += '<div class="cnav-wish-item">';
+      html += '<img src="' + esc(item.image || '') + '" alt="' + esc(item.title) + '" width="64" height="64" loading="lazy">';
+      html += '<div class="cnav-wish-item-info">';
+      html += '<p class="cnav-wish-item-title">' + esc(item.title) + '</p>';
+      html += '<p class="cnav-wish-item-price">' + money(item.price) + '</p>';
+      html += '</div>';
+      html += '<button class="cnav-wish-remove" data-i="' + i + '" aria-label="Remove">';
+      html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      html += '</button></div>';
+    });
+    wishItemsEl.innerHTML = html;
+    wishItemsEl.querySelectorAll('.cnav-wish-remove').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        wishlist.splice(parseInt(this.dataset.i, 10), 1);
+        saveWish();
+        renderWish();
+      });
+    });
+  }
+
+  function syncWishBadge() {
+    if (wishlist.length > 0) {
+      wishBadge.textContent = wishlist.length;
+      wishBadge.style.display = 'flex';
+    } else {
+      wishBadge.style.display = 'none';
+    }
+  }
+
+  /* ── Global API ── */
+  window.CustomMenu = {
+    addToCart: function (variantId, qty) {
+      fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: qty || 1 })
+      }).then(function (r) { return r.json(); })
+        .then(function () { fetchCart(); openCart(); })
+        .catch(function (e) { console.error('[CustomMenu] addToCart:', e); });
+    },
+    addToWishlist: function (product) {
+      if (!wishlist.some(function (p) { return p.id === product.id; })) {
+        wishlist.push(product);
+        saveWish();
+        syncWishBadge();
+      }
+    },
+    removeFromWishlist: function (id) {
+      wishlist = wishlist.filter(function (p) { return p.id !== id; });
+      saveWish();
+      renderWish();
+    },
+    isInWishlist: function (id) {
+      return wishlist.some(function (p) { return p.id === id; });
+    },
+    openCart: openCart,
+    openWishlist: openWish,
+    fetchCart: fetchCart
+  };
+
+  /* ── Shopify cart sync ── */
+  document.addEventListener('cart:updated',    fetchCart);
+  document.addEventListener('cart:item-added', fetchCart);
+  document.addEventListener('submit', function (e) {
+    if (e.target && e.target.getAttribute('action') === '/cart/add') {
+      setTimeout(fetchCart, 700);
+    }
+  });
+
+  /* ── Helpers ── */
+  function money(cents) { return '$' + (cents / 100).toFixed(2); }
+  function esc(str) {
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  /* ── Init ── */
+  document.body.classList.add('cnav-loaded');
+  fetchCart();
+  syncWishBadge();
+
+  if ({{ cart.item_count }} > 0) {
+    cartBadge.textContent = {{ cart.item_count }};
+    cartBadge.style.display = 'flex';
+  }
+
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Custom Header",
+  "tag": "div",
+  "class": "cnav-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "brand_logo",
+      "label": "Logo image",
+      "info": "যদি লোগো আপলোড করা থাকে, তাহলে টেক্সট ব্র্যান্ড নেমের বদলে এই ইমেজটি দেখানো হবে।"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 60,
+      "max": 300,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo width (Desktop)",
+      "default": 140
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "min": 40,
+      "max": 200,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo width (Mobile / Tablet)",
+      "default": 100
+    },
+    {
+      "type": "text",
+      "id": "brand_tagline",
+      "label": "Tagline (above name)",
+      "default": "I AM",
+      "info": "লোগো ইমেজ আপলোড না থাকলে এটি দেখাবে।"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "BITCH",
+      "info": "লোগো ইমেজ আপলোড না থাকলে এটি দেখাবে। খালি রাখলে স্টোরের নাম ব্যবহার হবে।"
+    },
+    {
+      "type": "header",
+      "content": "Header Spacing"
+    },
+    {
+      "type": "range",
+      "id": "header_padding_top",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "header_padding_bottom",
+      "min": 0,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding (Desktop)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "header_padding_top_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Top padding (Mobile / Tablet)",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "header_padding_bottom_mobile",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Bottom padding (Mobile / Tablet)",
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "Navigation Menu"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Main Menu",
+      "default": "main-menu",
+      "info": "Top-level items with child links become accordion sections in the mega menu."
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Header",
+      "category": "Header"
+    }
+  ]
+}
+{% endschema %}

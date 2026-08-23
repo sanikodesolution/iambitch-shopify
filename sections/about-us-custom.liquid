@@ -1,0 +1,1192 @@
+{% comment %}
+  IM BITCH - About Section
+  Fixed width: 1200px | Height: 761px
+  All spacing, colors, and social icons editable from Shopify Theme Customizer
+{% endcomment %}
+
+{% liquid
+  assign section_pt    = section.settings.section_padding_top    | default: 32
+  assign section_pb    = section.settings.section_padding_bottom  | default: 32
+  assign section_pl    = section.settings.section_padding_left    | default: 0
+  assign section_pr    = section.settings.section_padding_right   | default: 0
+  assign section_bg    = section.settings.section_bg_color
+
+  assign social_bg     = section.settings.social_bg_color
+  assign social_gap    = section.settings.social_icon_gap         | default: 16
+  assign social_pt     = section.settings.social_padding_top      | default: 12
+  assign social_pb     = section.settings.social_padding_bottom   | default: 12
+  assign social_pl     = section.settings.social_padding_left     | default: 8
+  assign social_pr     = section.settings.social_padding_right    | default: 8
+
+  assign content_gap   = section.settings.content_gap             | default: 48
+  assign content_ml    = section.settings.content_margin_left     | default: 56
+
+  assign text_pt       = section.settings.text_padding_top        | default: 0
+  assign text_pb       = section.settings.text_padding_bottom     | default: 0
+  assign text_pl       = section.settings.text_padding_left       | default: 0
+  assign text_pr       = section.settings.text_padding_right      | default: 0
+  assign text_bg       = section.settings.text_bg_color
+
+  assign image_pt      = section.settings.image_padding_top       | default: 24
+  assign image_pb      = section.settings.image_padding_bottom    | default: 24
+  assign image_pl      = section.settings.image_padding_left      | default: 24
+  assign image_pr      = section.settings.image_padding_right     | default: 24
+  assign image_bg      = section.settings.image_bg_color
+
+  assign show_social_mobile = section.settings.show_social_mobile
+
+  assign anim_enabled  = section.settings.enable_animations
+  assign anim_style    = section.settings.animation_style    | default: 'fade-up'
+  assign anim_duration = section.settings.animation_duration | default: 700
+  assign anim_stagger  = section.settings.animation_stagger  | default: 150
+  assign anim_easing   = section.settings.animation_easing   | default: 'ease-out'
+%}
+
+<section
+  class="imbitch-about{% if anim_enabled %} imbitch-animate imbitch-anim--{{ anim_style }}{% endif %}"
+  id="imbitch-about-{{ section.id }}"
+  style="
+    background-color: {{ section_bg }};
+    padding-top: {{ section_pt }}px;
+    padding-bottom: {{ section_pb }}px;
+    padding-left: {{ section_pl }}px;
+    padding-right: {{ section_pr }}px;
+    {% if anim_enabled %}
+    --imbitch-anim-duration: {{ anim_duration }}ms;
+    --imbitch-anim-easing: {{ anim_easing }};
+    --imbitch-anim-delay: 0ms;
+    {% endif %}
+  "
+>
+  <div class="imbitch-about__inner">
+
+    <!-- Social Icons Strip -->
+    <div
+      class="imbitch-about__social{% if anim_enabled %} imbitch-animate imbitch-anim--{{ anim_style }}{% endif %}"
+      style="
+        background-color: {{ social_bg }};
+        gap: {{ social_gap }}px;
+        padding-top: {{ social_pt }}px;
+        padding-bottom: {{ social_pb }}px;
+        padding-left: {{ social_pl }}px;
+        padding-right: {{ social_pr }}px;
+        {% if anim_enabled %}--imbitch-anim-delay: {{ anim_stagger }}ms;{% endif %}
+      "
+    >
+      {% for block in section.blocks %}
+        {% if block.type == 'social_icon' %}
+          {% liquid
+            assign icon_size    = block.settings.icon_size    | default: 24
+            assign icon_color   = block.settings.icon_color   | default: '#ffffff'
+            assign icon_bg      = block.settings.icon_bg_color
+            assign icon_pt      = block.settings.icon_padding_top    | default: 0
+            assign icon_pb      = block.settings.icon_padding_bottom | default: 0
+            assign icon_pl      = block.settings.icon_padding_left   | default: 0
+            assign icon_pr      = block.settings.icon_padding_right  | default: 0
+            assign icon_mt      = block.settings.icon_margin_top     | default: 0
+            assign icon_mb      = block.settings.icon_margin_bottom  | default: 0
+          %}
+          <a
+            href="{{ block.settings.url }}"
+            class="imbitch-about__social-icon"
+            target="_blank"
+            rel="noopener"
+            aria-label="{{ block.settings.label }}"
+            style="
+              width: {{ icon_size }}px;
+              height: {{ icon_size }}px;
+              background-color: {{ icon_bg }};
+              padding-top: {{ icon_pt }}px;
+              padding-bottom: {{ icon_pb }}px;
+              padding-left: {{ icon_pl }}px;
+              padding-right: {{ icon_pr }}px;
+              margin-top: {{ icon_mt }}px;
+              margin-bottom: {{ icon_mb }}px;
+              --icon-color: {{ icon_color }};
+              --icon-size: {{ icon_size }}px;
+            "
+            {{ block.shopify_attributes }}
+          >
+            {% comment %} Custom SVG Code takes priority {% endcomment %}
+            {% if block.settings.custom_svg != blank %}
+              <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                {{ block.settings.custom_svg }}
+              </span>
+            {% else %}
+              <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                {% case block.settings.platform %}
+                  {% when 'facebook' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% when 'twitter' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 4L10.5 13L4 20H5.5L11.25 14L16.5 20H21L14 10.5L20 4H18.5L13.25 9.5L8.5 4H4Z" fill="{{ icon_color }}"/>
+                    </svg>
+                  {% when 'youtube' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M22.54 6.42C22.4212 5.94541 22.1793 5.51057 21.8387 5.15941C21.498 4.80824 21.0708 4.55318 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92925 4.59318 2.50198 4.84824 2.16135 5.19941C1.82072 5.55057 1.57879 5.98541 1.46 6.46C1.14521 8.20556 0.991235 9.97631 1 11.75C0.988787 13.537 1.14277 15.3213 1.46 17.08C1.59096 17.5398 1.83831 17.9581 2.17814 18.2945C2.51798 18.6308 2.93882 18.8738 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.0708 18.8668 21.498 18.6118 21.8387 18.2606C22.1793 17.9094 22.4212 17.4746 22.54 17C22.8524 15.2676 23.0063 13.5103 23 11.75C23.0112 9.96295 22.8573 8.1787 22.54 6.42Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M9.75 15.02L15.5 11.75L9.75 8.48V15.02Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                  {% when 'tiktok' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.5a8.18 8.18 0 004.78 1.52V6.56a4.85 4.85 0 01-1.01.13z" fill="{{ icon_color }}"/>
+                    </svg>
+                  {% when 'instagram' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <circle cx="12" cy="12" r="4" stroke="{{ icon_color }}" stroke-width="2"/>
+                      <circle cx="17.5" cy="6.5" r="1" fill="{{ icon_color }}"/>
+                    </svg>
+                  {% when 'pinterest' %}
+                    <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.64 1.267 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.137-1.868 3.137-4.566 0-2.386-1.716-4.054-4.165-4.054-2.837 0-4.5 2.127-4.5 4.326 0 .856.33 1.774.742 2.276a.3.3 0 01.069.286c-.076.312-.244.995-.277 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z" fill="{{ icon_color }}"/>
+                    </svg>
+                  {% when 'custom' %}
+                    {% comment %} custom_svg field handles this above {% endcomment %}
+                {% endcase %}
+              </span>
+            {% endif %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <!-- Content Area (text + image) -->
+    <div
+      class="imbitch-about__content-wrap"
+      style="
+        gap: {{ content_gap }}px;
+        margin-left: {{ content_ml }}px;
+      "
+    >
+
+      <!-- Left: Text Content (desktop) -->
+      <div
+        class="imbitch-about__text{% if anim_enabled %} imbitch-animate imbitch-anim--{{ anim_style }}{% endif %}"
+        style="
+          background-color: {{ text_bg }};
+          padding-top: {{ text_pt }}px;
+          padding-bottom: {{ text_pb }}px;
+          padding-left: {{ text_pl }}px;
+          padding-right: {{ text_pr }}px;
+          {% if anim_enabled %}--imbitch-anim-delay: {{ anim_stagger | times: 2 }}ms;{% endif %}
+        "
+      >
+        <h2 class="imbitch-about__brand-name">{{ section.settings.brand_name | default: 'IM BITCH' }}</h2>
+        <h3 class="imbitch-about__tagline">{{ section.settings.tagline | default: 'Built by Two Sisters. Made for Bold Women.' }}</h3>
+        <div class="imbitch-about__body">
+          {{ section.settings.body_text | default: '<p>IM BITCH was created by two sisters in the USA with a dream, a passion for beauty, and a belief that confidence should never be quiet.</p><p>We started this brand with one simple idea: nail polish should feel more than just pretty. It should feel expressive, powerful, playful, and personal. Every shade is created to help you show up exactly as you are, whether your mood is soft, fierce, elegant, wild, calm, or completely unstoppable.</p><p>IM BITCH is more than a beauty brand. It is a statement.</p><p>It is for the women who own their style, protect their energy, and never apologize for being themselves.</p><p>From our first shade to every product we release, we focus on beautiful colors, premium presentation, and a brand experience that feels confident, modern, and unforgettable.</p><p>Two sisters. One dream. A whole lot of attitude.</p><p>Welcome to IM BITCH.</p>' }}
+        </div>
+      </div>
+
+      <!-- Right: Image + Social (desktop side-by-side on mobile: image left, social right) -->
+      <div
+        class="imbitch-about__image-social-wrap{% if anim_enabled %} imbitch-animate imbitch-anim--{{ anim_style }}{% endif %}"
+        {% if anim_enabled %}style="--imbitch-anim-delay: {{ anim_stagger | times: 3 }}ms;"{% endif %}
+      >
+
+        <!-- Mobile-only Social Strip (left of image on mobile) -->
+        <div
+          class="imbitch-about__social imbitch-about__social--mobile{% unless show_social_mobile %} imbitch-about__social--hidden{% endunless %}"
+          style="
+            background-color: {{ social_bg }};
+            gap: {{ social_gap }}px;
+            padding-top: {{ social_pt }}px;
+            padding-bottom: {{ social_pb }}px;
+            padding-left: {{ social_pl }}px;
+            padding-right: {{ social_pr }}px;
+          "
+        >
+          {% for block in section.blocks %}
+            {% if block.type == 'social_icon' %}
+              {% liquid
+                assign icon_size  = block.settings.icon_size  | default: 24
+                assign icon_color = block.settings.icon_color | default: '#ffffff'
+                assign icon_bg    = block.settings.icon_bg_color
+                assign icon_pt    = block.settings.icon_padding_top    | default: 0
+                assign icon_pb    = block.settings.icon_padding_bottom | default: 0
+                assign icon_pl    = block.settings.icon_padding_left   | default: 0
+                assign icon_pr    = block.settings.icon_padding_right  | default: 0
+                assign icon_mt    = block.settings.icon_margin_top     | default: 0
+                assign icon_mb    = block.settings.icon_margin_bottom  | default: 0
+              %}
+              <a
+                href="{{ block.settings.url }}"
+                class="imbitch-about__social-icon"
+                target="_blank"
+                rel="noopener"
+                aria-label="{{ block.settings.label }}"
+                style="
+                  width: {{ icon_size }}px;
+                  height: {{ icon_size }}px;
+                  background-color: {{ icon_bg }};
+                  padding-top: {{ icon_pt }}px;
+                  padding-bottom: {{ icon_pb }}px;
+                  padding-left: {{ icon_pl }}px;
+                  padding-right: {{ icon_pr }}px;
+                  margin-top: {{ icon_mt }}px;
+                  margin-bottom: {{ icon_mb }}px;
+                "
+              >
+                {% if block.settings.custom_svg != blank %}
+                  <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">{{ block.settings.custom_svg }}</span>
+                {% else %}
+                  <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                    {% case block.settings.platform %}
+                      {% when 'facebook' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {% when 'twitter' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 4L10.5 13L4 20H5.5L11.25 14L16.5 20H21L14 10.5L20 4H18.5L13.25 9.5L8.5 4H4Z" fill="{{ icon_color }}"/></svg>
+                      {% when 'youtube' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22.54 6.42C22.4212 5.94541 22.1793 5.51057 21.8387 5.15941C21.498 4.80824 21.0708 4.55318 20.6 4.42C18.88 4 12 4 12 4C12 4 5.12 4 3.4 4.46C2.92925 4.59318 2.50198 4.84824 2.16135 5.19941C1.82072 5.55057 1.57879 5.98541 1.46 6.46C1.14521 8.20556 0.991235 9.97631 1 11.75C0.988787 13.537 1.14277 15.3213 1.46 17.08C1.59096 17.5398 1.83831 17.9581 2.17814 18.2945C2.51798 18.6308 2.93882 18.8738 3.4 19C5.12 19.46 12 19.46 12 19.46C12 19.46 18.88 19.46 20.6 19C21.0708 18.8668 21.498 18.6118 21.8387 18.2606C22.1793 17.9094 22.4212 17.4746 22.54 17C22.8524 15.2676 23.0063 13.5103 23 11.75C23.0112 9.96295 22.8573 8.1787 22.54 6.42Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.75 15.02L15.5 11.75L9.75 8.48V15.02Z" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                      {% when 'tiktok' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.5a8.18 8.18 0 004.78 1.52V6.56a4.85 4.85 0 01-1.01.13z" fill="{{ icon_color }}"/></svg>
+                      {% when 'instagram' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="{{ icon_color }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="4" stroke="{{ icon_color }}" stroke-width="2"/><circle cx="17.5" cy="6.5" r="1" fill="{{ icon_color }}"/></svg>
+                      {% when 'pinterest' %}
+                        <svg width="{{ icon_size }}" height="{{ icon_size }}" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.853 0 1.267.64 1.267 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.476 1.806 1.772 0 3.137-1.868 3.137-4.566 0-2.386-1.716-4.054-4.165-4.054-2.837 0-4.5 2.127-4.5 4.326 0 .856.33 1.774.742 2.276a.3.3 0 01.069.286c-.076.312-.244.995-.277 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z" fill="{{ icon_color }}"/></svg>
+                    {% endcase %}
+                  </span>
+                {% endif %}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Image -->
+        <div
+          class="imbitch-about__image-wrap"
+          style="
+            background-color: {{ image_bg }};
+            padding-top: {{ image_pt }}px;
+            padding-bottom: {{ image_pb }}px;
+            padding-left: {{ image_pl }}px;
+            padding-right: {{ image_pr }}px;
+          "
+        >
+          {% if section.settings.about_image %}
+            <img
+              src="{{ section.settings.about_image | image_url: width: 576 }}"
+              alt="{{ section.settings.about_image.alt | default: 'IM BITCH founders' }}"
+              width="576"
+              height="697"
+              loading="eager"
+              fetchpriority="high"
+              class="imbitch-about__image"
+            >
+          {% else %}
+            {{ 'image' | placeholder_svg_tag: 'imbitch-about__image imbitch-about__image--placeholder' }}
+          {% endif %}
+        </div>
+
+      </div><!-- /.imbitch-about__image-social-wrap -->
+
+    </div>
+  </div>
+</section>
+
+<style>
+  :root {
+    --imbitch-font: 'glory', sans-serif;
+  }
+
+  /* ── Outer Section ── */
+  .imbitch-about {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+  }
+
+  /* ── 1200px Inner Container ── */
+  .imbitch-about__inner {
+    width: 1200px;
+    max-width: 100%;
+    min-height: calc(761px - 64px);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    box-sizing: border-box;
+  }
+
+  /* ── Social Icons Strip ── */
+  .imbitch-about__social {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    min-height: 168px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    align-self: center;
+    border-radius: 2px;
+  }
+
+  .imbitch-about__social-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    border-radius: 2px;
+  }
+
+  .imbitch-about__social-icon:hover {
+    opacity: 0.7;
+  }
+
+  .imbitch-about__icon-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .imbitch-about__icon-inner svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ── Content + Image Row ── */
+  .imbitch-about__content-wrap {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex: 1;
+    box-sizing: border-box;
+  }
+
+  /* ── Text Column ── */
+  .imbitch-about__text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  .imbitch-about__brand-name {
+    font-family: var(--imbitch-font), sans-serif;
+    font-weight: 600;
+    font-size: 32px;
+    line-height: 48px;
+    letter-spacing: -0.016em;
+    color: #ffffff;
+    margin: 0 0 16px 0;
+    padding: 0;
+  }
+
+  .imbitch-about__tagline {
+    font-family: var(--imbitch-font), sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: -0.016em;
+    color: #ffffff;
+    margin: 0 0 24px 0;
+    padding: 0;
+  }
+
+  .imbitch-about__body {
+    font-family: var(--imbitch-font), sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+    letter-spacing: -0.016em;
+    color: #ffffff;
+  }
+
+  .imbitch-about__body p {
+    margin: 0 0 12px 0;
+    padding: 0;
+  }
+
+  .imbitch-about__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ── Image Column ── */
+  .imbitch-about__image-wrap {
+    flex: 1;
+    height: 697px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .imbitch-about__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+  }
+
+  .imbitch-about__image--placeholder {
+    width: 100%;
+    height: 100%;
+    background: #1a1a1a;
+  }
+
+  /* ══════════════════════════════
+     RESPONSIVE
+  ══════════════════════════════ */
+
+  /* ── Image+Social Wrapper (desktop: image only) ── */
+  .imbitch-about__image-social-wrap {
+    flex-shrink: 0;
+    width: 576px;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+  }
+
+  /* Mobile social (inside image-social-wrap) hidden on desktop */
+  .imbitch-about__social--mobile {
+    display: none;
+  }
+
+  @media screen and (max-width: 1199px) {
+    .imbitch-about__inner {
+      width: 100%;
+      padding: 0 24px;
+    }
+    .imbitch-about__image-social-wrap {
+      width: 45%;
+    }
+    .imbitch-about__image-wrap {
+      height: auto;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    /* ── Outer inner: column → [image-social-row] then [text] ── */
+    .imbitch-about__inner {
+      flex-direction: column;
+      align-items: stretch;
+      padding: 0 16px;
+      min-height: unset;
+    }
+
+    /* Desktop social strip: hidden on mobile */
+    .imbitch-about__social:not(.imbitch-about__social--mobile) {
+      display: none !important;
+    }
+
+    /* content-wrap becomes a column: image-social-wrap on top, text below */
+    .imbitch-about__content-wrap {
+      flex-direction: column !important;
+      margin-left: 0 !important;
+      gap: 20px !important;
+    }
+
+    /* Reorder: image (with its social wrap) on top, text below */
+    .imbitch-about__image-social-wrap {
+      order: 1;
+    }
+
+    .imbitch-about__text {
+      order: 2;
+    }
+
+    /* image-social-wrap: row — image left, social right */
+    .imbitch-about__image-social-wrap {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 0;
+      width: 100%;
+    }
+
+    /* Image takes most of the width */
+    .imbitch-about__image-wrap {
+      flex: 1;
+      width: auto !important;
+      height: auto !important;
+      padding: 0 !important;
+    }
+
+    .imbitch-about__image {
+      width: 100%;
+      height: 100%;
+      max-height: 480px;
+      object-fit: cover;
+      object-position: center top;
+    }
+
+    /* Mobile social: vertical strip on the right of image */
+    .imbitch-about__social--mobile {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 40px !important;
+      height: auto !important;
+      min-height: unset !important;
+      flex-shrink: 0;
+      border-radius: 2px;
+    }
+
+    /* Mobile social: hidden by default (toggle "Show Social Icons on Mobile" in theme customizer to re-enable) */
+    .imbitch-about__social--mobile.imbitch-about__social--hidden {
+      display: none !important;
+    }
+
+    .imbitch-about__brand-name {
+      font-size: 24px;
+      line-height: 36px;
+    }
+
+    .imbitch-about__tagline {
+      font-size: 18px;
+      line-height: 26px;
+    }
+
+    .imbitch-about__body {
+      font-size: 14px;
+      line-height: 22px;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .imbitch-about__inner {
+      padding: 0 12px;
+    }
+    .imbitch-about__brand-name {
+      font-size: 20px;
+      line-height: 30px;
+    }
+    .imbitch-about__tagline {
+      font-size: 16px;
+      line-height: 24px;
+    }
+  }
+
+  /* ══════════════════════════════
+     ANIMATIONS (editable via Theme Customizer)
+     Scoped under html.imbitch-anim-active, which is only added once the
+     reveal script has actually run — this guarantees content is always
+     visible by default and is never permanently hidden if JS fails/blocked.
+
+     FIX: Added a pure-CSS "force reveal" keyframe as a hard backstop.
+     Even if JavaScript never runs at all (blocked, errors out, section
+     injected via AJAX without executing its <script>, etc.), this keyframe
+     forces full opacity/transform after a fixed delay — completely
+     independent of the JS timeout below. This guarantees content can never
+     get permanently stuck invisible. Delay kept short (1.5s) so that if the
+     JS path fails, visitors still see content almost immediately rather
+     than waiting several seconds.
+  ══════════════════════════════ */
+  @keyframes imbitch-force-reveal {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  html.imbitch-anim-active .imbitch-animate {
+    opacity: 0;
+    transition-property: opacity, transform;
+    transition-duration: var(--imbitch-anim-duration, 700ms);
+    transition-timing-function: var(--imbitch-anim-easing, ease-out);
+    transition-delay: var(--imbitch-anim-delay, 0ms);
+    will-change: opacity, transform;
+    /* CSS-only safety net: forces visibility after 1.5s no matter what JS does */
+    animation: imbitch-force-reveal 0.01s 1.5s forwards;
+  }
+
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--fade {
+    transform: none;
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--fade-up {
+    transform: translateY(32px);
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--fade-down {
+    transform: translateY(-32px);
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--fade-left {
+    transform: translateX(32px);
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--fade-right {
+    transform: translateX(-32px);
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--zoom-in {
+    transform: scale(0.92);
+  }
+  html.imbitch-anim-active .imbitch-animate.imbitch-anim--zoom-out {
+    transform: scale(1.08);
+  }
+
+  html.imbitch-anim-active .imbitch-animate.is-visible {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html.imbitch-anim-active .imbitch-animate {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+</style>
+
+{% if anim_enabled %}
+<script>
+  (function () {
+    try {
+      var root = document.getElementById('imbitch-about-{{ section.id }}');
+      if (!root) return;
+
+      // Add the animation-active class as early as possible so the CSS
+      // backstop keyframe (imbitch-force-reveal) starts counting down
+      // regardless of anything that happens below.
+      document.documentElement.classList.add('imbitch-anim-active');
+
+      var animatedEls = root.querySelectorAll('.imbitch-animate');
+      if (!animatedEls.length) return;
+
+      function reveal(el) {
+        el.classList.add('is-visible');
+      }
+
+      function revealInstant(el) {
+        // Elements already visible on page load should NOT play the
+        // scroll-fade animation at all — that's what was causing content
+        // to stay blank until the transition-delay + transition-duration
+        // finished. Temporarily disable transitions/animation, jump
+        // straight to the visible state, then restore transitions so any
+        // later state changes (unlikely here) still animate normally.
+        el.style.transition = 'none';
+        el.style.animation = 'none';
+        el.classList.add('is-visible');
+        void el.offsetWidth; // force reflow so the "none" actually applies
+        el.style.transition = '';
+        el.style.animation = '';
+      }
+
+      function isAlreadyInViewport(el) {
+        var rect = el.getBoundingClientRect();
+        var vh = window.innerHeight || document.documentElement.clientHeight;
+        // Same threshold logic as the observer below (15% visible)
+        return rect.top < vh * 0.85 && rect.bottom > 0;
+      }
+
+      if (!('IntersectionObserver' in window)) {
+        animatedEls.forEach(revealInstant);
+        return;
+      }
+
+      var pending = [];
+      animatedEls.forEach(function (el) {
+        // Anything already on-screen at load time appears instantly —
+        // no fade, no delay. Only elements below the fold get the
+        // scroll-triggered fade-in animation as the visitor scrolls down.
+        if (isAlreadyInViewport(el)) {
+          revealInstant(el);
+        } else {
+          pending.push(el);
+        }
+      });
+
+      if (!pending.length) return;
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              reveal(entry.target);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
+      );
+
+      pending.forEach(function (el) {
+        observer.observe(el);
+      });
+
+      // Safety net #1 (JS-level): if the observer never fires for remaining
+      // below-the-fold elements, force-reveal anyway. Kept short so nothing
+      // is left hidden for long.
+      setTimeout(function () {
+        pending.forEach(reveal);
+      }, 1200);
+    } catch (e) {
+      // Safety net #2 (catch-all): if ANY error occurs above, immediately
+      // force every animated element visible via inline styles so content
+      // is never left hidden because of a script failure.
+      var fallbackEls = document.querySelectorAll('.imbitch-animate');
+      fallbackEls.forEach(function (el) {
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+      });
+    }
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "IM BITCH About",
+  "tag": "section",
+  "class": "section-imbitch-about",
+  "settings": [
+    {
+      "type": "header",
+      "content": "── Section Layout ──"
+    },
+    {
+      "type": "color",
+      "id": "section_bg_color",
+      "label": "Section Background Color",
+      "default": "#04060b"
+    },
+    {
+      "type": "range",
+      "id": "section_padding_top",
+      "label": "Section Padding Top (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "section_padding_bottom",
+      "label": "Section Padding Bottom (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "section_padding_left",
+      "label": "Section Padding Left (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "section_padding_right",
+      "label": "Section Padding Right (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "── Social Icons Strip ──"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social_mobile",
+      "label": "Show Social Icons on Mobile",
+      "info": "Off by default. Turn this on anytime to bring the social icons back on mobile.",
+      "default": false
+    },
+    {
+      "type": "color",
+      "id": "social_bg_color",
+      "label": "Social Strip Background Color",
+      "default": "#263d48"
+    },
+    {
+      "type": "range",
+      "id": "social_icon_gap",
+      "label": "Gap Between Icons (px)",
+      "min": 4,
+      "max": 48,
+      "step": 2,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "social_padding_top",
+      "label": "Social Strip Padding Top (px)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "social_padding_bottom",
+      "label": "Social Strip Padding Bottom (px)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "social_padding_left",
+      "label": "Social Strip Padding Left (px)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "social_padding_right",
+      "label": "Social Strip Padding Right (px)",
+      "min": 0,
+      "max": 48,
+      "step": 2,
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "── Content Area ──"
+    },
+    {
+      "type": "range",
+      "id": "content_gap",
+      "label": "Gap: Text ↔ Image (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "content_margin_left",
+      "label": "Gap: Social Strip → Content (px)",
+      "min": 0,
+      "max": 120,
+      "step": 4,
+      "default": 56
+    },
+    {
+      "type": "header",
+      "content": "── Text Block ──"
+    },
+    {
+      "type": "color",
+      "id": "text_bg_color",
+      "label": "Text Block Background Color",
+      "default": "#04060b"
+    },
+    {
+      "type": "range",
+      "id": "text_padding_top",
+      "label": "Text Padding Top (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_padding_bottom",
+      "label": "Text Padding Bottom (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_padding_left",
+      "label": "Text Padding Left (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "text_padding_right",
+      "label": "Text Padding Right (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 0
+    },
+    {
+      "type": "header",
+      "content": "── Image Block ──"
+    },
+    {
+      "type": "color",
+      "id": "image_bg_color",
+      "label": "Image Block Background Color",
+      "default": "#04060b"
+    },
+    {
+      "type": "range",
+      "id": "image_padding_top",
+      "label": "Image Padding Top (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_padding_bottom",
+      "label": "Image Padding Bottom (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_padding_left",
+      "label": "Image Padding Left (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "range",
+      "id": "image_padding_right",
+      "label": "Image Padding Right (px)",
+      "min": 0,
+      "max": 80,
+      "step": 4,
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "── Content ──"
+    },
+    {
+      "type": "text",
+      "id": "brand_name",
+      "label": "Brand Name",
+      "default": "IM BITCH"
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "label": "Tagline",
+      "default": "Built by Two Sisters. Made for Bold Women."
+    },
+    {
+      "type": "richtext",
+      "id": "body_text",
+      "label": "Body Text",
+      "default": "<p>IM BITCH was created by two sisters in the USA with a dream, a passion for beauty, and a belief that confidence should never be quiet.</p><p>We started this brand with one simple idea: nail polish should feel more than just pretty. It should feel expressive, powerful, playful, and personal. Every shade is created to help you show up exactly as you are, whether your mood is soft, fierce, elegant, wild, calm, or completely unstoppable.</p><p>IM BITCH is more than a beauty brand. It is a statement.</p><p>It is for the women who own their style, protect their energy, and never apologize for being themselves.</p><p>From our first shade to every product we release, we focus on beautiful colors, premium presentation, and a brand experience that feels confident, modern, and unforgettable.</p><p>Two sisters. One dream. A whole lot of attitude.</p><p>Welcome to IM BITCH.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "about_image",
+      "label": "About Image"
+    },
+    {
+      "type": "header",
+      "content": "── Animations ──"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_animations",
+      "label": "Enable Animations",
+      "info": "Animates the section and its content (social icons, text, image) into view as the visitor scrolls.",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "animation_style",
+      "label": "Animation Style",
+      "options": [
+        { "value": "fade",       "label": "Fade In" },
+        { "value": "fade-up",    "label": "Fade Up" },
+        { "value": "fade-down",  "label": "Fade Down" },
+        { "value": "fade-left",  "label": "Slide From Right" },
+        { "value": "fade-right", "label": "Slide From Left" },
+        { "value": "zoom-in",    "label": "Zoom In" },
+        { "value": "zoom-out",   "label": "Zoom Out" }
+      ],
+      "default": "fade-up"
+    },
+    {
+      "type": "range",
+      "id": "animation_duration",
+      "label": "Animation Duration (ms)",
+      "min": 200,
+      "max": 2000,
+      "step": 100,
+      "default": 700
+    },
+    {
+      "type": "range",
+      "id": "animation_stagger",
+      "label": "Stagger Delay Between Elements (ms)",
+      "min": 0,
+      "max": 500,
+      "step": 50,
+      "default": 150
+    },
+    {
+      "type": "select",
+      "id": "animation_easing",
+      "label": "Animation Easing",
+      "options": [
+        { "value": "ease",         "label": "Ease" },
+        { "value": "ease-in",      "label": "Ease In" },
+        { "value": "ease-out",     "label": "Ease Out" },
+        { "value": "ease-in-out",  "label": "Ease In Out" },
+        { "value": "linear",       "label": "Linear" },
+        { "value": "cubic-bezier(0.16, 1, 0.3, 1)", "label": "Smooth (Expo Out)" }
+      ],
+      "default": "ease-out"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "social_icon",
+      "name": "Social Icon",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Icon Style"
+        },
+        {
+          "type": "select",
+          "id": "platform",
+          "label": "Platform (built-in icon)",
+          "options": [
+            { "value": "facebook",  "label": "Facebook" },
+            { "value": "twitter",   "label": "Twitter / X" },
+            { "value": "youtube",   "label": "YouTube" },
+            { "value": "tiktok",    "label": "TikTok" },
+            { "value": "instagram", "label": "Instagram" },
+            { "value": "pinterest", "label": "Pinterest" },
+            { "value": "custom",    "label": "Custom SVG (paste below)" }
+          ],
+          "default": "instagram"
+        },
+        {
+          "type": "textarea",
+          "id": "custom_svg",
+          "label": "Custom SVG Code (overrides platform icon)",
+          "info": "Paste a full <svg>…</svg> tag here. Leave blank to use the platform icon above."
+        },
+        {
+          "type": "color",
+          "id": "icon_color",
+          "label": "Icon Color",
+          "default": "#ffffff"
+        },
+        {
+          "type": "range",
+          "id": "icon_size",
+          "label": "Icon Size (px)",
+          "min": 12,
+          "max": 48,
+          "step": 2,
+          "default": 24
+        },
+        {
+          "type": "color",
+          "id": "icon_bg_color",
+          "label": "Icon Background Color",
+          "default": "#00000000"
+        },
+        {
+          "type": "header",
+          "content": "Spacing"
+        },
+        {
+          "type": "range",
+          "id": "icon_padding_top",
+          "label": "Padding Top (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "icon_padding_bottom",
+          "label": "Padding Bottom (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "icon_padding_left",
+          "label": "Padding Left (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "icon_padding_right",
+          "label": "Padding Right (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "icon_margin_top",
+          "label": "Margin Top (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "range",
+          "id": "icon_margin_bottom",
+          "label": "Margin Bottom (px)",
+          "min": 0,
+          "max": 24,
+          "step": 2,
+          "default": 0
+        },
+        {
+          "type": "header",
+          "content": "Link"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Profile URL"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Aria Label (accessibility)",
+          "default": "Follow us"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "IM BITCH About",
+      "blocks": [
+        { "type": "social_icon", "settings": { "platform": "facebook",  "label": "Facebook" } },
+        { "type": "social_icon", "settings": { "platform": "twitter",   "label": "Twitter" } },
+        { "type": "social_icon", "settings": { "platform": "youtube",   "label": "YouTube" } },
+        { "type": "social_icon", "settings": { "platform": "tiktok",    "label": "TikTok" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

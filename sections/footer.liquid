@@ -1,0 +1,1390 @@
+{% comment %}
+  ============================================================
+  FOOTER GROUP SECTION
+  Contains:
+    1) Subscribe & Save banner
+    2) Original footer content — unchanged
+  Because this lives in the footer group, it renders on every page.
+  ============================================================
+{% endcomment %}
+
+{{ 'section-core.css' | asset_url | stylesheet_tag }}
+
+<div class="section-background color-{{ section.settings.color_scheme }}"></div>
+
+<style>
+  :root {
+    --font: 'glory', sans-serif;
+  }
+
+  .sub-banner {
+    background: #030407;
+    padding: 0;
+    font-family: var(--font);
+
+    /* ---- Newsletter field variables (editable from theme editor) ---- */
+    --nl-max-width: {{ section.settings.newsletter_max_width }}px;
+    --nl-height: {{ section.settings.newsletter_height }}px;
+    --nl-font-size: {{ section.settings.newsletter_font_size }}px;
+    --nl-radius: {{ section.settings.newsletter_border_radius }}px;
+    --nl-padding-x: {{ section.settings.newsletter_padding_horizontal }}px;
+    --nl-btn-width: {{ section.settings.newsletter_button_width }}%;
+    --nl-margin-top: {{ section.settings.newsletter_margin_top }}px;
+    --nl-gap: {{ section.settings.newsletter_gap }}px;
+    --nl-border-color: {{ section.settings.newsletter_border_color }};
+    --nl-placeholder-color: {{ section.settings.newsletter_placeholder_color }};
+    --nl-btn-bg: {{ section.settings.newsletter_button_bg }};
+    --nl-btn-text: {{ section.settings.newsletter_button_text_color }};
+    --nl-input-bg: {{ section.settings.newsletter_input_bg }};
+  }
+
+  .sub-banner__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    min-height: 460px;
+  }
+
+  /* ── Left: Text ── */
+  .sub-banner__content {
+    padding: 56px 0px;
+  }
+
+  .sub-banner__heading {
+    font-size: 64px;
+    font-weight: 300;
+    color: #FFFFFF;
+    line-height: 140%;
+    letter-spacing: normal;
+    margin: 0 0 16px;
+    font-family: var(--font);
+  }
+
+  .sub-banner__subtext {
+    font-size: 24px;
+    font-weight: 400;
+    color: #7D909C;
+    line-height: 140%;
+    margin: 0 0 32px;
+  }
+
+  .sub-banner__subtext p {
+    margin: 0;
+  }
+
+  /* ── Newsletter field (replaces Shop Now button) ── */
+  .sub-banner__newsletter {
+    width: 100%;
+    max-width: var(--nl-max-width);
+    margin-top: var(--nl-margin-top);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sub-banner__newsletter-form {
+    display: flex;
+    align-items: stretch;
+    width: 100%;
+    height: var(--nl-height);
+    gap: var(--nl-gap);
+    border: 1px solid var(--nl-border-color);
+    border-radius: var(--nl-radius);
+    overflow: hidden;
+    box-sizing: border-box;
+    background: var(--nl-input-bg);
+  }
+
+  .sub-banner__newsletter-input {
+    flex: 1 1 auto;
+    min-width: 0;
+    height: 100%;
+    background: transparent !important;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-family: var(--font);
+    font-size: var(--nl-font-size);
+    padding: 0 var(--nl-padding-x);
+    box-sizing: border-box;
+  }
+
+  .sub-banner__newsletter-input::placeholder {
+    color: var(--nl-placeholder-color);
+  }
+
+  .sub-banner__newsletter-submit {
+    flex: 0 0 var(--nl-btn-width);
+    height: 100%;
+    background: var(--nl-btn-bg);
+    color: var(--nl-btn-text);
+    border: none;
+    font-family: var(--font);
+    font-size: var(--nl-font-size);
+    font-weight: 700;
+    line-height: 150%;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, opacity 0.2s;
+    padding: 0 8px;
+    box-sizing: border-box;
+  }
+
+  .sub-banner__newsletter-submit:hover {
+    opacity: 0.85;
+  }
+
+  .sub-banner__newsletter-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* ── Inline success / error message under the form ── */
+  .sub-banner__form-message {
+    margin-top: 12px;
+    font-family: var(--font);
+    font-size: 14px;
+    min-height: 20px;
+    color: #6FCF97;
+    display: none;
+  }
+
+  .sub-banner__form-message.show {
+    display: block;
+  }
+
+  .sub-banner__form-message.is-error {
+    color: #EB5757;
+  }
+
+  /* Captcha sits under email + Join (not floating top-right).
+     IMPORTANT: this slot is empty on a normal page load — Shopify only
+     injects/activates a real captcha widget if it decides a challenge
+     is actually needed (e.g. suspicious activity on submit). We must
+     NOT force this to be visible; we only handle its position so that
+     *if* Shopify ever populates it, it lands in the right spot. */
+  .sub-banner__newsletter-captcha {
+    width: 100%;
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sub-banner__newsletter-captcha:empty {
+    display: none;
+    margin-top: 0;
+  }
+
+  /* Only add spacing once real, visible content has been placed inside
+     (class added by JS below) — an empty/hidden placeholder element
+     living inside the slot should not push layout or show a border. */
+  .sub-banner__newsletter-captcha.has-visible-content {
+    margin-top: 16px;
+  }
+
+  .sub-banner__newsletter .h-captcha,
+  .sub-banner__newsletter .shopify-challenge__container,
+  .sub-banner__newsletter [data-hcaptcha-widget-id],
+  .sub-banner__newsletter-captcha .h-captcha,
+  .sub-banner__newsletter-captcha .shopify-challenge__container,
+  .sub-banner__content > .h-captcha,
+  .sub-banner__content > .shopify-challenge__container {
+    position: static !important;
+    inset: auto !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    transform: none !important;
+    margin: 0 !important;
+    float: none !important;
+    /* No forced display here on purpose — see comment above. Shopify's
+       own script toggles this element's display when a challenge is
+       actually required. Forcing display:block made an empty bordered
+       box appear on every visit even when no captcha was needed. */
+  }
+
+  /* Browsers draw a default inset border around <iframe> elements.
+     Shopify/hCaptcha widgets render inside an iframe, so without this
+     reset that default border shows up as a plain empty box. */
+  .sub-banner__newsletter-captcha iframe,
+  .sub-banner__newsletter iframe {
+    border: none !important;
+  }
+
+  .sub-banner__newsletter-captcha .shopify-challenge__button,
+  .sub-banner__newsletter-captcha input[type="submit"]:not(.sub-banner__newsletter-submit),
+  .sub-banner__newsletter .shopify-challenge__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 8px 20px;
+    background: var(--nl-btn-bg);
+    color: var(--nl-btn-text);
+    border: none;
+    border-radius: var(--nl-radius);
+    font-family: var(--font);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── Toast ── */
+  .sub-banner__toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #111111;
+    color: #ffffff;
+    border: 1px solid #AFC1CA;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-family: var(--font);
+    font-size: 14px;
+    z-index: 9999;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+
+  .sub-banner__toast.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  /* ── Right: Image ── */
+  .sub-banner__image {
+    width: 100%;
+    height: 100%;
+    min-height: 460px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sub-banner__image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 1024px) {
+    .sub-banner__inner {
+      min-height: auto;
+    }
+
+    .sub-banner__content {
+      padding: 40px 24px;
+    }
+
+    .sub-banner__heading {
+      font-size: 28px;
+    }
+
+    .sub-banner__subtext {
+      font-size: 18px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .sub-banner__inner {
+      grid-template-columns: 1fr;
+    }
+
+    /* Content on top, image at the bottom on mobile */
+    .sub-banner__content {
+      padding: 40px 20px 28px;
+      order: 1;
+    }
+
+    .sub-banner__image {
+      order: 2;
+      min-height: 260px;
+    }
+
+    .sub-banner__heading {
+      font-size: 24px;
+    }
+
+    .sub-banner__subtext {
+      font-size: 16px;
+      margin-bottom: 24px;
+    }
+
+    .sub-banner {
+      --nl-max-width: 100%;
+      --nl-height: {{ section.settings.newsletter_height | times: 0.9 | round }}px;
+      --nl-font-size: {{ section.settings.newsletter_font_size | minus: 1 }}px;
+      --nl-btn-width: {{ section.settings.newsletter_button_width_mobile }}%;
+    }
+  }
+
+  /* ── Full-bleed right image on desktop ── */
+  @media (min-width: 1025px) {
+    .sub-banner__inner {
+      position: relative;
+    }
+
+    .sub-banner__image {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      right: calc(50% - 50vw);
+      width: auto;
+      min-height: 0;
+    }
+  }
+</style>
+
+<section class="sub-banner">
+  <div class="sub-banner__inner">
+
+    <!-- Content -->
+    <div class="sub-banner__content">
+
+      {% if section.settings.heading != blank %}
+        <h2 class="sub-banner__heading">{{ section.settings.heading }}</h2>
+      {% endif %}
+
+      {% if section.settings.subtext != blank %}
+        <div class="sub-banner__subtext">{{ section.settings.subtext }}</div>
+      {% endif %}
+
+      <!-- Newsletter: Shopify customer form (syncs to Mailchimp when connected) -->
+      {% assign newsletter_form_id = section.id | append: '-newsletter' %}
+      {% form 'customer', id: newsletter_form_id, class: 'sub-banner__newsletter' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <input type="hidden" name="contact[accepts_marketing]" value="true">
+        <div class="sub-banner__newsletter-form">
+          <input
+            type="email"
+            name="contact[email]"
+            id="{{ newsletter_form_id }}-email"
+            class="sub-banner__newsletter-input"
+            placeholder="{{ section.settings.newsletter_placeholder | default: 'Enter your email' }}"
+            aria-label="Email address"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            required
+            {% if form.errors %}
+              aria-invalid="true"
+              aria-describedby="{{ newsletter_form_id }}-message"
+            {% elsif form.posted_successfully? %}
+              aria-describedby="{{ newsletter_form_id }}-message"
+            {% endif %}>
+          <button type="submit" name="commit" class="sub-banner__newsletter-submit">
+            {{ section.settings.newsletter_button_label | default: 'Join' }}
+          </button>
+        </div>
+        <div class="sub-banner__newsletter-captcha" data-newsletter-captcha></div>
+        <p
+          id="{{ newsletter_form_id }}-message"
+          class="sub-banner__form-message{% if form.posted_successfully? %} show{% elsif form.errors %} show is-error{% endif %}"
+          data-newsletter-message
+          role="status"
+          aria-live="polite"
+        >
+          {%- if form.posted_successfully? -%}
+            Thanks! You have been subscribed.
+          {%- elsif form.errors -%}
+            {{ form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email }}
+          {%- endif -%}
+        </p>
+      {% endform %}
+
+    </div>
+
+    <!-- Image -->
+    <div class="sub-banner__image">
+      {% if section.settings.image != blank %}
+        <img
+          src="{{ section.settings.image | img_url: 'master' }}"
+          alt="{{ section.settings.image_alt | default: section.settings.heading | escape }}"
+          loading="lazy"
+          width="720"
+          height="458"
+        >
+      {% elsif section.settings.image_url != blank %}
+        <img
+          src="{{ section.settings.image_url }}"
+          alt="{{ section.settings.image_alt | default: '' }}"
+          loading="lazy"
+          width="720"
+          height="458"
+        >
+      {% else %}
+        {{ 'lifestyle-1' | placeholder_svg_tag }}
+      {% endif %}
+    </div>
+
+  </div>
+</section>
+
+<footer class="iab-footer color-{{ section.settings.color_scheme }}">
+  <div class="iab-footer__container">
+
+    <div class="iab-footer__inner">
+
+      <!-- Brand + Contact -->
+      <div class="iab-footer__brand-col wow fadeInUp" data-wow-delay="100ms">
+        <a
+          href="{{ routes.root_url }}"
+          class="iab-footer__logo"
+          aria-label="{{ section.settings.logo_bottom | default: section.settings.logo_image.alt }}"
+          {% if section.settings.logo_image != blank %}
+            style="--iab-logo-width: {{ section.settings.logo_width | default: 160 }}px; --iab-logo-width-mobile: {{ section.settings.logo_width_mobile | default: 120 }}px;"
+          {% endif %}
+        >
+          {% if section.settings.logo_image != blank %}
+            <img
+              class="iab-footer__logo-img"
+              src="{{ section.settings.logo_image | image_url: width: 800 }}"
+              srcset="{{ section.settings.logo_image | image_url: width: 200 }} 200w,
+                      {{ section.settings.logo_image | image_url: width: 400 }} 400w,
+                      {{ section.settings.logo_image | image_url: width: 600 }} 600w,
+                      {{ section.settings.logo_image | image_url: width: 800 }} 800w"
+              sizes="(max-width: 749px) {{ section.settings.logo_width_mobile | default: 120 }}px, {{ section.settings.logo_width | default: 160 }}px"
+              width="{{ section.settings.logo_image.width }}"
+              height="{{ section.settings.logo_image.height }}"
+              alt="{{ section.settings.logo_image.alt | default: section.settings.logo_bottom }}"
+              loading="lazy"
+            >
+          {% else %}
+            <span class="iab-footer__logo-top">{{ section.settings.logo_top | default: 'I AM' }}</span>
+            <span class="iab-footer__logo-bottom">{{ section.settings.logo_bottom | default: 'BITCH' }}</span>
+          {% endif %}
+        </a>
+
+        <div class="iab-footer__contact-items">
+          {% if section.settings.contact_email != blank %}
+            <a href="mailto:{{ section.settings.contact_email }}" class="iab-footer__contact-item">
+              <svg class="iab-footer__icon" width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <rect x="1" y="1" width="18" height="14" rx="1" stroke="currentColor" stroke-width="1.5"/>
+                <path d="M1 3L10 9.5L19 3" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              <span>{{ section.settings.contact_label | default: 'Contact us' }}</span>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Nav Columns -->
+      <nav class="iab-footer__nav" aria-label="Footer navigation">
+
+        <!-- Column 1: About -->
+        <div class="iab-footer__nav-col wow fadeInUp" data-wow-delay="200ms">
+          <p class="iab-footer__nav-heading">{{ section.settings.col1_title | default: 'ABOUT' }}</p>
+          <ul class="iab-footer__nav-list">
+            {% for i in (1..5) %}
+              {% assign label_key = 'col1_link' | append: i | append: '_label' %}
+              {% assign url_key   = 'col1_link' | append: i | append: '_url' %}
+              {% if section.settings[label_key] != blank %}
+                <li><a href="{{ section.settings[url_key] | default: '#' }}">{{ section.settings[label_key] }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Column 2: Products -->
+        <div class="iab-footer__nav-col wow fadeInUp" data-wow-delay="300ms">
+          <p class="iab-footer__nav-heading">{{ section.settings.col2_title | default: 'PRODUCTS' }}</p>
+          <ul class="iab-footer__nav-list">
+            {% for i in (1..5) %}
+              {% assign label_key = 'col2_link' | append: i | append: '_label' %}
+              {% assign url_key   = 'col2_link' | append: i | append: '_url' %}
+              {% if section.settings[label_key] != blank %}
+                <li><a href="{{ section.settings[url_key] | default: '#' }}">{{ section.settings[label_key] }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+      
+
+        <!-- Column 4: Help -->
+        <div class="iab-footer__nav-col wow fadeInUp" data-wow-delay="500ms">
+          <p class="iab-footer__nav-heading">{{ section.settings.col4_title | default: 'HELP' }}</p>
+          <ul class="iab-footer__nav-list">
+            {% for i in (1..6) %}
+              {% assign label_key = 'col4_link' | append: i | append: '_label' %}
+              {% assign url_key   = 'col4_link' | append: i | append: '_url' %}
+              {% if section.settings[label_key] != blank %}
+                <li><a href="{{ section.settings[url_key] | default: '#' }}">{{ section.settings[label_key] }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        </div>
+
+      </nav>
+    </div>
+
+    <!-- Social Bar -->
+    <div class="iab-footer__social-bar">
+      {% if section.settings.social_handle != blank %}
+        {% if section.settings.social_handle_url != blank %}
+          <a href="{{ section.settings.social_handle_url }}" class="iab-footer__social-handle" target="_blank" rel="noopener noreferrer">{{ section.settings.social_handle }}</a>
+        {% else %}
+          <span class="iab-footer__social-handle">{{ section.settings.social_handle }}</span>
+        {% endif %}
+      {% endif %}
+      <div class="iab-footer__social-icons">
+
+  {% if section.settings.facebook_url != blank %}
+    <a href="{{ section.settings.facebook_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+      <img src="{{ 'facebook-lite.svg' | asset_url }}" alt="Facebook">
+    </a>
+  {% endif %}
+
+  {% if section.settings.instagram_url != blank %}
+    <a href="{{ section.settings.instagram_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram">
+    </a>
+  {% endif %}
+
+  {% if section.settings.youtube_url != blank %}
+    <a href="{{ section.settings.youtube_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+      <img src="{{ 'youtube.svg' | asset_url }}" alt="YouTube">
+    </a>
+  {% endif %}
+
+  {% if section.settings.tiktok_url != blank %}
+    <a href="{{ section.settings.tiktok_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+      <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok">
+    </a>
+  {% endif %}
+
+</div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="iab-footer__bottom">
+      <a href="{{ section.settings.privacy_url | default: '/policies/privacy-policy' }}" class="iab-footer__bottom-link">
+        {{ section.settings.privacy_label | default: 'Privacy Policy' }}
+      </a>
+      <a href="{{ section.settings.patents_url | default: '#' }}" class="iab-footer__bottom-link">
+        {{ section.settings.patents_label | default: 'Patents' }}
+      </a>
+      <a href="{{ section.settings.terms_url | default: '/policies/terms-of-service' }}" class="iab-footer__bottom-link">
+        {{ section.settings.terms_label | default: 'Terms & Conditions' }}
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+{% stylesheet %}
+/* ============================================================
+   I AM BITCH — Custom Footer (Horizon Theme)
+   ============================================================ */
+:root {
+    --font: 'glory', sans-serif;
+  }
+/* Outer footer = full-width black band. No max-width here —
+   this is what gives the continuous black background edge to edge. */
+.iab-footer {
+  background-color: #000;
+  color: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Inner container = the actual 1200px centered content column.
+   Everything (logo, nav, social bar, bottom bar) lives inside this,
+   so all rows align to the same 1200px edges. */
+.iab-footer__container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 0px;
+  box-sizing: border-box;
+}
+
+/* ---- Top: brand + nav side by side ---- */
+.iab-footer__inner {
+  display: flex;
+  gap: 40px;
+  padding-bottom: 48px;
+}
+
+/* ---- Brand Column ---- */
+.iab-footer__brand-col {
+  flex: 0 0 240px;
+  min-width: 200px;
+}
+
+.iab-footer__logo {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: #fff;
+  line-height: 1;
+  margin-bottom: 36px;
+}
+
+.iab-footer__logo-top {
+  font-size: 22px;
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  font-family: var(--font);
+}
+
+.iab-footer__logo-bottom {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  font-family: var(--font);
+}
+
+/* ---- Uploaded logo image (responsive) ---- */
+.iab-footer__logo-img {
+  display: block;
+  width: var(--iab-logo-width, 160px);
+  max-width: 100%;
+  height: auto;
+}
+
+.iab-footer__contact-items {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.iab-footer__contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-family: var(--font);
+  transition: opacity 0.2s ease;
+}
+
+.iab-footer__contact-item:hover {
+  opacity: 0.65;
+}
+
+.iab-footer__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+}
+
+/* ---- Nav ---- */
+.iab-footer__nav {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.iab-footer__nav-col {
+  flex: 1;
+}
+
+.iab-footer__nav-heading {
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 22px;
+  color: #fff;
+  font-family: var(--font);
+}
+
+.iab-footer__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.iab-footer__nav-list a {
+  color: #AFC1CA;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-family: var(--font);
+  transition: color 0.2s ease;
+}
+
+.iab-footer__nav-list a:hover {
+  color: #fff;
+}
+
+/* ---- Social Bar ---- */
+.iab-footer__social-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color:#AFC1CA;
+  gap: 22px;
+  padding: 28px 0;
+  /* border-top: 1px solid rgba(255, 255, 255, 0.12); */
+}
+
+.iab-footer__social-handle {
+  font-size: 16px;
+  font-weight: 400;
+  color: #AFC1CA;
+  letter-spacing: 0.02em;
+  font-family: var(--font);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a.iab-footer__social-handle:hover {
+  color: #fff;
+}
+
+.iab-footer__social-icons {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.iab-footer__social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.iab-footer__social-link:hover {
+  opacity: 0.6;
+}
+
+/* ---- Bottom Bar ---- */
+.iab-footer__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0;
+  /* border-top: 1px solid rgba(255, 255, 255, 0.12); */
+}
+
+.iab-footer__bottom-link {
+  color: #AFC1CA;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  font-family: var(--font);
+  transition: color 0.2s ease;
+}
+
+.iab-footer__bottom-link:hover {
+  color: #fff;
+}
+
+/* ============================================================
+   TABLET  750px – 989px
+   ============================================================ */
+@media screen and (min-width: 750px) and (max-width: 989px) {
+  .iab-footer__container {
+    padding: 48px 24px 0;
+  }
+
+  .iab-footer__brand-col {
+    flex: 0 0 190px;
+    min-width: 160px;
+  }
+
+  .iab-footer__logo-bottom {
+    font-size: 40px;
+  }
+
+  .iab-footer__nav {
+    flex-wrap: wrap;
+    gap: 28px 16px;
+  }
+
+  .iab-footer__nav-col {
+    flex: 1 1 calc(50% - 8px);
+    min-width: 120px;
+  }
+}
+
+/* ============================================================
+   MOBILE  < 750px  — matches Image 2
+   ============================================================ */
+@media screen and (max-width: 749px) {
+  .iab-footer__container {
+    padding: 40px 24px 0;
+  }
+
+  .iab-footer__inner {
+    flex-direction: column;
+    gap: 0;
+    padding-bottom: 36px;
+  }
+
+  /* Logo centred on mobile */
+  .iab-footer__brand-col {
+    flex: none;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+  }
+
+  .iab-footer__logo {
+    align-items: center;
+    margin-bottom: 28px;
+  }
+
+  .iab-footer__logo-top {
+    font-size: 18px;
+  }
+
+  .iab-footer__logo-bottom {
+    font-size: 46px;
+  }
+
+  .iab-footer__logo-img {
+    width: var(--iab-logo-width-mobile, 120px);
+  }
+
+  /* Contact row: side-by-side on mobile */
+  .iab-footer__contact-items {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+  }
+
+  /* Nav: 2-column grid */
+  .iab-footer__nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px 20px;
+  }
+
+  .iab-footer__nav-heading {
+    font-size: 12px;
+    margin-bottom: 14px;
+  }
+
+  .iab-footer__nav-list {
+    gap: 11px;
+  }
+
+  .iab-footer__nav-list a {
+    font-size: 13px;
+  }
+
+  /* Social bar: stacked */
+  .iab-footer__social-bar {
+    flex-direction: column;
+    gap: 16px;
+    padding: 24px 0;
+  }
+
+  .iab-footer__social-icons {
+    gap: 26px;
+  }
+
+  /* Bottom bar */
+  .iab-footer__bottom {
+    padding: 18px 0;
+    gap: 8px;
+  }
+
+  .iab-footer__bottom-link {
+    font-size: 11px;
+  }
+}
+.iab-footer__social-link img {
+  width: 24px;
+  height: 24px;
+  display: block;
+  object-fit: contain;
+}
+
+/* ============================================================
+   Footer column fade-up — self-contained, no WOW.js / animate.css
+   dependency (those can conflict with each other's class-naming
+   between versions, which is why the animation wasn't firing).
+   JS below adds "iab-inview" per element after its own delay.
+============================================================ */
+.iab-footer__brand-col.wow,
+.iab-footer__nav-col.wow {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.iab-footer__brand-col.wow.iab-inview,
+.iab-footer__nav-col.wow.iab-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+{% endstylesheet %}
+
+<script>
+  (function () {
+    // Self-contained fade-up for footer columns — does not depend on
+    // WOW.js or animate.css (whose class-naming can silently conflict
+    // between versions and stop animations from ever firing).
+    function initFooterFadeUp() {
+      var targets = document.querySelectorAll('.iab-footer .wow');
+      if (!targets.length) return;
+
+      if (!('IntersectionObserver' in window)) {
+        // Fallback: just show everything immediately.
+        targets.forEach(function (el) { el.classList.add('iab-inview'); });
+        return;
+      }
+
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var delayAttr = el.getAttribute('data-wow-delay') || '0ms';
+          var delayMs = parseInt(delayAttr, 10) || 0;
+          setTimeout(function () {
+            el.classList.add('iab-inview');
+          }, delayMs);
+          observer.unobserve(el);
+        });
+      }, { threshold: 0.15 });
+
+      targets.forEach(function (el) { observer.observe(el); });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFooterFadeUp);
+    } else {
+      initFooterFadeUp();
+    }
+
+    // After Shopify redirects with ?customer_posted=true, scroll to success message.
+    if (/[?&]customer_posted=true(?:&|#|$)/.test(window.location.search)) {
+      var msg = document.querySelector('.sub-banner__newsletter [data-newsletter-message]');
+      if (msg) {
+        msg.classList.add('show');
+        if (!msg.textContent.trim()) {
+          msg.textContent = 'Thanks! You have been subscribed.';
+          msg.classList.remove('is-error');
+        }
+        msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+
+    // Move Shopify/hCaptcha widgets under the email + Join row.
+    function relocateCaptcha() {
+      document.querySelectorAll('form.sub-banner__newsletter').forEach(function (form) {
+        var slot = form.querySelector('[data-newsletter-captcha]');
+        if (!slot) return;
+
+        var nodes = [];
+        form.querySelectorAll('.h-captcha, .shopify-challenge__container, [data-hcaptcha-widget-id], iframe[src*="hcaptcha"]').forEach(function (el) {
+          nodes.push(el);
+        });
+
+        // Captcha sometimes injects as a sibling inside the banner content
+        var content = form.closest('.sub-banner__content');
+        if (content) {
+          content.querySelectorAll(':scope > .h-captcha, :scope > .shopify-challenge__container').forEach(function (el) {
+            nodes.push(el);
+          });
+        }
+
+        nodes.forEach(function (el) {
+          var target = el;
+          if (el.tagName === 'IFRAME' && el.parentElement && !slot.contains(el.parentElement)) {
+            target = el.parentElement.classList.contains('h-captcha') ? el.parentElement : el;
+          }
+          if (!slot.contains(target)) slot.appendChild(target);
+        });
+
+        // Challenge "Submit" button Shopify adds near captcha
+        form.querySelectorAll('.shopify-challenge__button, input[type="submit"]').forEach(function (btn) {
+          if (btn.classList.contains('sub-banner__newsletter-submit')) return;
+          if (!slot.contains(btn)) slot.appendChild(btn);
+        });
+
+        // Only show/space the slot once it holds something Shopify has
+        // actually made visible (offsetParent !== null means it's
+        // rendered on screen, not display:none). This stops an empty
+        // or still-hidden placeholder from creating a visible box.
+        var hasVisibleChild = Array.prototype.some.call(slot.children, function (child) {
+          return child.offsetParent !== null;
+        });
+        slot.classList.toggle('has-visible-content', hasVisibleChild);
+      });
+    }
+
+    relocateCaptcha();
+    document.addEventListener('DOMContentLoaded', relocateCaptcha);
+    if (typeof MutationObserver !== 'undefined') {
+      var timer = null;
+      var observer = new MutationObserver(function () {
+        clearTimeout(timer);
+        timer = setTimeout(relocateCaptcha, 50);
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "t:names.footer",
+  "class": "section-wrapper",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Subscribe Banner — Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Subscribe & Save"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "label": "Subtext",
+      "default": "<p>Never run out of your essentials again</p>"
+    },
+    {
+      "type": "header",
+      "content": "Subscribe Banner — Newsletter field"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_placeholder",
+      "label": "Email placeholder text",
+      "default": "Enter your email"
+    },
+    {
+      "type": "text",
+      "id": "newsletter_button_label",
+      "label": "Button label",
+      "default": "Join"
+    },
+    {
+      "type": "range",
+      "id": "newsletter_max_width",
+      "label": "Field max width (px)",
+      "min": 240,
+      "max": 640,
+      "step": 10,
+      "default": 460
+    },
+    {
+      "type": "range",
+      "id": "newsletter_height",
+      "label": "Field height (px)",
+      "min": 32,
+      "max": 90,
+      "step": 2,
+      "default": 58
+    },
+    {
+      "type": "range",
+      "id": "newsletter_font_size",
+      "label": "Font size (px)",
+      "min": 12,
+      "max": 22,
+      "step": 1,
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "newsletter_border_radius",
+      "label": "Corner radius (px)",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "newsletter_padding_horizontal",
+      "label": "Input horizontal padding (px)",
+      "min": 8,
+      "max": 40,
+      "step": 1,
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "newsletter_gap",
+      "label": "Gap between field and button (px)",
+      "min": 0,
+      "max": 20,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "newsletter_button_width",
+      "label": "Join button width — desktop (%)",
+      "min": 15,
+      "max": 45,
+      "step": 1,
+      "default": 26
+    },
+    {
+      "type": "range",
+      "id": "newsletter_button_width_mobile",
+      "label": "Join button width — mobile (%)",
+      "min": 20,
+      "max": 50,
+      "step": 1,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "newsletter_margin_top",
+      "label": "Top margin (px)",
+      "min": 0,
+      "max": 60,
+      "step": 1,
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "newsletter_border_color",
+      "label": "Field border color",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "newsletter_placeholder_color",
+      "label": "Placeholder text color",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "newsletter_input_bg",
+      "label": "Input background color",
+      "default": "#020409"
+    },
+    {
+      "type": "color",
+      "id": "newsletter_button_bg",
+      "label": "Join button background",
+      "default": "#AFC1CA"
+    },
+    {
+      "type": "color",
+      "id": "newsletter_button_text_color",
+      "label": "Join button text color",
+      "default": "#131215"
+    },
+    {
+      "type": "header",
+      "content": "Subscribe Banner — Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "text",
+      "id": "image_url",
+      "label": "Image URL (fallback if no image uploaded)",
+      "default": "https://cdn.shopify.com/s/files/1/0714/0084/9482/files/image_17_1.png"
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Image Alt Text",
+      "default": "Subscribe and Save"
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_image",
+      "label": "Logo image (upload)",
+      "info": "Upload a logo image. If left empty, the text logo below will be used instead."
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width — Desktop",
+      "min": 60,
+      "max": 400,
+      "step": 5,
+      "unit": "px",
+      "default": 160
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width — Mobile",
+      "min": 40,
+      "max": 250,
+      "step": 5,
+      "unit": "px",
+      "default": 120
+    },
+    {
+      "type": "text",
+      "id": "logo_top",
+      "label": "Logo — Line 1 (text, used only if no image is uploaded)",
+      "default": "I AM"
+    },
+    {
+      "type": "text",
+      "id": "logo_bottom",
+      "label": "Logo — Line 2 (text, used only if no image is uploaded)",
+      "default": "BITCH"
+    },
+    {
+      "type": "header",
+      "content": "Contact"
+    },
+    {
+      "type": "text",
+      "id": "contact_label",
+      "label": "Contact link label",
+      "default": "Contact us"
+    },
+    {
+      "type": "text",
+      "id": "contact_email",
+      "label": "Contact email",
+      "default": "hello@iambitch.com"
+    },
+    {
+      "type": "text",
+      "id": "phone_number",
+      "label": "Phone number",
+      "default": "(20) 66-111-777"
+    },
+    {
+      "type": "header",
+      "content": "Column 1 — About"
+    },
+    { "type": "text", "id": "col1_title",        "label": "Heading",      "default": "ABOUT" },
+    { "type": "text", "id": "col1_link1_label",  "label": "Link 1 label", "default": "Our Story" },
+    { "type": "url",  "id": "col1_link1_url",    "label": "Link 1 URL" },
+    { "type": "text", "id": "col1_link2_label",  "label": "Link 2 label", "default": "Careers" },
+    { "type": "url",  "id": "col1_link2_url",    "label": "Link 2 URL" },
+    { "type": "text", "id": "col1_link3_label",  "label": "Link 3 label", "default": "Carry Our Products" },
+    { "type": "url",  "id": "col1_link3_url",    "label": "Link 3 URL" },
+    { "type": "text", "id": "col1_link4_label",  "label": "Link 4 label", "default": "Become an Authorized" },
+    { "type": "url",  "id": "col1_link4_url",    "label": "Link 4 URL" },
+    { "type": "text", "id": "col1_link5_label",  "label": "Link 5 label" },
+    { "type": "url",  "id": "col1_link5_url",    "label": "Link 5 URL" },
+    {
+      "type": "header",
+      "content": "Column 2 — Products"
+    },
+    { "type": "text", "id": "col2_title",        "label": "Heading",      "default": "PRODUCTS" },
+    { "type": "text", "id": "col2_link1_label",  "label": "Link 1 label", "default": "Nail Polish" },
+    { "type": "url",  "id": "col2_link1_url",    "label": "Link 1 URL" },
+    { "type": "text", "id": "col2_link2_label",  "label": "Link 2 label", "default": "Color Tube" },
+    { "type": "url",  "id": "col2_link2_url",    "label": "Link 2 URL" },
+    { "type": "text", "id": "col2_link3_label",  "label": "Link 3 label", "default": "Builder Gel" },
+    { "type": "url",  "id": "col2_link3_url",    "label": "Link 3 URL" },
+    { "type": "text", "id": "col2_link4_label",  "label": "Link 4 label" },
+    { "type": "url",  "id": "col2_link4_url",    "label": "Link 4 URL" },
+    { "type": "text", "id": "col2_link5_label",  "label": "Link 5 label" },
+    { "type": "url",  "id": "col2_link5_url",    "label": "Link 5 URL" },
+    {
+      "type": "header",
+      "content": "Column 3 — Warranty"
+    },
+    { "type": "text", "id": "col3_title",        "label": "Heading",      "default": "WARRANTY" },
+    { "type": "text", "id": "col3_link1_label",  "label": "Link 1 label", "default": "Warranty Center" },
+    { "type": "url",  "id": "col3_link1_url",    "label": "Link 1 URL" },
+    { "type": "text", "id": "col3_link2_label",  "label": "Link 2 label", "default": "Register Your Product" },
+    { "type": "url",  "id": "col3_link2_url",    "label": "Link 2 URL" },
+    { "type": "text", "id": "col3_link3_label",  "label": "Link 3 label", "default": "File A Claim" },
+    { "type": "url",  "id": "col3_link3_url",    "label": "Link 3 URL" },
+    { "type": "text", "id": "col3_link4_label",  "label": "Link 4 label", "default": "Repair Services" },
+    { "type": "url",  "id": "col3_link4_url",    "label": "Link 4 URL" },
+    { "type": "text", "id": "col3_link5_label",  "label": "Link 5 label" },
+    { "type": "url",  "id": "col3_link5_url",    "label": "Link 5 URL" },
+    {
+      "type": "header",
+      "content": "Column 4 — Help"
+    },
+    { "type": "text", "id": "col4_title",        "label": "Heading",      "default": "HELP" },
+    { "type": "text", "id": "col4_link1_label",  "label": "Link 1 label", "default": "FAQ" },
+    { "type": "url",  "id": "col4_link1_url",    "label": "Link 1 URL" },
+    { "type": "text", "id": "col4_link2_label",  "label": "Link 2 label", "default": "Learn" },
+    { "type": "url",  "id": "col4_link2_url",    "label": "Link 2 URL" },
+    { "type": "text", "id": "col4_link3_label",  "label": "Link 3 label", "default": "News" },
+    { "type": "url",  "id": "col4_link3_url",    "label": "Link 3 URL" },
+    { "type": "text", "id": "col4_link4_label",  "label": "Link 4 label", "default": "Shipping Policy" },
+    { "type": "url",  "id": "col4_link4_url",    "label": "Link 4 URL" },
+    { "type": "text", "id": "col4_link5_label",  "label": "Link 5 label", "default": "Return Policy" },
+    { "type": "url",  "id": "col4_link5_url",    "label": "Link 5 URL" },
+    { "type": "text", "id": "col4_link6_label",  "label": "Link 6 label" },
+    { "type": "url",  "id": "col4_link6_url",    "label": "Link 6 URL" },
+    {
+      "type": "header",
+      "content": "Social"
+    },
+    {
+      "type": "text",
+      "id": "social_handle",
+      "label": "Social handle text",
+      "default": "@iambitch | #iambitch"
+    },
+    {
+      "type": "url",
+      "id": "social_handle_url",
+      "label": "Social handle link URL",
+      "info": "If set, the social handle text becomes a clickable link."
+    },
+    { "type": "url", "id": "facebook_url",   "label": "Facebook URL" },
+    { "type": "url", "id": "instagram_url",  "label": "Instagram URL" },
+    { "type": "url", "id": "youtube_url",    "label": "YouTube URL" },
+    { "type": "url", "id": "tiktok_url",     "label": "TikTok URL" },
+    {
+      "type": "header",
+      "content": "Bottom bar"
+    },
+    { "type": "text", "id": "privacy_label", "label": "Privacy label",  "default": "Privacy Policy" },
+    { "type": "url",  "id": "privacy_url",   "label": "Privacy URL" },
+    { "type": "text", "id": "patents_label", "label": "Patents label",   "default": "Patents" },
+    { "type": "url",  "id": "patents_url",   "label": "Patents URL" },
+    { "type": "text", "id": "terms_label",   "label": "Terms label",     "default": "Terms & Conditions" },
+    { "type": "url",  "id": "terms_url",     "label": "Terms URL" }
+  ],
+  "presets": [
+    {
+      "name": "t:names.footer",
+      "category": "t:categories.footer"
+    }
+  ]
+}
+{% endschema %}
