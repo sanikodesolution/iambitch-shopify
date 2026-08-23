@@ -43,24 +43,31 @@
     display:none;
   }
 
+  @media screen and (max-width: 989px) {
+    .pbanner-section--collection.color-{{ section.settings.color_scheme }} {
+      padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
+    }
+  }
+
   @media screen and (max-width: 749px) {
     .pbanner-section.color-{{ section.settings.color_scheme }} {
       padding-top: {{ section.settings.padding_top | times: 0.6 | round }}px;
-      padding-bottom: {{ section.settings.padding_bottom | times: 0.45 | round }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.6 | round }}px;
     }
     .pbanner-heading {
       font-size: {{ section.settings.heading_size | times: 0.65 | round }}px;
-    }
-    .pbanner-container { padding: 0 20px; }
-    .pbanner-container--collection .pbanner-heading {
-      text-align: center;
     }
   }
 {% endstyle %}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
+{% if template.name == 'collection' %}
+<section class="pbanner-section pbanner-section--collection color-{{ section.settings.color_scheme }}">
+{% else %}
 <section class="pbanner-section color-{{ section.settings.color_scheme }}">
+{% endif %}
   <div class="pbanner-container{% if template.name == 'collection' %} pbanner-container--collection{% endif %}">
     {% if section.settings.heading != blank %}
       <h1 class="pbanner-heading">{{ section.settings.heading }}</h1>
