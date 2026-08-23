@@ -72,6 +72,9 @@
     {% if section.settings.heading != blank %}
       <h1 class="pbanner-heading">{{ section.settings.heading }}</h1>
     {% endif %}
+    {% if template.name == 'collection' %}
+      <div class="pbanner-filters-slot" id="CollectionFiltersSlot" aria-hidden="true"></div>
+    {% endif %}
     {% if section.settings.subheading != blank %}
       <p class="pbanner-subheading">{{ section.settings.subheading }}</p>
     {% endif %}

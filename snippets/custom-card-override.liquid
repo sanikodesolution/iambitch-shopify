@@ -893,44 +893,82 @@
     margin-right: 0;
     min-width: 0;
     padding: 0;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .pbanner-filters-slot:empty {
+    display: none !important;
+  }
+
+  .pbanner-filters-slot:not(:empty) {
+    display: block !important;
   }
 
   .pbanner-filters-slot .facets-block-wrapper,
+  .pbanner-filters-slot .facets-block-wrapper--horizontal {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    grid-column: auto !important;
+  }
+
   .pbanner-filters-slot .facets,
+  .pbanner-filters-slot .facets--horizontal {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
   .pbanner-filters-slot .facets__form-wrapper,
   .pbanner-filters-slot .facets__form,
   .pbanner-filters-slot facets-form-component {
     padding-inline: 0 !important;
     margin-inline: 0 !important;
-  }
-
-  .pbanner-filters-slot .facets-block-wrapper {
-    margin: 0 !important;
-    padding: 0 !important;
-    width: auto !important;
-    grid-column: auto !important;
-  }
-
-  .pbanner-filters-slot .facets--horizontal {
     display: flex !important;
-    padding: 0 !important;
-  }
-
-  .pbanner-filters-slot .facets__form-wrapper,
-  .pbanner-filters-slot .facets__form {
-    justify-content: flex-end !important;
+    visibility: visible !important;
     width: auto !important;
   }
 
   .pbanner-filters-slot .facets__filters-wrapper {
     display: flex !important;
     max-width: none !important;
+    visibility: visible !important;
+  }
+
+  .pbanner-filters-slot overflow-list {
+    display: block !important;
+    visibility: visible !important;
+    width: auto !important;
   }
 
   .pbanner-filters-slot overflow-list::part(list) {
     display: flex !important;
+    flex-wrap: nowrap !important;
     grid-template-columns: none !important;
     column-gap: 48px !important;
+    visibility: visible !important;
+    overflow: visible !important;
+    height: auto !important;
+  }
+
+  .pbanner-filters-slot accordion-custom.facets__item,
+  .pbanner-filters-slot .facets__panel,
+  .pbanner-filters-slot .facets__summary {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .pbanner-filters-slot .facets-horizontal-remove,
@@ -941,6 +979,30 @@
 
   .pbanner-filters-slot .price-facet__field {
     max-width: calc(50% - 18px) !important;
+  }
+
+  /* Facets moved to banner — product grid must use full centered width */
+  .collection-wrapper:not(:has(> .facets-block-wrapper--horizontal)) .main-collection-grid {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  /* Fallback: if JS has not moved facets yet, still show them on desktop */
+  .collection-wrapper > .facets-block-wrapper--horizontal {
+    display: block !important;
+    visibility: visible !important;
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    margin: 0 0 12px !important;
+    padding-inline: var(--page-margin, 40px) !important;
+    box-sizing: border-box !important;
+  }
+
+  .collection-wrapper > .facets-block-wrapper--horizontal .facets--horizontal {
+    display: flex !important;
+    justify-content: flex-end !important;
+    visibility: visible !important;
+    width: 100% !important;
   }
 
   .collection-wrapper > .facets-toggle {
@@ -1722,11 +1784,32 @@
   function disableFacetOverflow(root) {
     if (!root) return;
     root.querySelectorAll('overflow-list').forEach(function (list) {
-      list.setAttribute('disabled', 'true');
-      if (typeof list.showAll === 'function') {
-        list.showAll();
+      try {
+        if (typeof list.showAll === 'function') {
+          list.showAll();
+        } else {
+          list.setAttribute('disabled', 'true');
+        }
+      } catch (e) {
+        list.setAttribute('disabled', 'true');
       }
     });
+  }
+
+  function findCollectionFacets(wrapper, banner) {
+    if (wrapper) {
+      var inWrapper = wrapper.querySelector(':scope > .facets-block-wrapper--horizontal');
+      if (inWrapper) return inWrapper;
+    }
+
+    if (banner) {
+      var slot = banner.querySelector('.pbanner-filters-slot');
+      if (slot) {
+        return slot.querySelector('.facets-block-wrapper--horizontal');
+      }
+    }
+
+    return document.querySelector('.facets-block-wrapper--horizontal');
   }
 
   function clearMobileFacetPanelPosition(panel) {
@@ -1835,13 +1918,7 @@
   function relocateCollectionFilters() {
     var banner = document.querySelector('.pbanner-container--collection');
     var wrapper = document.querySelector('.collection-wrapper');
-    var facets = wrapper
-      ? wrapper.querySelector(':scope > .facets-block-wrapper--horizontal')
-      : null;
-
-    if (!facets && banner) {
-      facets = banner.querySelector('.pbanner-filters-slot .facets-block-wrapper--horizontal');
-    }
+    var facets = findCollectionFacets(wrapper, banner);
 
     if (!facets) return;
 
@@ -1853,15 +1930,19 @@
     var isDesktop = window.matchMedia('(min-width: 990px)').matches;
 
     if (isDesktop && banner) {
-      var slot = banner.querySelector('.pbanner-filters-slot');
+      var slot = banner.querySelector('.pbanner-filters-slot') || document.getElementById('CollectionFiltersSlot');
       if (!slot) {
         slot = document.createElement('div');
         slot.className = 'pbanner-filters-slot';
+        slot.id = 'CollectionFiltersSlot';
         banner.appendChild(slot);
       }
+
       if (facets.parentElement !== slot) {
         slot.appendChild(facets);
       }
+
+      slot.removeAttribute('aria-hidden');
       slot.style.display = '';
       disableFacetOverflow(facets);
       return;
@@ -1875,6 +1956,11 @@
       }
     } else if (wrapper && facets.parentElement !== wrapper) {
       wrapper.insertBefore(facets, wrapper.firstChild);
+    }
+
+    var mobileSlot = banner ? banner.querySelector('.pbanner-filters-slot') : null;
+    if (mobileSlot) {
+      mobileSlot.setAttribute('aria-hidden', 'true');
     }
 
     disableFacetOverflow(facets);
@@ -1910,7 +1996,7 @@
   var staggerTimer = null;
   function scheduleProcessAll(extraDelays, replayStagger) {
     /* filter:update fires BEFORE section morph finishes — retry several times */
-    var delays = extraDelays || [0, 50, 150, 350, 700, 1200];
+    var delays = extraDelays || [0, 50, 150, 350, 700, 1200, 2000];
     processAllTimers.forEach(clearTimeout);
     processAllTimers = delays.map(function (ms) {
       return setTimeout(processAll, ms);
