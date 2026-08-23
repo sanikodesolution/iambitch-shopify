@@ -712,8 +712,9 @@
   }
 
   .collection-wrapper > .facets-block-wrapper--horizontal .facets--horizontal {
-    display: block !important;
-    width: auto !important;
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
     max-width: 100% !important;
     padding: 0 !important;
     height: auto !important;
@@ -746,11 +747,11 @@
 
   .collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(list) {
     display: flex !important;
-    flex-wrap: wrap !important;
+    flex-wrap: nowrap !important;
     justify-content: center !important;
     align-items: flex-end !important;
-    column-gap: 48px !important;
-    row-gap: 16px !important;
+    column-gap: clamp(28px, 8vw, 48px) !important;
+    row-gap: 0 !important;
     width: auto !important;
     max-width: 100% !important;
     margin-inline: auto !important;
@@ -788,7 +789,7 @@
     box-sizing: border-box !important;
   }
 
-  /* Disable theme accordion expand animation — it breaks horizontal popovers below 750px */
+  /* Disable theme accordion expand animation — it keeps panels in document flow below 750px */
   .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details .details-content,
   .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details::details-content {
     block-size: auto !important;
@@ -797,15 +798,28 @@
     transition: none !important;
     padding-block: 0 !important;
     content-visibility: visible !important;
+    height: auto !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details:not([open]) .details-content {
+  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details:not([open]) .details-content,
+  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details:not([open])::details-content {
     display: none !important;
+    block-size: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
     pointer-events: none !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal details[open] floating-panel-component {
+  /* Popover dropdown — must NOT stay in document flow (that pushes Price down) */
+  .collection-wrapper > .facets-block-wrapper--horizontal details[open] > floating-panel-component,
+  .collection-wrapper > .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content {
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
     display: block !important;
+    margin: 0 !important;
     min-width: 280px !important;
     max-width: min(340px, calc(100vw - 40px)) !important;
     width: max-content !important;
@@ -813,8 +827,13 @@
     z-index: 9999 !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal details:not([open]) floating-panel-component {
+  .collection-wrapper > .facets-block-wrapper--horizontal details:not([open]) > floating-panel-component {
     display: none !important;
+    position: absolute !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    height: 0 !important;
+    overflow: hidden !important;
   }
 
   .collection-wrapper > .facets-block-wrapper--horizontal .price-facet--horizontal {
@@ -1734,37 +1753,12 @@
       return;
     }
 
-    var summary = details.querySelector('.facets__summary');
-    if (!summary) return;
-
-    var margin = 20;
-    var gap = 8;
-    var viewport = window.innerWidth;
-    var maxWidth = Math.min(340, viewport - margin * 2);
-
-    clearMobileFacetPanelPosition(panel);
-
-    panel.dataset.iabPositioning = '1';
-    panel.style.setProperty('position', 'fixed', 'important');
-    panel.style.setProperty('min-width', '280px', 'important');
-    panel.style.setProperty('max-width', maxWidth + 'px', 'important');
-    panel.style.setProperty('width', 'max-content', 'important');
-    panel.style.setProperty('z-index', '9999', 'important');
-    panel.style.setProperty('transform', 'none', 'important');
-
-    var summaryRect = summary.getBoundingClientRect();
-    panel.style.setProperty('top', (summaryRect.bottom + gap) + 'px', 'important');
-
-    var panelWidth = panel.getBoundingClientRect().width || 280;
-    var left = summaryRect.left + (summaryRect.width / 2) - (panelWidth / 2);
-
-    if (left < margin) left = margin;
-    if (left + panelWidth > viewport - margin) {
-      left = Math.max(margin, viewport - margin - panelWidth);
-    }
-
-    panel.style.setProperty('left', left + 'px', 'important');
-    delete panel.dataset.iabPositioning;
+    /* Strip theme floating-panel inline offsets — CSS absolute handles placement */
+    panel.style.removeProperty('top');
+    panel.style.removeProperty('left');
+    panel.style.removeProperty('right');
+    panel.style.removeProperty('transform');
+    panel.style.removeProperty('position');
   }
 
   function resetMobileFacetPanelStyles(root) {
@@ -1815,6 +1809,23 @@
       requestAnimationFrame(function () {
         positionMobileFacetDropdown(panel);
       });
+      setTimeout(function () {
+        positionMobileFacetDropdown(panel);
+      }, 60);
+    }, true);
+
+    root.addEventListener('click', function (e) {
+      if (window.matchMedia('(min-width: 990px)').matches) return;
+      var summary = e.target.closest('.facets__summary');
+      if (!summary || !root.contains(summary)) return;
+      var details = summary.closest('.facets__panel');
+      if (!details) return;
+      setTimeout(function () {
+        positionMobileFacetDropdown(details);
+      }, 0);
+      setTimeout(function () {
+        positionMobileFacetDropdown(details);
+      }, 80);
     }, true);
 
     patchMobileFacetPanels(root);
@@ -1951,14 +1962,6 @@
     var root = document.querySelector('.collection-wrapper > .facets-block-wrapper--horizontal');
     if (root) resetMobileFacetPanelStyles(root);
   });
-
-  window.addEventListener('scroll', function () {
-    var root = document.querySelector('.collection-wrapper > .facets-block-wrapper--horizontal');
-    if (!root || window.matchMedia('(min-width: 990px)').matches) return;
-    root.querySelectorAll('.facets__panel[open]').forEach(function (details) {
-      positionMobileFacetDropdown(details);
-    });
-  }, true);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
