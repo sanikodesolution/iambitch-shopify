@@ -631,11 +631,11 @@
   border-top-color: rgba(175, 193, 202, 0.22) !important;
 }
 
-/* Products count — keep light, no motion */
-.facets--horizontal .products-count-wrapper,
-.facets--horizontal .products-count {
-  color: #afc1ca !important;
-  opacity: 1 !important;
+/* Hide product count ("1 item") beside collection filters */
+.products-count-wrapper,
+.products-count,
+[data-testid="products-count"] {
+  display: none !important;
 }
 
 /* Collection header — title left, filters right (same row) */
