@@ -765,22 +765,41 @@
     position: relative !important;
   }
 
+  .collection-wrapper > .facets-block-wrapper--horizontal .facets__panel[open] {
+    z-index: 12 !important;
+  }
+
+  .collection-wrapper > .facets-block-wrapper--horizontal .facets__filters-wrapper,
+  .collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(list) {
+    overflow: visible !important;
+  }
+
   .collection-wrapper > .facets-block-wrapper--horizontal .facets__summary {
     width: auto !important;
     justify-content: center !important;
     box-sizing: border-box !important;
   }
 
-  /* Open panels — full width dropdown, not squashed */
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__panel-content,
-  .collection-wrapper > .facets-block-wrapper--horizontal floating-panel-component.facets__panel-content {
+  /* Theme only uses absolute dropdowns from 750px — force popover mode on mobile/tablet */
+  .collection-wrapper > .facets-block-wrapper--horizontal floating-panel-component.facets__panel-content,
+  .collection-wrapper > .facets-block-wrapper--horizontal floating-panel-component.facets__inputs {
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: auto !important;
+    transform: none !important;
+    width: max-content !important;
     min-width: 280px !important;
     max-width: min(340px, calc(100vw - 40px)) !important;
-    width: max-content !important;
-    overflow: visible !important;
-    left: 50% !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
+    overflow: hidden !important;
+    margin-top: 8px !important;
+    z-index: 13 !important;
+  }
+
+  .collection-wrapper > .facets-block-wrapper--horizontal .facets__item:last-child floating-panel-component,
+  .collection-wrapper > .facets-block-wrapper--horizontal .facets__panel:last-of-type floating-panel-component {
+    left: auto !important;
+    right: 0 !important;
   }
 
   .collection-wrapper > .facets-block-wrapper--horizontal .price-facet--horizontal {
@@ -1676,6 +1695,37 @@
     });
   }
 
+  function resetMobileFacetPanelStyles(root) {
+    if (!root || window.matchMedia('(min-width: 990px)').matches) return;
+    root.querySelectorAll('floating-panel-component').forEach(function (panel) {
+      panel.style.removeProperty('top');
+      panel.style.removeProperty('left');
+    });
+  }
+
+  function bindMobileFacetPanels(root) {
+    if (!root || root.dataset.iabFacetPanelsBound === '1') return;
+    root.dataset.iabFacetPanelsBound = '1';
+
+    root.addEventListener('toggle', function (e) {
+      var panel = e.target;
+      if (!panel || panel.tagName !== 'DETAILS' || !panel.classList.contains('facets__panel')) return;
+      if (window.matchMedia('(min-width: 990px)').matches) return;
+
+      if (panel.open) {
+        root.querySelectorAll('.facets__panel').forEach(function (other) {
+          if (other !== panel) other.removeAttribute('open');
+        });
+      }
+
+      requestAnimationFrame(function () {
+        resetMobileFacetPanelStyles(root);
+      });
+    }, true);
+
+    resetMobileFacetPanelStyles(root);
+  }
+
   function relocateCollectionFilters() {
     var banner = document.querySelector('.pbanner-container--collection');
     var wrapper = document.querySelector('.collection-wrapper');
@@ -1722,6 +1772,7 @@
     }
 
     disableFacetOverflow(facets);
+    bindMobileFacetPanels(facets);
   }
 
   function processAll() {
