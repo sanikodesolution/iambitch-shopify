@@ -498,6 +498,67 @@
   border-color: rgba(175, 193, 202, 0.35) !important;
 }
 
+/* Price filter inputs — dark fields instead of light gray popover inputs */
+.facets--horizontal .price-facet__input,
+.facets--drawer .price-facet__input,
+.facets--horizontal .price-facet__field .field__input,
+.facets--drawer .price-facet__field .field__input {
+  background: #111820 !important;
+  background-color: #111820 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(175, 193, 202, 0.28) !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
+}
+
+.facets--horizontal .price-facet__input:is(:focus, :hover),
+.facets--drawer .price-facet__input:is(:focus, :hover),
+.facets--horizontal .price-facet__field .field__input:is(:focus, :hover),
+.facets--drawer .price-facet__field .field__input:is(:focus, :hover) {
+  background: #182028 !important;
+  background-color: #182028 !important;
+  border-color: rgba(175, 193, 202, 0.5) !important;
+  box-shadow: none !important;
+}
+
+.facets--horizontal .price-facet__input::placeholder,
+.facets--drawer .price-facet__input::placeholder {
+  color: rgba(175, 193, 202, 0.55) !important;
+}
+
+.facets--horizontal .price-facet__label,
+.facets--drawer .price-facet__label {
+  color: #afc1ca !important;
+}
+
+.facets--horizontal .price-facet__separator,
+.facets--drawer .price-facet__separator {
+  color: #afc1ca !important;
+}
+
+.facets--horizontal .price-facet__highest-price,
+.facets--drawer .price-facet__highest-price {
+  color: rgba(175, 193, 202, 0.75) !important;
+  padding-inline: 4px !important;
+}
+
+.facets--horizontal .price-facet__inputs-wrapper,
+.facets--drawer .price-facet__inputs-wrapper {
+  padding: 0 !important;
+}
+
+.facets--horizontal .price-facet__field,
+.facets--drawer .price-facet__field {
+  background: transparent !important;
+}
+
+.facets--horizontal .facets__clear,
+.facets--horizontal .clear-filter {
+  color: #afc1ca !important;
+  background: transparent !important;
+  border-color: rgba(175, 193, 202, 0.35) !important;
+}
+
 .facets--horizontal .facets__clear {
   padding: 8px 14px 12px !important;
 }
