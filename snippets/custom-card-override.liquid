@@ -645,15 +645,33 @@
   box-sizing: border-box;
 }
 
+/* Always show horizontal filters (theme hides .facets--horizontal below 750px) */
+.pbanner-filters-slot .facets-block-wrapper--horizontal,
+.collection-wrapper .facets-block-wrapper--horizontal {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.pbanner-filters-slot .facets--horizontal,
+.collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+}
+
 /* Shared: force all facet triggers visible (overflow-list hides them otherwise) */
 .pbanner-filters-slot overflow-list,
-.collection-wrapper > .facets-block-wrapper--horizontal overflow-list {
+.collection-wrapper .facets-block-wrapper--horizontal overflow-list {
   display: block !important;
   width: 100% !important;
 }
 
 .pbanner-filters-slot overflow-list::part(list),
-.collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(list) {
+.collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(list) {
   width: 100% !important;
   overflow: visible !important;
   height: auto !important;
@@ -667,7 +685,7 @@
 }
 
 .pbanner-filters-slot overflow-list::part(overflow),
-.collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(overflow) {
+.collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(overflow) {
   display: none !important;
 }
 
@@ -698,7 +716,7 @@
     align-items: stretch !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal {
+  .collection-wrapper .facets-block-wrapper--horizontal {
     display: flex !important;
     justify-content: center !important;
     position: static !important;
@@ -711,7 +729,7 @@
     box-sizing: border-box !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets--horizontal {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal {
     display: flex !important;
     justify-content: center !important;
     width: 100% !important;
@@ -722,8 +740,8 @@
     margin-inline: auto !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__form-wrapper,
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__form {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__form-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__form {
     display: flex !important;
     justify-content: center !important;
     width: auto !important;
@@ -733,7 +751,7 @@
     margin-inline: auto !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__filters-wrapper {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper {
     display: flex !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
@@ -745,7 +763,7 @@
     margin: 0 auto !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(list) {
+  .collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(list) {
     display: flex !important;
     flex-wrap: nowrap !important;
     justify-content: center !important;
@@ -759,14 +777,14 @@
 
   .product-grid-container,
   .product-grid-container .collection-wrapper,
-  .collection-wrapper > .facets-block-wrapper--horizontal,
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom.facets__item {
+  .collection-wrapper .facets-block-wrapper--horizontal,
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom.facets__item {
     overflow: visible !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom.facets__item,
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__item,
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__panel {
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom.facets__item,
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__item,
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__panel {
     width: auto !important;
     flex: 0 0 auto !important;
     min-width: auto !important;
@@ -774,24 +792,24 @@
     padding: 0 !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__panel[open] {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__panel[open] {
     z-index: 12 !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__filters-wrapper,
-  .collection-wrapper > .facets-block-wrapper--horizontal overflow-list::part(list) {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(list) {
     overflow: visible !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets__summary {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets__summary {
     width: auto !important;
     justify-content: center !important;
     box-sizing: border-box !important;
   }
 
   /* Disable theme accordion expand animation — it keeps panels in document flow below 750px */
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details .details-content,
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details::details-content {
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details .details-content,
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details::details-content {
     block-size: auto !important;
     overflow: visible !important;
     opacity: 1 !important;
@@ -801,8 +819,8 @@
     height: auto !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details:not([open]) .details-content,
-  .collection-wrapper > .facets-block-wrapper--horizontal accordion-custom details:not([open])::details-content {
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details:not([open]) .details-content,
+  .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details:not([open])::details-content {
     display: none !important;
     block-size: 0 !important;
     height: 0 !important;
@@ -811,8 +829,8 @@
   }
 
   /* Popover dropdown — must NOT stay in document flow (that pushes Price down) */
-  .collection-wrapper > .facets-block-wrapper--horizontal details[open] > floating-panel-component,
-  .collection-wrapper > .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content {
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component,
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content {
     position: absolute !important;
     top: calc(100% + 8px) !important;
     left: 50% !important;
@@ -827,7 +845,7 @@
     z-index: 9999 !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal details:not([open]) > floating-panel-component {
+  .collection-wrapper .facets-block-wrapper--horizontal details:not([open]) > floating-panel-component {
     display: none !important;
     position: absolute !important;
     visibility: hidden !important;
@@ -836,19 +854,19 @@
     overflow: hidden !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .price-facet--horizontal {
+  .collection-wrapper .facets-block-wrapper--horizontal .price-facet--horizontal {
     min-width: 280px !important;
     width: 100% !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .price-facet__field {
+  .collection-wrapper .facets-block-wrapper--horizontal .price-facet__field {
     max-width: none !important;
     flex: 1 1 45% !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets-horizontal-remove,
-  .collection-wrapper > .facets-block-wrapper--horizontal .filter-remove-buttons,
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets-remove {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets-horizontal-remove,
+  .collection-wrapper .facets-block-wrapper--horizontal .filter-remove-buttons,
+  .collection-wrapper .facets-block-wrapper--horizontal .facets-remove {
     display: none !important;
   }
 
@@ -900,10 +918,11 @@
     overflow: visible !important;
   }
 
-  .pbanner-filters-slot:empty {
+  .pbanner-filters-slot:empty:not(.is-populated) {
     display: none !important;
   }
 
+  .pbanner-filters-slot.is-populated,
   .pbanner-filters-slot:not(:empty) {
     display: block !important;
   }
@@ -982,13 +1001,13 @@
   }
 
   /* Facets moved to banner — product grid must use full centered width */
-  .collection-wrapper:not(:has(> .facets-block-wrapper--horizontal)) .main-collection-grid {
+  .collection-wrapper:not(:has(.facets-block-wrapper--horizontal)) .main-collection-grid {
     grid-column: 1 / -1 !important;
     width: 100% !important;
   }
 
-  /* Fallback: if JS has not moved facets yet, still show them on desktop */
-  .collection-wrapper > .facets-block-wrapper--horizontal {
+  /* Fallback: filters visible in collection until / unless moved to banner */
+  .collection-wrapper .facets-block-wrapper--horizontal {
     display: block !important;
     visibility: visible !important;
     grid-column: 1 / -1 !important;
@@ -998,7 +1017,7 @@
     box-sizing: border-box !important;
   }
 
-  .collection-wrapper > .facets-block-wrapper--horizontal .facets--horizontal {
+  .collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal {
     display: flex !important;
     justify-content: flex-end !important;
     visibility: visible !important;
@@ -1780,6 +1799,8 @@
 
   var facetsOriginalParent = null;
   var facetsOriginalNextSibling = null;
+  var facetsMountOriginalParent = null;
+  var facetsMountOriginalNextSibling = null;
 
   function disableFacetOverflow(root) {
     if (!root) return;
@@ -1797,19 +1818,53 @@
   }
 
   function findCollectionFacets(wrapper, banner) {
+    if (banner) {
+      var inSlot = banner.querySelector('.pbanner-filters-slot .facets-block-wrapper--horizontal');
+      if (inSlot) return inSlot;
+    }
+
     if (wrapper) {
-      var inWrapper = wrapper.querySelector(':scope > .facets-block-wrapper--horizontal');
+      var inWrapper = wrapper.querySelector('.facets-block-wrapper--horizontal');
       if (inWrapper) return inWrapper;
     }
 
-    if (banner) {
-      var slot = banner.querySelector('.pbanner-filters-slot');
-      if (slot) {
-        return slot.querySelector('.facets-block-wrapper--horizontal');
-      }
+    return document.querySelector('.collection-wrapper .facets-block-wrapper--horizontal');
+  }
+
+  function getFacetsMountNode(facets, wrapper) {
+    if (!facets) return null;
+    if (!wrapper) return facets;
+
+    var shopifyBlock = facets.closest('.shopify-block');
+    if (shopifyBlock && wrapper.contains(shopifyBlock)) return shopifyBlock;
+
+    return facets;
+  }
+
+  function rememberFacetsHome(mountNode, wrapper) {
+    if (!mountNode || !wrapper || !wrapper.contains(mountNode)) return;
+    if (facetsMountOriginalParent) return;
+
+    facetsMountOriginalParent = mountNode.parentElement;
+    facetsMountOriginalNextSibling = mountNode.nextElementSibling;
+
+    if (mountNode.querySelector('.facets-block-wrapper--horizontal')) {
+      facetsOriginalParent = wrapper;
+      facetsOriginalNextSibling = mountNode.nextElementSibling;
+    }
+  }
+
+  function restoreFacetsMount(mountNode) {
+    if (!mountNode || !facetsMountOriginalParent) return false;
+    if (mountNode.parentElement === facetsMountOriginalParent) return true;
+
+    if (facetsMountOriginalNextSibling && facetsMountOriginalNextSibling.parentElement === facetsMountOriginalParent) {
+      facetsMountOriginalParent.insertBefore(mountNode, facetsMountOriginalNextSibling);
+    } else {
+      facetsMountOriginalParent.appendChild(mountNode);
     }
 
-    return document.querySelector('.facets-block-wrapper--horizontal');
+    return true;
   }
 
   function clearMobileFacetPanelPosition(panel) {
@@ -1922,10 +1977,8 @@
 
     if (!facets) return;
 
-    if (wrapper && facets.parentElement === wrapper) {
-      facetsOriginalParent = wrapper;
-      facetsOriginalNextSibling = facets.nextElementSibling;
-    }
+    var mountNode = getFacetsMountNode(facets, wrapper) || facets;
+    rememberFacetsHome(mountNode, wrapper);
 
     var isDesktop = window.matchMedia('(min-width: 990px)').matches;
 
@@ -1938,28 +1991,21 @@
         banner.appendChild(slot);
       }
 
-      if (facets.parentElement !== slot) {
-        slot.appendChild(facets);
+      if (mountNode.parentElement !== slot) {
+        slot.appendChild(mountNode);
       }
 
       slot.removeAttribute('aria-hidden');
-      slot.style.display = '';
+      slot.classList.add('is-populated');
       disableFacetOverflow(facets);
       return;
     }
 
-    if (facetsOriginalParent && facets.parentElement !== facetsOriginalParent) {
-      if (facetsOriginalNextSibling) {
-        facetsOriginalParent.insertBefore(facets, facetsOriginalNextSibling);
-      } else {
-        facetsOriginalParent.appendChild(facets);
-      }
-    } else if (wrapper && facets.parentElement !== wrapper) {
-      wrapper.insertBefore(facets, wrapper.firstChild);
-    }
+    restoreFacetsMount(mountNode);
 
     var mobileSlot = banner ? banner.querySelector('.pbanner-filters-slot') : null;
     if (mobileSlot) {
+      mobileSlot.classList.remove('is-populated');
       mobileSlot.setAttribute('aria-hidden', 'true');
     }
 
@@ -2040,12 +2086,19 @@
         }
         if (shouldRefresh) scheduleProcessAll([0, 80, 250, 500], false);
       }).observe(observeRoot, { childList: true, subtree: true });
+
+      var bannerRoot = document.querySelector('.pbanner-container--collection');
+      if (bannerRoot) {
+        new MutationObserver(function () {
+          scheduleProcessAll([0, 100, 300], false);
+        }).observe(bannerRoot, { childList: true, subtree: true });
+      }
     }
   }
 
   window.addEventListener('resize', function () {
     relocateCollectionFilters();
-    var root = document.querySelector('.collection-wrapper > .facets-block-wrapper--horizontal');
+    var root = document.querySelector('.collection-wrapper .facets-block-wrapper--horizontal');
     if (root) resetMobileFacetPanelStyles(root);
   });
 
