@@ -14,6 +14,15 @@
     background: #000;
     padding-top: {{ section.settings.padding_top }}px;
     padding-bottom: {{ section.settings.padding_bottom }}px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .pbanner-container--collection .pbanner-filters-slot {
+    position: relative;
+    z-index: 3;
+    min-width: max-content;
+    flex-shrink: 0;
   }
 
   .pbanner-container {
