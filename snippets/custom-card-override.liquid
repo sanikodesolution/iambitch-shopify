@@ -640,26 +640,39 @@
 
 /* Collection header — title left, filters right (same row) */
 @media screen and (min-width: 750px) {
-  .pbanner-container--collection {
+  .pbanner-section:has(+ .product-grid-container) .pbanner-container--collection {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 32px;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding-inline: var(--page-margin, 40px);
     box-sizing: border-box;
   }
 
   .pbanner-container--collection .pbanner-heading {
     flex: 0 1 auto;
     margin: 0;
+    padding: 0;
   }
 
   .pbanner-filters-slot {
     flex: 0 0 auto;
     margin-left: auto;
+    margin-right: 0;
     min-width: 0;
+    padding: 0;
+  }
+
+  .pbanner-filters-slot .facets-block-wrapper,
+  .pbanner-filters-slot .facets,
+  .pbanner-filters-slot .facets__form-wrapper,
+  .pbanner-filters-slot .facets__form,
+  .pbanner-filters-slot facets-form-component {
+    padding-inline: 0 !important;
+    margin-inline: 0 !important;
   }
 
   .pbanner-filters-slot .facets-block-wrapper {
@@ -681,6 +694,12 @@
 
   .pbanner-filters-slot .facets__filters-wrapper {
     max-width: none !important;
+  }
+
+  .pbanner-filters-slot .facets-horizontal-remove,
+  .pbanner-filters-slot .filter-remove-buttons,
+  .pbanner-filters-slot .facets-remove {
+    display: none !important;
   }
 
   .pbanner-section:has(+ .product-grid-container) {
@@ -906,6 +925,7 @@
     margin-left: auto !important;
     margin-right: auto !important;
     width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
