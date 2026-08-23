@@ -58,7 +58,7 @@
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
 <section class="pbanner-section color-{{ section.settings.color_scheme }}">
-  <div class="pbanner-container">
+  <div class="pbanner-container{% if template.name == 'collection' %} pbanner-container--collection{% endif %}">
     {% if section.settings.heading != blank %}
       <h1 class="pbanner-heading">{{ section.settings.heading }}</h1>
     {% endif %}
