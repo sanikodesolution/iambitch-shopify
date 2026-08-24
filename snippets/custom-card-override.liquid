@@ -781,14 +781,26 @@
   .collection-wrapper .facets-block-wrapper--horizontal {
     display: flex !important;
     justify-content: center !important;
-    position: static !important;
+    position: relative !important;
+    z-index: 40 !important;
     width: 100% !important;
     height: auto !important;
-    margin: 0 auto 24px !important;
-    padding: 12px 20px 48px !important;
+    margin: 0 auto 32px !important;
+    padding: 12px 20px 64px !important;
     overflow: visible !important;
     grid-column: 1 / -1 !important;
     box-sizing: border-box !important;
+  }
+
+  .collection-wrapper .facets-block-wrapper--horizontal:has(.facets__panel[open]) {
+    z-index: 60 !important;
+  }
+
+  .collection-wrapper .main-collection-grid,
+  .collection-wrapper > .main-collection-grid,
+  .product-grid-container .main-collection-grid {
+    position: relative !important;
+    z-index: 1 !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal {
@@ -855,7 +867,7 @@
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets__panel[open] {
-    z-index: 12 !important;
+    z-index: 70 !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper,
@@ -865,7 +877,7 @@
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets__summary {
     width: auto !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     box-sizing: border-box !important;
   }
 
@@ -890,7 +902,7 @@
     pointer-events: none !important;
   }
 
-  /* Popover dropdown — must NOT stay in document flow (that pushes Price down) */
+  /* Popover dropdown — absolute, above products, fully visible on mobile */
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component,
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content {
     position: absolute !important;
@@ -901,12 +913,35 @@
     display: block !important;
     margin: 0 !important;
     min-width: min(280px, calc(100vw - 32px)) !important;
-    max-width: min(340px, calc(100vw - 32px)) !important;
+    max-width: calc(100vw - 32px) !important;
     width: max-content !important;
     overflow: visible !important;
     height: auto !important;
     max-height: none !important;
+    background: #05080c !important;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75) !important;
     z-index: 9999 !important;
+  }
+
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
+    width: min(320px, calc(100vw - 32px)) !important;
+    min-width: min(280px, calc(100vw - 32px)) !important;
+    padding: 16px 14px 20px !important;
+    overflow: visible !important;
+  }
+
+  .collection-wrapper .facets-block-wrapper--horizontal .price-facet__highest-price,
+  .collection-wrapper .facets-block-wrapper--horizontal .price-facet__highest-price--horizontal {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    padding: 12px 2px 2px !important;
+    margin: 0 !important;
+    line-height: 1.45 !important;
+    font-size: 13px !important;
+    white-space: normal !important;
+    overflow: visible !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal details:not([open]) > floating-panel-component {
@@ -921,6 +956,7 @@
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet--horizontal {
     min-width: 0 !important;
     width: 100% !important;
+    overflow: visible !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__field {
@@ -2067,6 +2103,8 @@
     var summary = details.querySelector('.facets__summary') || details;
     var gutter = 16;
     var summaryRect = summary.getBoundingClientRect();
+    var vw = window.innerWidth;
+    var maxWidth = Math.max(160, vw - gutter * 2);
 
     panel.dataset.iabPositioning = '1';
     panel.style.setProperty('position', 'absolute', 'important');
@@ -2074,14 +2112,18 @@
     panel.style.setProperty('right', 'auto', 'important');
     panel.style.setProperty('transform', 'none', 'important');
     panel.style.setProperty('margin', '0', 'important');
+    panel.style.setProperty('overflow', 'visible', 'important');
+    panel.style.setProperty('height', 'auto', 'important');
+    panel.style.setProperty('max-height', 'none', 'important');
+    panel.style.setProperty('z-index', '9999', 'important');
+    panel.style.setProperty('max-width', maxWidth + 'px', 'important');
+    panel.style.setProperty('width', Math.min(320, maxWidth) + 'px', 'important');
     panel.style.setProperty('left', '0px', 'important');
 
-    var maxWidth = Math.max(160, window.innerWidth - gutter * 2);
-    panel.style.setProperty('max-width', maxWidth + 'px', 'important');
-
+    /* Measure after width is applied, then clamp inside the viewport */
     var panelWidth = Math.min(panel.offsetWidth || 280, maxWidth);
     var left = 0;
-    var overflowRight = summaryRect.left + panelWidth + gutter - window.innerWidth;
+    var overflowRight = summaryRect.left + panelWidth + gutter - vw;
     if (overflowRight > 0) left = -overflowRight;
     if (summaryRect.left + left < gutter) left = gutter - summaryRect.left;
 
