@@ -727,6 +727,8 @@
   min-width: 0 !important;
   max-width: 100% !important;
   flex-shrink: 1 !important;
+  overflow: visible !important;
+  position: relative !important;
 }
 
 .pbanner-filters-slot overflow-list::part(list),
@@ -837,6 +839,11 @@
     margin: 0 auto !important;
   }
 
+  .collection-wrapper .facets-block-wrapper--horizontal overflow-list {
+    width: 100% !important;
+    overflow: visible !important;
+  }
+
   .collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(list) {
     display: flex !important;
     flex-wrap: nowrap !important;
@@ -844,9 +851,10 @@
     align-items: flex-end !important;
     column-gap: clamp(28px, 8vw, 48px) !important;
     row-gap: 0 !important;
-    width: auto !important;
+    width: 100% !important;
     max-width: 100% !important;
     margin-inline: auto !important;
+    overflow: visible !important;
   }
 
   .product-grid-container,
@@ -862,7 +870,7 @@
     width: auto !important;
     flex: 0 0 auto !important;
     min-width: auto !important;
-    position: relative !important;
+    position: static !important;
     padding: 0 !important;
   }
 
@@ -884,6 +892,7 @@
   /* Disable theme accordion expand animation — it keeps panels in document flow below 750px */
   .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details .details-content,
   .collection-wrapper .facets-block-wrapper--horizontal accordion-custom details::details-content {
+    display: contents !important;
     block-size: auto !important;
     overflow: visible !important;
     opacity: 1 !important;
@@ -902,21 +911,25 @@
     pointer-events: none !important;
   }
 
-  /* Popover dropdown — fixed + centered in the mobile viewport */
+  /* Center both dropdowns under the full filter row */
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component,
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content,
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
-    position: fixed !important;
+    position: absolute !important;
+    top: calc(100% + 8px) !important;
     left: 50% !important;
     right: auto !important;
     inset-inline-start: 50% !important;
     inset-inline-end: auto !important;
     transform: translateX(-50%) !important;
     display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
     margin: 0 !important;
-    width: min(300px, calc(100vw - 32px)) !important;
-    min-width: min(260px, calc(100vw - 32px)) !important;
+    width: min(300px, calc(100% - 32px)) !important;
+    min-width: 0 !important;
     max-width: calc(100vw - 32px) !important;
     overflow: visible !important;
     height: auto !important;
@@ -2107,32 +2120,18 @@
       return;
     }
 
-    var summary = details.querySelector('.facets__summary') || details;
-    var gutter = 16;
-    var summaryRect = summary.getBoundingClientRect();
-    var vw = window.innerWidth;
-    var maxWidth = Math.max(160, vw - gutter * 2);
-    var width = Math.min(300, maxWidth);
-    var top = Math.round(summaryRect.bottom + 8);
-
+    /* Let CSS place the panel. Only strip Horizon floating-panel inline offsets. */
     panel.dataset.iabPositioning = '1';
-    panel.style.setProperty('position', 'fixed', 'important');
-    panel.style.setProperty('top', top + 'px', 'important');
-    panel.style.setProperty('left', '50%', 'important');
-    panel.style.setProperty('right', 'auto', 'important');
-    panel.style.setProperty('inset-inline-start', '50%', 'important');
-    panel.style.setProperty('inset-inline-end', 'auto', 'important');
-    panel.style.setProperty('transform', 'translateX(-50%)', 'important');
-    panel.style.setProperty('margin', '0', 'important');
-    panel.style.setProperty('overflow', 'visible', 'important');
-    panel.style.setProperty('height', 'auto', 'important');
-    panel.style.setProperty('max-height', 'none', 'important');
-    panel.style.setProperty('z-index', '9999', 'important');
-    panel.style.setProperty('box-sizing', 'border-box', 'important');
-    panel.style.setProperty('max-width', maxWidth + 'px', 'important');
-    panel.style.setProperty('width', width + 'px', 'important');
-    panel.style.setProperty('min-width', Math.min(260, maxWidth) + 'px', 'important');
-
+    panel.style.removeProperty('top');
+    panel.style.removeProperty('left');
+    panel.style.removeProperty('right');
+    panel.style.removeProperty('inset-inline-start');
+    panel.style.removeProperty('inset-inline-end');
+    panel.style.removeProperty('transform');
+    panel.style.removeProperty('position');
+    panel.style.removeProperty('width');
+    panel.style.removeProperty('min-width');
+    panel.style.removeProperty('max-width');
     requestAnimationFrame(function () {
       panel.dataset.iabPositioning = '0';
     });
@@ -2211,8 +2210,9 @@
     document.documentElement.dataset.iabFacetCloseBound = '1';
 
     document.addEventListener('click', function (e) {
+      if (e.target.closest('.facets__summary, .facets__panel, floating-panel-component')) return;
+
       document.querySelectorAll('.facets--horizontal .facets__panel[open]').forEach(function (details) {
-        if (details.contains(e.target)) return;
         details.removeAttribute('open');
         clearMobileFacetPanelPosition(details.querySelector('floating-panel-component'));
       });
