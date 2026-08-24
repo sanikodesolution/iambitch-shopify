@@ -902,19 +902,22 @@
     pointer-events: none !important;
   }
 
-  /* Popover dropdown — absolute, above products, fully visible on mobile */
+  /* Popover dropdown — fixed + centered in the mobile viewport */
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component,
-  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content {
-    position: absolute !important;
-    top: calc(100% + 8px) !important;
-    left: 0 !important;
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content,
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
+  .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
+    position: fixed !important;
+    left: 50% !important;
     right: auto !important;
-    transform: none !important;
+    inset-inline-start: 50% !important;
+    inset-inline-end: auto !important;
+    transform: translateX(-50%) !important;
     display: block !important;
     margin: 0 !important;
+    width: min(300px, calc(100vw - 32px)) !important;
     min-width: min(260px, calc(100vw - 32px)) !important;
     max-width: calc(100vw - 32px) !important;
-    width: min(300px, calc(100vw - 32px)) !important;
     overflow: visible !important;
     height: auto !important;
     max-height: none !important;
@@ -924,18 +927,9 @@
     box-sizing: border-box !important;
   }
 
-  /* Price is the right-side trigger — open from its right edge so it stays on screen */
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
-    left: auto !important;
-    right: 0 !important;
-    inset-inline-start: auto !important;
-    inset-inline-end: 0 !important;
-    width: min(300px, calc(100vw - 32px)) !important;
-    min-width: min(260px, calc(100vw - 32px)) !important;
-    max-width: calc(100vw - 32px) !important;
     padding: 16px 14px 20px !important;
-    overflow: visible !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__highest-price,
@@ -2119,12 +2113,16 @@
     var vw = window.innerWidth;
     var maxWidth = Math.max(160, vw - gutter * 2);
     var width = Math.min(300, maxWidth);
-    var isPrice = !!panel.querySelector('.price-facet');
+    var top = Math.round(summaryRect.bottom + 8);
 
     panel.dataset.iabPositioning = '1';
-    panel.style.setProperty('position', 'absolute', 'important');
-    panel.style.setProperty('top', 'calc(100% + 8px)', 'important');
-    panel.style.setProperty('transform', 'none', 'important');
+    panel.style.setProperty('position', 'fixed', 'important');
+    panel.style.setProperty('top', top + 'px', 'important');
+    panel.style.setProperty('left', '50%', 'important');
+    panel.style.setProperty('right', 'auto', 'important');
+    panel.style.setProperty('inset-inline-start', '50%', 'important');
+    panel.style.setProperty('inset-inline-end', 'auto', 'important');
+    panel.style.setProperty('transform', 'translateX(-50%)', 'important');
     panel.style.setProperty('margin', '0', 'important');
     panel.style.setProperty('overflow', 'visible', 'important');
     panel.style.setProperty('height', 'auto', 'important');
@@ -2135,44 +2133,7 @@
     panel.style.setProperty('width', width + 'px', 'important');
     panel.style.setProperty('min-width', Math.min(260, maxWidth) + 'px', 'important');
 
-    /*
-      Price sits on the right — pin panel to trigger's right edge.
-      Other filters pin to left, then shift left if they would overflow.
-    */
-    if (isPrice || summaryRect.left + width + gutter > vw) {
-      var rightOffset = Math.max(0, summaryRect.right + gutter - vw);
-      panel.style.setProperty('left', 'auto', 'important');
-      panel.style.setProperty('right', rightOffset + 'px', 'important');
-      panel.style.setProperty('inset-inline-start', 'auto', 'important');
-      panel.style.setProperty('inset-inline-end', rightOffset + 'px', 'important');
-    } else {
-      var left = 0;
-      var overflowRight = summaryRect.left + width + gutter - vw;
-      if (overflowRight > 0) left = -overflowRight;
-      if (summaryRect.left + left < gutter) left = gutter - summaryRect.left;
-      panel.style.setProperty('right', 'auto', 'important');
-      panel.style.setProperty('left', left + 'px', 'important');
-      panel.style.setProperty('inset-inline-end', 'auto', 'important');
-      panel.style.setProperty('inset-inline-start', left + 'px', 'important');
-    }
-
-    /* Second pass after paint — clamp if anything still sticks out */
     requestAnimationFrame(function () {
-      var rect = panel.getBoundingClientRect();
-      if (rect.right > vw - gutter) {
-        var shift = rect.right - (vw - gutter);
-        var currentLeft = parseFloat(panel.style.left);
-        if (!isNaN(currentLeft)) {
-          panel.style.setProperty('left', (currentLeft - shift) + 'px', 'important');
-        } else {
-          panel.style.setProperty('left', 'auto', 'important');
-          panel.style.setProperty('right', Math.max(0, parseFloat(panel.style.right) || 0) + shift + 'px', 'important');
-        }
-      }
-      if (rect.left < gutter) {
-        panel.style.setProperty('right', 'auto', 'important');
-        panel.style.setProperty('left', (gutter - summaryRect.left) + 'px', 'important');
-      }
       panel.dataset.iabPositioning = '0';
     });
   }
