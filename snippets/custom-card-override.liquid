@@ -230,8 +230,8 @@
   border-radius: 2px !important;
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
   color: #afc1ca !important;
-  min-width: 280px !important;
-  max-width: 340px !important;
+  min-width: min(280px, calc(100vw - 32px)) !important;
+  max-width: min(340px, calc(100vw - 32px)) !important;
   padding: 0 !important;
   overflow: hidden !important;
   margin-top: 8px !important;
@@ -664,10 +664,10 @@
 .pbanner-filters-slot {
   position: relative;
   z-index: 3;
-  flex-shrink: 0 !important;
-  min-width: max-content !important;
+  flex-shrink: 1 !important;
+  min-width: 0 !important;
   width: auto !important;
-  max-width: none !important;
+  max-width: 100% !important;
   pointer-events: auto !important;
 }
 
@@ -694,19 +694,19 @@
 .collection-wrapper .facets-block-wrapper--horizontal overflow-list {
   display: block !important;
   width: auto !important;
-  min-width: max-content !important;
-  max-width: none !important;
-  flex-shrink: 0 !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+  flex-shrink: 1 !important;
 }
 
 .pbanner-filters-slot overflow-list::part(list),
 .collection-wrapper .facets-block-wrapper--horizontal overflow-list::part(list) {
   width: auto !important;
-  min-width: max-content !important;
-  max-width: none !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   overflow: visible !important;
   height: auto !important;
-  flex-shrink: 0 !important;
+  flex-shrink: 1 !important;
 }
 
 @media screen and (min-width: 990px) {
@@ -870,8 +870,8 @@
     transform: none !important;
     display: block !important;
     margin: 0 !important;
-    min-width: 280px !important;
-    max-width: min(340px, calc(100vw - 40px)) !important;
+    min-width: min(280px, calc(100vw - 32px)) !important;
+    max-width: min(340px, calc(100vw - 32px)) !important;
     width: max-content !important;
     overflow: hidden !important;
     z-index: 9999 !important;
@@ -887,7 +887,7 @@
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet--horizontal {
-    min-width: 280px !important;
+    min-width: 0 !important;
     width: 100% !important;
   }
 
@@ -938,13 +938,13 @@
   }
 
   .pbanner-filters-slot {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     margin-left: auto;
     margin-right: 0;
-    min-width: max-content !important;
+    min-width: 0 !important;
     width: auto !important;
-    max-width: none !important;
-    flex-shrink: 0 !important;
+    max-width: 100% !important;
+    flex-shrink: 1 !important;
     padding: 0;
     display: block !important;
     visibility: visible !important;
@@ -971,15 +971,15 @@
     visibility: visible !important;
     opacity: 1 !important;
     width: auto !important;
-    min-width: max-content !important;
-    max-width: none !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
     height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     grid-column: auto !important;
     position: relative;
     z-index: 3;
-    flex-shrink: 0 !important;
+    flex-shrink: 1 !important;
     pointer-events: auto !important;
   }
 
@@ -989,14 +989,14 @@
     visibility: visible !important;
     opacity: 1 !important;
     width: auto !important;
-    min-width: max-content !important;
-    max-width: none !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
     height: auto !important;
     overflow: visible !important;
     padding: 0 !important;
     position: relative;
     z-index: var(--facets-upper-z-index, 4);
-    flex-shrink: 0 !important;
+    flex-shrink: 1 !important;
     pointer-events: auto !important;
   }
 
@@ -1012,7 +1012,7 @@
 
   .pbanner-filters-slot .facets__filters-wrapper {
     display: flex !important;
-    max-width: none !important;
+    max-width: 100% !important;
     visibility: visible !important;
   }
 
@@ -1020,9 +1020,9 @@
     display: block !important;
     visibility: visible !important;
     width: auto !important;
-    min-width: max-content !important;
-    max-width: none !important;
-    flex-shrink: 0 !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    flex-shrink: 1 !important;
     position: relative;
     z-index: var(--facets-upper-z-index, 4);
   }
@@ -1097,8 +1097,8 @@
     transform: none !important;
     margin: 0 !important;
     display: block !important;
-    min-width: 280px !important;
-    max-width: min(340px, calc(100vw - 40px)) !important;
+    min-width: min(280px, calc(100vw - 32px)) !important;
+    max-width: min(340px, calc(100vw - 32px)) !important;
     width: max-content !important;
     overflow: hidden !important;
     z-index: 9999 !important;
@@ -2023,12 +2023,32 @@
       return;
     }
 
-    /* Strip theme floating-panel inline offsets — CSS absolute handles placement */
-    panel.style.removeProperty('top');
-    panel.style.removeProperty('left');
-    panel.style.removeProperty('right');
-    panel.style.removeProperty('transform');
-    panel.style.removeProperty('position');
+    var summary = details.querySelector('.facets__summary') || details;
+    var gutter = 16;
+    var summaryRect = summary.getBoundingClientRect();
+
+    panel.dataset.iabPositioning = '1';
+    panel.style.setProperty('position', 'absolute', 'important');
+    panel.style.setProperty('top', 'calc(100% + 8px)', 'important');
+    panel.style.setProperty('right', 'auto', 'important');
+    panel.style.setProperty('transform', 'none', 'important');
+    panel.style.setProperty('margin', '0', 'important');
+    panel.style.setProperty('left', '0px', 'important');
+
+    var maxWidth = Math.max(160, window.innerWidth - gutter * 2);
+    panel.style.setProperty('max-width', maxWidth + 'px', 'important');
+
+    var panelWidth = Math.min(panel.offsetWidth || 280, maxWidth);
+    var left = 0;
+    var overflowRight = summaryRect.left + panelWidth + gutter - window.innerWidth;
+    if (overflowRight > 0) left = -overflowRight;
+    if (summaryRect.left + left < gutter) left = gutter - summaryRect.left;
+
+    panel.style.setProperty('left', left + 'px', 'important');
+
+    requestAnimationFrame(function () {
+      panel.dataset.iabPositioning = '0';
+    });
   }
 
   function resetMobileFacetPanelStyles(root) {
@@ -2099,6 +2119,19 @@
     resetMobileFacetPanelStyles(root);
   }
 
+  function bindFacetOutsideClose() {
+    if (document.documentElement.dataset.iabFacetCloseBound === '1') return;
+    document.documentElement.dataset.iabFacetCloseBound = '1';
+
+    document.addEventListener('click', function (e) {
+      document.querySelectorAll('.facets--horizontal .facets__panel[open]').forEach(function (details) {
+        if (details.contains(e.target)) return;
+        details.removeAttribute('open');
+        clearMobileFacetPanelPosition(details.querySelector('floating-panel-component'));
+      });
+    });
+  }
+
   function relocateCollectionFilters() {
     var banner = document.querySelector('.pbanner-container--collection');
     var wrapper = document.querySelector('.collection-wrapper');
@@ -2134,6 +2167,7 @@
           bindMobileFacetPanels(facets);
           patchMobileFacetPanels(facets);
           resetMobileFacetPanelStyles(facets);
+          bindFacetOutsideClose();
         });
       });
       return;
@@ -2153,6 +2187,7 @@
     bindMobileFacetPanels(facets);
     patchMobileFacetPanels(facets);
     resetMobileFacetPanelStyles(facets);
+    bindFacetOutsideClose();
   }
 
   function processAll() {
