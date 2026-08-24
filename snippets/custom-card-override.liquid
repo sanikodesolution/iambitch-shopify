@@ -233,7 +233,7 @@
   min-width: min(280px, calc(100vw - 32px)) !important;
   max-width: min(340px, calc(100vw - 32px)) !important;
   padding: 0 !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   margin-top: 8px !important;
 }
 
@@ -539,7 +539,14 @@
 .facets--horizontal .price-facet__highest-price,
 .facets--drawer .price-facet__highest-price {
   color: rgba(175, 193, 202, 0.75) !important;
-  padding-inline: 4px !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  padding: 10px 4px 0 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  white-space: normal !important;
+  overflow: visible !important;
 }
 
 .facets--horizontal .price-facet__inputs-wrapper,
@@ -552,12 +559,21 @@
   background: transparent !important;
 }
 
-/* Keep price inputs inside dropdown panel */
+/* Keep price inputs inside dropdown panel — overflow visible so highest-price text is not clipped */
 .facets--horizontal floating-panel-component.facets__panel-content:has(.price-facet),
 .facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
   box-sizing: border-box !important;
-  overflow: hidden !important;
-  padding: 18px 16px 14px !important;
+  overflow: visible !important;
+  padding: 18px 16px 18px !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.facets--horizontal .price-facet--horizontal,
+.facets--drawer .price-facet {
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 .facets--horizontal .price-facet--horizontal,
@@ -637,10 +653,13 @@
   display: none !important;
 }
 
-/* Collection page header + filters layout */
+/* Collection page header + filters layout
+   Banner must stack ABOVE the product grid so open dropdowns
+   are not covered by the black collection section below. */
 .shopify-section:has(.pbanner-section--collection) {
   position: relative;
-  isolation: isolate;
+  z-index: 20;
+  overflow: visible !important;
 }
 
 .shopify-section:has(.pbanner-section--collection) > .section-background {
@@ -649,7 +668,8 @@
 
 .pbanner-section--collection {
   position: relative;
-  z-index: 1;
+  z-index: 2;
+  overflow: visible !important;
 }
 
 .pbanner-container--collection {
@@ -658,17 +678,27 @@
   margin-inline: auto;
   box-sizing: border-box;
   position: relative;
-  z-index: 2;
+  z-index: 3;
+  overflow: visible !important;
 }
 
 .pbanner-filters-slot {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   flex-shrink: 1 !important;
   min-width: 0 !important;
   width: auto !important;
   max-width: 100% !important;
   pointer-events: auto !important;
+  overflow: visible !important;
+}
+
+.pbanner-section--collection + .product-grid-container,
+.pbanner-section--collection + .shopify-section,
+.shopify-section:has(.pbanner-section--collection) + .shopify-section,
+.shopify-section:has(.pbanner-section--collection) + .product-grid-container {
+  position: relative;
+  z-index: 1;
 }
 
 /* Always show horizontal filters (theme hides .facets--horizontal below 750px) */
@@ -873,7 +903,9 @@
     min-width: min(280px, calc(100vw - 32px)) !important;
     max-width: min(340px, calc(100vw - 32px)) !important;
     width: max-content !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
     z-index: 9999 !important;
   }
 
@@ -1100,8 +1132,17 @@
     min-width: min(280px, calc(100vw - 32px)) !important;
     max-width: min(340px, calc(100vw - 32px)) !important;
     width: max-content !important;
-    overflow: hidden !important;
+    overflow: visible !important;
+    height: auto !important;
+    max-height: none !important;
     z-index: 9999 !important;
+  }
+
+  .pbanner-filters-slot .price-facet__highest-price,
+  .pbanner-filters-slot .price-facet__highest-price--horizontal {
+    display: block !important;
+    visibility: visible !important;
+    padding: 10px 4px 0 !important;
   }
 
   .pbanner-filters-slot details:not([open]) > floating-panel-component {
