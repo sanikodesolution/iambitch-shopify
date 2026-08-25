@@ -1013,7 +1013,7 @@
   }
 
   .pbanner-section--collection + .product-grid-container {
-    margin-top: 64px !important;
+    margin-top: 0 !important;
   }
 }
 
@@ -1264,16 +1264,20 @@
 }
 
 @media screen and (min-width: 990px) {
+  /* Total gap Shop All/filters → products = 100px */
   .pbanner-section--collection {
-    padding-bottom: 80px !important;
+    padding-bottom: 0 !important;
   }
 
-  .pbanner-section--collection + .product-grid-container {
-    margin-top: 96px !important;
+  .pbanner-section--collection + .product-grid-container,
+  .shopify-section:has(.pbanner-section--collection) + .shopify-section .product-grid-container {
+    margin-top: 0 !important;
+    padding-block-start: 100px !important;
+    --padding-block-start: 100px !important;
   }
 
   .pbanner-section--collection + .product-grid-container .main-collection-grid {
-    padding-top: 16px !important;
+    padding-top: 0 !important;
   }
 }
 
