@@ -161,6 +161,25 @@
   cursor: pointer !important;
   list-style: none !important;
   opacity: 1 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.facets--horizontal .facets__summary::selection,
+.facets--horizontal .facets__label::selection {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.facets--horizontal .facets__summary:focus,
+.facets--horizontal .facets__summary:focus-visible {
+  outline: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 .facets--horizontal .facets__summary::-webkit-details-marker {
@@ -175,6 +194,9 @@
   font-weight: 400 !important;
   letter-spacing: 0.01em !important;
   line-height: 1.2 !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  background: transparent !important;
 }
 
 .facets--horizontal .facets__status-wrapper {
@@ -2231,6 +2253,13 @@
         details.removeAttribute('open');
         clearMobileFacetPanelPosition(details.querySelector('floating-panel-component'));
       });
+    });
+
+    /* Prevent grey text-selection highlight on filter labels (Availability, Price, etc.) */
+    document.addEventListener('mouseup', function (e) {
+      if (!e.target.closest('.facets__summary, .facets__label')) return;
+      var selection = window.getSelection && window.getSelection();
+      if (selection && selection.removeAllRanges) selection.removeAllRanges();
     });
   }
 
