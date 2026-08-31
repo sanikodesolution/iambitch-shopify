@@ -285,8 +285,8 @@
 
 .facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
 .facets--horizontal .facets__panel-content:has(.price-facet) {
-  min-width: min(188px, calc(100vw - 32px)) !important;
-  max-width: min(224px, calc(100vw - 32px)) !important;
+  min-width: min(260px, calc(100vw - 32px)) !important;
+  max-width: min(300px, calc(100vw - 32px)) !important;
   width: 100% !important;
 }
 
@@ -570,8 +570,8 @@
 .facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
 .facets--horizontal .facets__panel-content:has(.price-facet),
 .facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
-  min-width: min(188px, calc(100vw - 32px)) !important;
-  max-width: min(224px, calc(100vw - 32px)) !important;
+  min-width: min(260px, calc(100vw - 32px)) !important;
+  max-width: min(300px, calc(100vw - 32px)) !important;
   width: 100% !important;
   box-sizing: border-box !important;
   overflow: visible !important;
@@ -613,12 +613,12 @@
 .facets--drawer .price-facet__field {
   position: relative !important;
   flex: 1 1 0 !important;
-  min-width: 0 !important;
+  min-width: 88px !important;
   display: flex !important;
   align-items: stretch !important;
   min-height: 34px !important;
   border-radius: 4px !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   background: #10161c !important;
   border: 1px solid rgba(175, 193, 202, 0.2) !important;
   transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease !important;
@@ -646,12 +646,14 @@
   background: transparent !important;
   background-color: transparent !important;
   color: #ffffff !important;
-  padding: 0 8px 0 38px !important;
+  padding: 0 10px 0 38px !important;
   font-family: var(--font, 'glory', sans-serif) !important;
   font-size: 13px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   text-align: left !important;
+  text-overflow: clip !important;
+  overflow: visible !important;
   box-shadow: none !important;
   outline: none !important;
 }
@@ -1061,9 +1063,9 @@
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
     padding: 10px 10px 8px !important;
-    width: min(224px, calc(100% - 32px)) !important;
-    min-width: min(188px, calc(100vw - 32px)) !important;
-    max-width: min(224px, calc(100vw - 32px)) !important;
+    width: min(300px, calc(100% - 32px)) !important;
+    min-width: min(260px, calc(100vw - 32px)) !important;
+    max-width: min(300px, calc(100vw - 32px)) !important;
     background: #0a0e12 !important;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03) inset !important;
   }
@@ -1099,7 +1101,8 @@
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__field {
     max-width: none !important;
-    flex: 1 1 45% !important;
+    flex: 1 1 0 !important;
+    min-width: 88px !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets-horizontal-remove,
@@ -1323,14 +1326,15 @@
 
   .pbanner-filters-slot details[open] > floating-panel-component:has(.price-facet),
   .pbanner-filters-slot details[open] > floating-panel-component.details-content:has(.price-facet) {
-    min-width: min(188px, calc(100vw - 32px)) !important;
-    max-width: min(224px, calc(100vw - 32px)) !important;
+    min-width: min(260px, calc(100vw - 32px)) !important;
+    max-width: min(300px, calc(100vw - 32px)) !important;
     padding: 10px 10px 8px !important;
   }
 
   .pbanner-filters-slot .price-facet__field {
     max-width: none !important;
     flex: 1 1 0 !important;
+    min-width: 88px !important;
   }
 
   .pbanner-filters-slot details:not([open]) > floating-panel-component {
