@@ -170,9 +170,26 @@
 }
 
 .facets--horizontal .facets__summary::selection,
-.facets--horizontal .facets__label::selection {
+.facets--horizontal .facets__label::selection,
+.facets--horizontal .facets__summary *::selection,
+.facets--horizontal .facets__label *::selection {
   background: transparent !important;
   color: inherit !important;
+}
+
+.facets--horizontal .facets__summary::-moz-selection,
+.facets--horizontal .facets__label::-moz-selection,
+.facets--horizontal .facets__summary *::-moz-selection,
+.facets--horizontal .facets__label *::-moz-selection {
+  background: transparent !important;
+  color: inherit !important;
+}
+
+.facets--horizontal .facets__summary *,
+.facets--horizontal .facets__label * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
 }
 
 .facets--horizontal .facets__summary:focus,
@@ -2242,9 +2259,48 @@
     resetMobileFacetPanelStyles(root);
   }
 
+  function clearFacetFocusAndSelection(root) {
+    var selection = window.getSelection && window.getSelection();
+    if (selection && selection.removeAllRanges) selection.removeAllRanges();
+
+    var scope = root || document;
+    var active = document.activeElement;
+    if (active instanceof HTMLElement && active.closest('.facets__summary')) {
+      active.blur();
+    }
+
+    scope.querySelectorAll('.facets__summary').forEach(function (summary) {
+      if (summary === document.activeElement) summary.blur();
+    });
+  }
+
+  function bindFacetSelectionGuard() {
+    if (document.documentElement.dataset.iabFacetSelectionBound === '1') return;
+    document.documentElement.dataset.iabFacetSelectionBound = '1';
+
+    /* Stop browser from focusing + selecting summary text on click/load */
+    document.addEventListener('mousedown', function (e) {
+      if (!e.target.closest('.facets__summary')) return;
+      e.preventDefault();
+    }, true);
+
+    document.addEventListener('mouseup', function (e) {
+      if (!e.target.closest('.facets__summary, .facets__label')) return;
+      clearFacetFocusAndSelection(document);
+    });
+
+    window.addEventListener('load', function () {
+      clearFacetFocusAndSelection(document);
+      setTimeout(function () { clearFacetFocusAndSelection(document); }, 0);
+      setTimeout(function () { clearFacetFocusAndSelection(document); }, 100);
+      setTimeout(function () { clearFacetFocusAndSelection(document); }, 350);
+    });
+  }
+
   function bindFacetOutsideClose() {
     if (document.documentElement.dataset.iabFacetCloseBound === '1') return;
     document.documentElement.dataset.iabFacetCloseBound = '1';
+    bindFacetSelectionGuard();
 
     document.addEventListener('click', function (e) {
       if (e.target.closest('.facets__summary, .facets__panel, floating-panel-component')) return;
@@ -2253,13 +2309,6 @@
         details.removeAttribute('open');
         clearMobileFacetPanelPosition(details.querySelector('floating-panel-component'));
       });
-    });
-
-    /* Prevent grey text-selection highlight on filter labels (Availability, Price, etc.) */
-    document.addEventListener('mouseup', function (e) {
-      if (!e.target.closest('.facets__summary, .facets__label')) return;
-      var selection = window.getSelection && window.getSelection();
-      if (selection && selection.removeAllRanges) selection.removeAllRanges();
     });
   }
 
@@ -2286,6 +2335,7 @@
 
       if (mountNode.parentElement !== slot) {
         slot.appendChild(mountNode);
+        clearFacetFocusAndSelection(facets);
       }
 
       slot.removeAttribute('aria-hidden');
@@ -2299,6 +2349,7 @@
           patchMobileFacetPanels(facets);
           resetMobileFacetPanelStyles(facets);
           bindFacetOutsideClose();
+          clearFacetFocusAndSelection(facets);
         });
       });
       return;
@@ -2319,10 +2370,12 @@
     patchMobileFacetPanels(facets);
     resetMobileFacetPanelStyles(facets);
     bindFacetOutsideClose();
+    clearFacetFocusAndSelection(facets);
   }
 
   function processAll() {
     relocateCollectionFilters();
+    clearFacetFocusAndSelection(document);
 
     document.querySelectorAll('.product-grid product-card, results-list product-card').forEach(function (card) {
       injectCard(card);
@@ -2410,10 +2463,12 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
+      bindFacetSelectionGuard();
       processAll();
       watchForGridUpdates();
     });
   } else {
+    bindFacetSelectionGuard();
     processAll();
     watchForGridUpdates();
   }
