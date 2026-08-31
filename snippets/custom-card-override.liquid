@@ -285,8 +285,8 @@
 
 .facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
 .facets--horizontal .facets__panel-content:has(.price-facet) {
-  min-width: min(200px, calc(100vw - 32px)) !important;
-  max-width: min(248px, calc(100vw - 32px)) !important;
+  min-width: min(188px, calc(100vw - 32px)) !important;
+  max-width: min(224px, calc(100vw - 32px)) !important;
   width: 100% !important;
 }
 
@@ -566,123 +566,169 @@
   color: #ffffff !important;
 }
 
-/* Price filter inputs — dark fields instead of light gray popover inputs */
+/* Price filter — compact polished dropdown */
+.facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
+.facets--horizontal .facets__panel-content:has(.price-facet),
+.facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
+  min-width: min(188px, calc(100vw - 32px)) !important;
+  max-width: min(224px, calc(100vw - 32px)) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+  padding: 10px 10px 8px !important;
+  height: auto !important;
+  max-height: none !important;
+}
+
+.facets--horizontal .price-facet--horizontal,
+.facets--drawer .price-facet {
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  gap: 0 !important;
+}
+
+.facets--horizontal .price-facet .facets__inputs-wrapper--row,
+.facets--drawer .price-facet .facets__inputs-wrapper--row {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.facets--horizontal .price-facet .facets__inputs-wrapper,
+.facets--drawer .price-facet .facets__inputs-wrapper,
+.facets--horizontal .price-facet__inputs-wrapper,
+.facets--drawer .price-facet__inputs-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+  gap: 6px !important;
+  padding: 0 !important;
+  align-items: center !important;
+}
+
+.facets--horizontal .price-facet__field,
+.facets--drawer .price-facet__field {
+  position: relative !important;
+  flex: 1 1 0 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  align-items: stretch !important;
+  min-height: 34px !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+  background: #10161c !important;
+  border: 1px solid rgba(175, 193, 202, 0.2) !important;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease !important;
+}
+
+.facets--horizontal .price-facet__field:focus-within,
+.facets--drawer .price-facet__field:focus-within {
+  border-color: rgba(175, 193, 202, 0.42) !important;
+  background: #141c23 !important;
+  box-shadow: 0 0 0 1px rgba(175, 193, 202, 0.08) inset !important;
+}
+
 .facets--horizontal .price-facet__input,
 .facets--drawer .price-facet__input,
 .facets--horizontal .price-facet__field .field__input,
 .facets--drawer .price-facet__field .field__input {
-  background: #111820 !important;
-  background-color: #111820 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  box-sizing: border-box !important;
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
   color: #ffffff !important;
-  border: 1px solid rgba(175, 193, 202, 0.28) !important;
-  border-radius: 2px !important;
+  padding: 0 8px 0 30px !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  text-align: left !important;
   box-shadow: none !important;
+  outline: none !important;
 }
 
 .facets--horizontal .price-facet__input:is(:focus, :hover),
 .facets--drawer .price-facet__input:is(:focus, :hover),
 .facets--horizontal .price-facet__field .field__input:is(:focus, :hover),
 .facets--drawer .price-facet__field .field__input:is(:focus, :hover) {
-  background: #182028 !important;
-  background-color: #182028 !important;
-  border-color: rgba(175, 193, 202, 0.5) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
   box-shadow: none !important;
 }
 
 .facets--horizontal .price-facet__input::placeholder,
 .facets--drawer .price-facet__input::placeholder {
-  color: rgba(175, 193, 202, 0.55) !important;
+  color: rgba(175, 193, 202, 0.45) !important;
 }
 
 .facets--horizontal .price-facet__label,
 .facets--drawer .price-facet__label {
-  color: #afc1ca !important;
-}
-
-.facets--horizontal .price-facet__separator,
-.facets--drawer .price-facet__separator {
-  color: #afc1ca !important;
-}
-
-.facets--horizontal .price-facet__highest-price,
-.facets--drawer .price-facet__highest-price {
-  color: rgba(175, 193, 202, 0.75) !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  padding: 10px 4px 0 !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  width: 26px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   margin: 0 !important;
-  line-height: 1.4 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-}
-
-.facets--horizontal .price-facet__inputs-wrapper,
-.facets--drawer .price-facet__inputs-wrapper {
   padding: 0 !important;
-}
-
-.facets--horizontal .price-facet__field,
-.facets--drawer .price-facet__field {
-  background: transparent !important;
-}
-
-/* Keep price inputs inside dropdown panel — overflow visible so highest-price text is not clipped */
-.facets--horizontal floating-panel-component.facets__panel-content:has(.price-facet),
-.facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
-  box-sizing: border-box !important;
-  overflow: visible !important;
-  padding: 12px 10px 14px !important;
-  height: auto !important;
-  max-height: none !important;
-}
-
-.facets--horizontal .price-facet--horizontal,
-.facets--drawer .price-facet {
-  overflow: visible !important;
-  height: auto !important;
-  max-height: none !important;
-}
-
-.facets--horizontal .price-facet--horizontal,
-.facets--drawer .price-facet {
-  min-width: 0 !important;
-  width: 100% !important;
-  max-width: 100% !important;
-}
-
-.facets--horizontal .price-facet .facets__inputs-wrapper--row,
-.facets--horizontal .price-facet .facets__inputs-wrapper,
-.facets--drawer .price-facet .facets__inputs-wrapper {
-  width: 100% !important;
-  max-width: 100% !important;
-  box-sizing: border-box !important;
-  gap: 8px !important;
-}
-
-.facets--horizontal .price-facet__field,
-.facets--drawer .price-facet__field {
-  flex: 1 1 0 !important;
-  min-width: 0 !important;
-}
-
-.facets--horizontal .price-facet__input,
-.facets--drawer .price-facet__input,
-.facets--horizontal .price-facet__field .field__input,
-.facets--drawer .price-facet__field .field__input {
-  width: 100% !important;
-  max-width: 100% !important;
-  min-width: 0 !important;
-  box-sizing: border-box !important;
-  padding-left: 28px !important;
-  padding-right: 8px !important;
-  font-size: 13px !important;
+  transform: none !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: rgba(175, 193, 202, 0.6) !important;
+  pointer-events: none !important;
+  border-right: 1px solid rgba(175, 193, 202, 0.12) !important;
+  background: rgba(0, 0, 0, 0.18) !important;
 }
 
 .facets--horizontal .price-facet__separator,
 .facets--drawer .price-facet__separator {
   flex: 0 0 auto !important;
   white-space: nowrap !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0.04em !important;
+  text-transform: lowercase !important;
+  color: rgba(175, 193, 202, 0.45) !important;
+  padding: 0 1px !important;
+  line-height: 1 !important;
+}
+
+.facets--horizontal .price-facet__highest-price,
+.facets--drawer .price-facet__highest-price,
+.facets--horizontal .price-facet__highest-price--horizontal,
+.facets--drawer .price-facet__highest-price--horizontal {
+  color: rgba(175, 193, 202, 0.52) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  padding: 8px 2px 0 !important;
+  margin: 6px 0 0 !important;
+  border-top: 1px solid rgba(175, 193, 202, 0.1) !important;
+  font-family: var(--font, 'glory', sans-serif) !important;
+  font-size: 11px !important;
+  font-weight: 400 !important;
+  line-height: 1.45 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
+.facets--horizontal .price-facet .facets__clear,
+.facets--horizontal .price-facet .clear-filter {
+  margin: 4px 0 0 auto !important;
+  padding: 0 2px !important;
 }
 
 /* Drawer / mobile panel — same dark language */
@@ -1014,7 +1060,12 @@
 
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
-    padding: 12px 10px 14px !important;
+    padding: 10px 10px 8px !important;
+    width: min(224px, calc(100% - 32px)) !important;
+    min-width: min(188px, calc(100vw - 32px)) !important;
+    max-width: min(224px, calc(100vw - 32px)) !important;
+    background: #0a0e12 !important;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03) inset !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__highest-price,
@@ -1022,10 +1073,11 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    padding: 12px 2px 2px !important;
-    margin: 0 !important;
+    padding: 8px 2px 0 !important;
+    margin: 6px 0 0 !important;
+    border-top: 1px solid rgba(175, 193, 202, 0.1) !important;
     line-height: 1.45 !important;
-    font-size: 13px !important;
+    font-size: 11px !important;
     white-space: normal !important;
     overflow: visible !important;
   }
@@ -1264,7 +1316,21 @@
   .pbanner-filters-slot .price-facet__highest-price--horizontal {
     display: block !important;
     visibility: visible !important;
-    padding: 10px 4px 0 !important;
+    padding: 8px 2px 0 !important;
+    margin: 6px 0 0 !important;
+    font-size: 11px !important;
+  }
+
+  .pbanner-filters-slot details[open] > floating-panel-component:has(.price-facet),
+  .pbanner-filters-slot details[open] > floating-panel-component.details-content:has(.price-facet) {
+    min-width: min(188px, calc(100vw - 32px)) !important;
+    max-width: min(224px, calc(100vw - 32px)) !important;
+    padding: 10px 10px 8px !important;
+  }
+
+  .pbanner-filters-slot .price-facet__field {
+    max-width: none !important;
+    flex: 1 1 0 !important;
   }
 
   .pbanner-filters-slot details:not([open]) > floating-panel-component {
@@ -1275,10 +1341,6 @@
   .pbanner-filters-slot .filter-remove-buttons,
   .pbanner-filters-slot .facets-remove {
     display: none !important;
-  }
-
-  .pbanner-filters-slot .price-facet__field {
-    max-width: calc(50% - 18px) !important;
   }
 
   /* Facets moved to banner — product grid must use full centered width */
