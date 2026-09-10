@@ -540,25 +540,41 @@
 
   {% if section.settings.facebook_url != blank %}
     <a href="{{ section.settings.facebook_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-      <img src="{{ 'facebook-lite.svg' | asset_url }}" alt="Facebook">
+      {% if section.settings.facebook_icon != blank %}
+        <img src="{{ section.settings.facebook_icon | image_url: width: 48 }}" alt="Facebook" width="24" height="24" loading="lazy">
+      {% else %}
+        <img src="{{ 'facebook-lite.svg' | asset_url }}" alt="Facebook">
+      {% endif %}
     </a>
   {% endif %}
 
   {% if section.settings.instagram_url != blank %}
     <a href="{{ section.settings.instagram_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-      <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram">
+      {% if section.settings.instagram_icon != blank %}
+        <img src="{{ section.settings.instagram_icon | image_url: width: 48 }}" alt="Instagram" width="24" height="24" loading="lazy">
+      {% else %}
+        <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram">
+      {% endif %}
     </a>
   {% endif %}
 
   {% if section.settings.youtube_url != blank %}
     <a href="{{ section.settings.youtube_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
-      <img src="{{ 'youtube.svg' | asset_url }}" alt="YouTube">
+      {% if section.settings.youtube_icon != blank %}
+        <img src="{{ section.settings.youtube_icon | image_url: width: 48 }}" alt="YouTube" width="24" height="24" loading="lazy">
+      {% else %}
+        <img src="{{ 'youtube.svg' | asset_url }}" alt="YouTube">
+      {% endif %}
     </a>
   {% endif %}
 
   {% if section.settings.tiktok_url != blank %}
     <a href="{{ section.settings.tiktok_url }}" class="iab-footer__social-link" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
-      <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok">
+      {% if section.settings.tiktok_icon != blank %}
+        <img src="{{ section.settings.tiktok_icon | image_url: width: 48 }}" alt="TikTok" width="24" height="24" loading="lazy">
+      {% else %}
+        <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok">
+      {% endif %}
     </a>
   {% endif %}
 
@@ -1366,9 +1382,33 @@ a.iab-footer__social-handle:hover {
       "info": "If set, the social handle text becomes a clickable link."
     },
     { "type": "url", "id": "facebook_url",   "label": "Facebook URL" },
+    {
+      "type": "image_picker",
+      "id": "facebook_icon",
+      "label": "Facebook icon (upload)",
+      "info": "Optional. If left empty, the default icon will be used."
+    },
     { "type": "url", "id": "instagram_url",  "label": "Instagram URL" },
+    {
+      "type": "image_picker",
+      "id": "instagram_icon",
+      "label": "Instagram icon (upload)",
+      "info": "Optional. If left empty, the default icon will be used."
+    },
     { "type": "url", "id": "youtube_url",    "label": "YouTube URL" },
+    {
+      "type": "image_picker",
+      "id": "youtube_icon",
+      "label": "YouTube icon (upload)",
+      "info": "Optional. If left empty, the default icon will be used."
+    },
     { "type": "url", "id": "tiktok_url",     "label": "TikTok URL" },
+    {
+      "type": "image_picker",
+      "id": "tiktok_icon",
+      "label": "TikTok icon (upload)",
+      "info": "Optional. If left empty, the default icon will be used."
+    },
     {
       "type": "header",
       "content": "Bottom bar"

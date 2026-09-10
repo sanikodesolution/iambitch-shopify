@@ -139,8 +139,8 @@
   display: flex !important;
   flex-wrap: wrap !important;
   align-items: flex-end !important;
-  column-gap: 28px !important;
-  row-gap: 12px !important;
+  column-gap: 48px !important;
+  row-gap: 16px !important;
 }
 
 .facets--horizontal .facets__panel {
@@ -152,57 +152,15 @@
   display: inline-flex !important;
   align-items: center !important;
   justify-content: flex-start !important;
-  gap: 6px !important;
+  gap: 10px !important;
   height: auto !important;
   min-height: 0 !important;
-  padding: 0 0 8px !important;
-  border-bottom: 1px solid rgba(175, 193, 202, 0.35) !important;
-  color: #b8c4cc !important;
+  padding: 0 2px 10px !important;
+  border-bottom: 1px solid rgba(175, 193, 202, 0.45) !important;
+  color: #c8d0d6 !important;
   cursor: pointer !important;
   list-style: none !important;
   opacity: 1 !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -webkit-tap-highlight-color: transparent !important;
-  background: transparent !important;
-  outline: none !important;
-  box-shadow: none !important;
-  transition: color 0.2s ease, border-color 0.2s ease !important;
-}
-
-.facets--horizontal .facets__summary:hover {
-  color: #ffffff !important;
-  border-bottom-color: rgba(175, 193, 202, 0.6) !important;
-}
-
-.facets--horizontal .facets__summary::selection,
-.facets--horizontal .facets__label::selection,
-.facets--horizontal .facets__summary *::selection,
-.facets--horizontal .facets__label *::selection {
-  background: transparent !important;
-  color: inherit !important;
-}
-
-.facets--horizontal .facets__summary::-moz-selection,
-.facets--horizontal .facets__label::-moz-selection,
-.facets--horizontal .facets__summary *::-moz-selection,
-.facets--horizontal .facets__label *::-moz-selection {
-  background: transparent !important;
-  color: inherit !important;
-}
-
-.facets--horizontal .facets__summary *,
-.facets--horizontal .facets__label * {
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -moz-user-select: none !important;
-}
-
-.facets--horizontal .facets__summary:focus,
-.facets--horizontal .facets__summary:focus-visible {
-  outline: none !important;
-  background: transparent !important;
-  box-shadow: none !important;
 }
 
 .facets--horizontal .facets__summary::-webkit-details-marker {
@@ -211,15 +169,12 @@
 
 .facets--horizontal .facets__label,
 .facets--horizontal .facets__clear-all-link {
-  color: inherit !important;
+  color: #c8d0d6 !important;
   font-family: var(--font, 'glory', sans-serif) !important;
-  font-size: 14px !important;
+  font-size: 15px !important;
   font-weight: 400 !important;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.01em !important;
   line-height: 1.2 !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  background: transparent !important;
 }
 
 .facets--horizontal .facets__status-wrapper {
@@ -236,13 +191,13 @@
 }
 
 .facets--horizontal .facets__summary .icon-caret {
-  width: 10px !important;
-  height: 10px !important;
+  width: 12px !important;
+  height: 12px !important;
   margin: 0 !important;
-  color: inherit !important;
-  opacity: 0.85 !important;
+  color: #c8d0d6 !important;
+  opacity: 1 !important;
   flex-shrink: 0 !important;
-  transition: transform 0.2s ease, color 0.2s ease !important;
+  transition: transform 0.2s ease !important;
 }
 
 .facets--horizontal .facets__panel[open] .facets__summary {
@@ -269,25 +224,17 @@
 .facets--horizontal .facets__panel-content,
 .facets--horizontal floating-panel-component.facets__inputs,
 .facets-mobile-wrapper .facets__panel-content {
-  background: #0a0e12 !important;
-  background-color: #0a0e12 !important;
-  border: 1px solid rgba(175, 193, 202, 0.2) !important;
-  border-radius: 6px !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03) inset !important;
+  background: #05080c !important;
+  background-color: #05080c !important;
+  border: 1px solid rgba(175, 193, 202, 0.16) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
   color: #afc1ca !important;
-  width: max-content !important;
-  min-width: min(168px, calc(100vw - 32px)) !important;
-  max-width: min(220px, calc(100vw - 32px)) !important;
+  min-width: min(280px, calc(100vw - 32px)) !important;
+  max-width: min(340px, calc(100vw - 32px)) !important;
   padding: 0 !important;
-  overflow: hidden !important;
-  margin-top: 6px !important;
-}
-
-.facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
-.facets--horizontal .facets__panel-content:has(.price-facet) {
-  min-width: min(260px, calc(100vw - 32px)) !important;
-  max-width: min(300px, calc(100vw - 32px)) !important;
-  width: 100% !important;
+  overflow: visible !important;
+  margin-top: 8px !important;
 }
 
 /* Panel header inside dropdown */
@@ -323,8 +270,8 @@
 
 .facets--horizontal .facets__inputs-wrapper,
 .facets--drawer .facets__inputs-wrapper {
-  padding: 6px !important;
-  max-height: 280px;
+  padding: 10px 8px 12px !important;
+  max-height: 320px;
   overflow-y: auto;
   margin: 0 !important;
 }
@@ -356,23 +303,23 @@
   display: flex !important;
   align-items: center !important;
   width: 100% !important;
-  min-height: 36px !important;
+  min-height: 46px !important;
   margin: 0 !important;
-  padding: 8px 10px !important;
-  border-radius: 4px !important;
+  padding: 12px 14px !important;
+  border-radius: 2px !important;
   box-sizing: border-box !important;
   cursor: pointer !important;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .facets--horizontal .checkbox:hover,
 .facets--drawer .checkbox:hover {
-  background: rgba(125, 144, 158, 0.2) !important;
+  background: rgba(125, 144, 158, 0.28) !important;
 }
 
 .facets--horizontal .checkbox:has(.checkbox__input:checked),
 .facets--drawer .checkbox:has(.checkbox__input:checked) {
-  background: rgba(45, 62, 70, 0.85) !important;
+  background: #2d3e46 !important;
 }
 
 .facets--horizontal .checkbox__input,
@@ -398,10 +345,9 @@
 .facets--drawer .checkbox__label-text {
   color: #afc1ca !important;
   font-family: var(--font, 'glory', sans-serif) !important;
-  font-size: 13px !important;
+  font-size: 15px !important;
   font-weight: 400 !important;
-  line-height: 1.35 !important;
-  white-space: nowrap !important;
+  line-height: 1.3 !important;
 }
 
 .facets--horizontal .checkbox:has(.checkbox__input:checked) .checkbox__label-text,
@@ -547,35 +493,78 @@
 /* Clear button inside dropdown */
 .facets--horizontal .facets__clear,
 .facets--horizontal .clear-filter {
-  color: rgba(175, 193, 202, 0.75) !important;
+  color: #afc1ca !important;
   background: transparent !important;
-  border: none !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.03em !important;
-  text-transform: none !important;
-  padding: 4px 8px 6px !important;
-  margin: 0 2px 2px auto !important;
-  display: block !important;
-  width: fit-content !important;
-  transition: color 0.15s ease !important;
+  border-color: rgba(175, 193, 202, 0.35) !important;
 }
 
-.facets--horizontal .facets__clear:hover,
-.facets--horizontal .clear-filter:hover {
+/* Price filter inputs — dark fields instead of light gray popover inputs */
+.facets--horizontal .price-facet__input,
+.facets--drawer .price-facet__input,
+.facets--horizontal .price-facet__field .field__input,
+.facets--drawer .price-facet__field .field__input {
+  background: #111820 !important;
+  background-color: #111820 !important;
   color: #ffffff !important;
+  border: 1px solid rgba(175, 193, 202, 0.28) !important;
+  border-radius: 2px !important;
+  box-shadow: none !important;
 }
 
-/* Price filter — compact polished dropdown */
-.facets--horizontal floating-panel-component.facets__inputs:has(.price-facet),
-.facets--horizontal .facets__panel-content:has(.price-facet),
+.facets--horizontal .price-facet__input:is(:focus, :hover),
+.facets--drawer .price-facet__input:is(:focus, :hover),
+.facets--horizontal .price-facet__field .field__input:is(:focus, :hover),
+.facets--drawer .price-facet__field .field__input:is(:focus, :hover) {
+  background: #182028 !important;
+  background-color: #182028 !important;
+  border-color: rgba(175, 193, 202, 0.5) !important;
+  box-shadow: none !important;
+}
+
+.facets--horizontal .price-facet__input::placeholder,
+.facets--drawer .price-facet__input::placeholder {
+  color: rgba(175, 193, 202, 0.55) !important;
+}
+
+.facets--horizontal .price-facet__label,
+.facets--drawer .price-facet__label {
+  color: #afc1ca !important;
+}
+
+.facets--horizontal .price-facet__separator,
+.facets--drawer .price-facet__separator {
+  color: #afc1ca !important;
+}
+
+.facets--horizontal .price-facet__highest-price,
+.facets--drawer .price-facet__highest-price {
+  color: rgba(175, 193, 202, 0.75) !important;
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  padding: 10px 4px 0 !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  white-space: normal !important;
+  overflow: visible !important;
+}
+
+.facets--horizontal .price-facet__inputs-wrapper,
+.facets--drawer .price-facet__inputs-wrapper {
+  padding: 0 !important;
+}
+
+.facets--horizontal .price-facet__field,
+.facets--drawer .price-facet__field {
+  background: transparent !important;
+}
+
+/* Keep price inputs inside dropdown panel — overflow visible so highest-price text is not clipped */
+.facets--horizontal floating-panel-component.facets__panel-content:has(.price-facet),
 .facets--drawer floating-panel-component.facets__panel-content:has(.price-facet) {
-  min-width: min(260px, calc(100vw - 32px)) !important;
-  max-width: min(300px, calc(100vw - 32px)) !important;
-  width: 100% !important;
   box-sizing: border-box !important;
   overflow: visible !important;
-  padding: 10px 10px 8px !important;
+  padding: 18px 16px 18px !important;
   height: auto !important;
   max-height: none !important;
 }
@@ -585,50 +574,28 @@
   overflow: visible !important;
   height: auto !important;
   max-height: none !important;
+}
+
+.facets--horizontal .price-facet--horizontal,
+.facets--drawer .price-facet {
   min-width: 0 !important;
   width: 100% !important;
   max-width: 100% !important;
-  gap: 0 !important;
 }
 
 .facets--horizontal .price-facet .facets__inputs-wrapper--row,
-.facets--drawer .price-facet .facets__inputs-wrapper--row {
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
 .facets--horizontal .price-facet .facets__inputs-wrapper,
-.facets--drawer .price-facet .facets__inputs-wrapper,
-.facets--horizontal .price-facet__inputs-wrapper,
-.facets--drawer .price-facet__inputs-wrapper {
+.facets--drawer .price-facet .facets__inputs-wrapper {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
   gap: 8px !important;
-  padding: 0 !important;
-  align-items: center !important;
 }
 
 .facets--horizontal .price-facet__field,
 .facets--drawer .price-facet__field {
-  position: relative !important;
   flex: 1 1 0 !important;
-  min-width: 88px !important;
-  display: flex !important;
-  align-items: stretch !important;
-  min-height: 34px !important;
-  border-radius: 4px !important;
-  overflow: visible !important;
-  background: #10161c !important;
-  border: 1px solid rgba(175, 193, 202, 0.2) !important;
-  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease !important;
-}
-
-.facets--horizontal .price-facet__field:focus-within,
-.facets--drawer .price-facet__field:focus-within {
-  border-color: rgba(175, 193, 202, 0.42) !important;
-  background: #141c23 !important;
-  box-shadow: 0 0 0 1px rgba(175, 193, 202, 0.08) inset !important;
+  min-width: 0 !important;
 }
 
 .facets--horizontal .price-facet__input,
@@ -638,101 +605,27 @@
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
-  height: 34px !important;
-  min-height: 34px !important;
   box-sizing: border-box !important;
-  border: none !important;
-  border-radius: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  color: #ffffff !important;
-  padding: 0 10px 0 38px !important;
-  font-family: var(--font, 'glory', sans-serif) !important;
+  padding-left: 28px !important;
+  padding-right: 8px !important;
   font-size: 13px !important;
-  font-weight: 400 !important;
-  line-height: 1 !important;
-  text-align: left !important;
-  text-overflow: clip !important;
-  overflow: visible !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.facets--horizontal .price-facet__input:is(:focus, :hover),
-.facets--drawer .price-facet__input:is(:focus, :hover),
-.facets--horizontal .price-facet__field .field__input:is(:focus, :hover),
-.facets--drawer .price-facet__field .field__input:is(:focus, :hover) {
-  background: transparent !important;
-  background-color: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-.facets--horizontal .price-facet__input::placeholder,
-.facets--drawer .price-facet__input::placeholder {
-  color: rgba(175, 193, 202, 0.45) !important;
-}
-
-.facets--horizontal .price-facet__label,
-.facets--drawer .price-facet__label {
-  position: absolute !important;
-  left: 0 !important;
-  top: 0 !important;
-  bottom: 0 !important;
-  width: 30px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  margin: 0 !important;
-  padding: 0 4px 0 0 !important;
-  transform: none !important;
-  font-family: var(--font, 'glory', sans-serif) !important;
-  font-size: 12px !important;
-  font-weight: 500 !important;
-  color: rgba(175, 193, 202, 0.6) !important;
-  pointer-events: none !important;
-  border-right: 1px solid rgba(175, 193, 202, 0.12) !important;
-  background: rgba(0, 0, 0, 0.18) !important;
 }
 
 .facets--horizontal .price-facet__separator,
 .facets--drawer .price-facet__separator {
   flex: 0 0 auto !important;
   white-space: nowrap !important;
-  font-size: 11px !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.04em !important;
-  text-transform: lowercase !important;
-  color: rgba(175, 193, 202, 0.45) !important;
-  padding: 0 1px !important;
-  line-height: 1 !important;
 }
 
-.facets--horizontal .price-facet__highest-price,
-.facets--drawer .price-facet__highest-price,
-.facets--horizontal .price-facet__highest-price--horizontal,
-.facets--drawer .price-facet__highest-price--horizontal {
-  color: #d2dde4 !important;
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  padding: 10px 4px 2px !important;
-  margin: 8px 0 0 !important;
-  border-top: 1px solid rgba(175, 193, 202, 0.22) !important;
-  font-family: var(--font, 'glory', sans-serif) !important;
-  font-size: 12px !important;
-  font-weight: 400 !important;
-  letter-spacing: 0.01em !important;
-  line-height: 1.55 !important;
-  white-space: normal !important;
-  overflow: visible !important;
-  -webkit-font-smoothing: antialiased !important;
+.facets--horizontal .facets__clear,
+.facets--horizontal .clear-filter {
+  color: #afc1ca !important;
+  background: transparent !important;
+  border-color: rgba(175, 193, 202, 0.35) !important;
 }
 
-.facets--horizontal .price-facet .facets__clear,
-.facets--horizontal .price-facet .clear-filter {
-  margin: 4px 0 0 auto !important;
-  padding: 0 2px !important;
+.facets--horizontal .facets__clear {
+  padding: 8px 14px 12px !important;
 }
 
 /* Drawer / mobile panel — same dark language */
@@ -866,7 +759,7 @@
 @media screen and (min-width: 990px) {
   .pbanner-filters-slot overflow-list::part(list) {
     display: flex !important;
-    column-gap: 28px !important;
+    column-gap: 48px !important;
   }
 }
 
@@ -954,7 +847,7 @@
     flex-wrap: wrap !important;
     justify-content: center !important;
     align-items: flex-end !important;
-    column-gap: 28px !important;
+    column-gap: 48px !important;
     row-gap: 16px !important;
     width: auto !important;
     max-width: 100% !important;
@@ -971,7 +864,7 @@
     flex-wrap: nowrap !important;
     justify-content: center !important;
     align-items: flex-end !important;
-    column-gap: clamp(20px, 5vw, 28px) !important;
+    column-gap: clamp(28px, 8vw, 48px) !important;
     row-gap: 0 !important;
     width: 100% !important;
     max-width: 100% !important;
@@ -1050,7 +943,7 @@
     opacity: 1 !important;
     pointer-events: auto !important;
     margin: 0 !important;
-    width: min(220px, calc(100% - 32px)) !important;
+    width: min(300px, calc(100% - 32px)) !important;
     min-width: 0 !important;
     max-width: calc(100vw - 32px) !important;
     overflow: visible !important;
@@ -1064,12 +957,7 @@
 
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
-    padding: 10px 10px 8px !important;
-    width: min(300px, calc(100% - 32px)) !important;
-    min-width: min(260px, calc(100vw - 32px)) !important;
-    max-width: min(300px, calc(100vw - 32px)) !important;
-    background: #0a0e12 !important;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.03) inset !important;
+    padding: 16px 14px 20px !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__highest-price,
@@ -1077,13 +965,10 @@
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    color: #d2dde4 !important;
-    padding: 10px 4px 2px !important;
-    margin: 8px 0 0 !important;
-    border-top: 1px solid rgba(175, 193, 202, 0.22) !important;
-    line-height: 1.55 !important;
-    font-size: 12px !important;
-    letter-spacing: 0.01em !important;
+    padding: 12px 2px 2px !important;
+    margin: 0 !important;
+    line-height: 1.45 !important;
+    font-size: 13px !important;
     white-space: normal !important;
     overflow: visible !important;
   }
@@ -1105,8 +990,7 @@
 
   .collection-wrapper .facets-block-wrapper--horizontal .price-facet__field {
     max-width: none !important;
-    flex: 1 1 0 !important;
-    min-width: 88px !important;
+    flex: 1 1 45% !important;
   }
 
   .collection-wrapper .facets-block-wrapper--horizontal .facets-horizontal-remove,
@@ -1253,7 +1137,7 @@
     display: flex !important;
     flex-wrap: nowrap !important;
     grid-template-columns: none !important;
-    column-gap: 28px !important;
+    column-gap: 48px !important;
     visibility: visible !important;
     overflow: visible !important;
     height: auto !important;
@@ -1310,8 +1194,8 @@
     transform: none !important;
     margin: 0 !important;
     display: block !important;
-    min-width: min(168px, calc(100vw - 32px)) !important;
-    max-width: min(220px, calc(100vw - 32px)) !important;
+    min-width: min(280px, calc(100vw - 32px)) !important;
+    max-width: min(340px, calc(100vw - 32px)) !important;
     width: max-content !important;
     overflow: visible !important;
     height: auto !important;
@@ -1323,25 +1207,7 @@
   .pbanner-filters-slot .price-facet__highest-price--horizontal {
     display: block !important;
     visibility: visible !important;
-    color: #d2dde4 !important;
-    padding: 10px 4px 2px !important;
-    margin: 8px 0 0 !important;
-    font-size: 12px !important;
-    line-height: 1.55 !important;
-    letter-spacing: 0.01em !important;
-  }
-
-  .pbanner-filters-slot details[open] > floating-panel-component:has(.price-facet),
-  .pbanner-filters-slot details[open] > floating-panel-component.details-content:has(.price-facet) {
-    min-width: min(260px, calc(100vw - 32px)) !important;
-    max-width: min(300px, calc(100vw - 32px)) !important;
-    padding: 10px 10px 8px !important;
-  }
-
-  .pbanner-filters-slot .price-facet__field {
-    max-width: none !important;
-    flex: 1 1 0 !important;
-    min-width: 88px !important;
+    padding: 10px 4px 0 !important;
   }
 
   .pbanner-filters-slot details:not([open]) > floating-panel-component {
@@ -1352,6 +1218,10 @@
   .pbanner-filters-slot .filter-remove-buttons,
   .pbanner-filters-slot .facets-remove {
     display: none !important;
+  }
+
+  .pbanner-filters-slot .price-facet__field {
+    max-width: calc(50% - 18px) !important;
   }
 
   /* Facets moved to banner — product grid must use full centered width */
@@ -2350,48 +2220,9 @@
     resetMobileFacetPanelStyles(root);
   }
 
-  function clearFacetFocusAndSelection(root) {
-    var selection = window.getSelection && window.getSelection();
-    if (selection && selection.removeAllRanges) selection.removeAllRanges();
-
-    var scope = root || document;
-    var active = document.activeElement;
-    if (active instanceof HTMLElement && active.closest('.facets__summary')) {
-      active.blur();
-    }
-
-    scope.querySelectorAll('.facets__summary').forEach(function (summary) {
-      if (summary === document.activeElement) summary.blur();
-    });
-  }
-
-  function bindFacetSelectionGuard() {
-    if (document.documentElement.dataset.iabFacetSelectionBound === '1') return;
-    document.documentElement.dataset.iabFacetSelectionBound = '1';
-
-    /* Stop browser from focusing + selecting summary text on click/load */
-    document.addEventListener('mousedown', function (e) {
-      if (!e.target.closest('.facets__summary')) return;
-      e.preventDefault();
-    }, true);
-
-    document.addEventListener('mouseup', function (e) {
-      if (!e.target.closest('.facets__summary, .facets__label')) return;
-      clearFacetFocusAndSelection(document);
-    });
-
-    window.addEventListener('load', function () {
-      clearFacetFocusAndSelection(document);
-      setTimeout(function () { clearFacetFocusAndSelection(document); }, 0);
-      setTimeout(function () { clearFacetFocusAndSelection(document); }, 100);
-      setTimeout(function () { clearFacetFocusAndSelection(document); }, 350);
-    });
-  }
-
   function bindFacetOutsideClose() {
     if (document.documentElement.dataset.iabFacetCloseBound === '1') return;
     document.documentElement.dataset.iabFacetCloseBound = '1';
-    bindFacetSelectionGuard();
 
     document.addEventListener('click', function (e) {
       if (e.target.closest('.facets__summary, .facets__panel, floating-panel-component')) return;
@@ -2426,7 +2257,6 @@
 
       if (mountNode.parentElement !== slot) {
         slot.appendChild(mountNode);
-        clearFacetFocusAndSelection(facets);
       }
 
       slot.removeAttribute('aria-hidden');
@@ -2440,7 +2270,6 @@
           patchMobileFacetPanels(facets);
           resetMobileFacetPanelStyles(facets);
           bindFacetOutsideClose();
-          clearFacetFocusAndSelection(facets);
         });
       });
       return;
@@ -2461,12 +2290,10 @@
     patchMobileFacetPanels(facets);
     resetMobileFacetPanelStyles(facets);
     bindFacetOutsideClose();
-    clearFacetFocusAndSelection(facets);
   }
 
   function processAll() {
     relocateCollectionFilters();
-    clearFacetFocusAndSelection(document);
 
     document.querySelectorAll('.product-grid product-card, results-list product-card').forEach(function (card) {
       injectCard(card);
@@ -2554,12 +2381,10 @@
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', function () {
-      bindFacetSelectionGuard();
       processAll();
       watchForGridUpdates();
     });
   } else {
-    bindFacetSelectionGuard();
     processAll();
     watchForGridUpdates();
   }

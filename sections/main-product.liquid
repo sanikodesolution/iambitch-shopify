@@ -4,6 +4,13 @@
   Shopify Horizon Theme Compatible
   File: sections/more-products.liquid
   Card design now matches the main collection page card style
+
+  DYNAMIC MODE:
+  - On a PRODUCT page  -> shows products from that product's first collection
+                           (the current product itself is excluded)
+  - On a COLLECTION page -> shows products from that same collection
+  - Anywhere else / if no context found -> falls back to the manually
+    selected "Collection" setting (if set), otherwise shows from "All"
   ============================================================
 {% endcomment %}
 {{ 'section-core.css' | asset_url | stylesheet_tag }}
@@ -376,31 +383,66 @@
       {% endif %}
     </div>
 
-    {% assign mprod_collection = collections[section.settings.collection] %}
+    {% comment %}
+      ============================================================
+      DYNAMIC COLLECTION / PRODUCT DETECTION
+      1) Product page  -> use that product's first collection
+      2) Collection page -> use that collection
+      3) Otherwise -> fall back to the manually picked "collection"
+         setting, then to "All" as a last resort
+      ============================================================
+    {% endcomment %}
+    {% assign mprod_current_product = product %}
+    {% assign mprod_collection = blank %}
+
+    {% if template.name == 'product' and mprod_current_product != blank %}
+      {% if mprod_current_product.collections.size > 0 %}
+        {% assign mprod_collection = mprod_current_product.collections.first %}
+      {% endif %}
+    {% elsif template.name == 'collection' and collection != blank %}
+      {% assign mprod_collection = collection %}
+    {% endif %}
+
+    {% if mprod_collection == blank and section.settings.collection != blank %}
+      {% assign mprod_collection = collections[section.settings.collection] %}
+    {% endif %}
+
+    {% if mprod_collection == blank %}
+      {% assign mprod_collection = collections.all %}
+    {% endif %}
 
     {% if mprod_collection != blank and mprod_collection.products.size > 0 %}
       <div class="mprod-grid">
-        {% for product in mprod_collection.products limit: section.settings.products_to_show %}
-          {% assign mprod_compare = product.compare_at_price %}
-          {% assign mprod_price   = product.price %}
-          {% assign mprod_wow_delay = forloop.index | times: 100 %}
-          {% assign mprod_secondary_image = product.images[1] | default: product.featured_image %}
+        {% assign mprod_shown = 0 %}
+        {% for mprod_product in mprod_collection.products %}
+          {% if mprod_current_product != blank and mprod_product.id == mprod_current_product.id %}
+            {% continue %}
+          {% endif %}
+          {% if mprod_shown >= section.settings.products_to_show %}
+            {% break %}
+          {% endif %}
+          {% assign mprod_shown = mprod_shown | plus: 1 %}
+
+          {% assign mprod_compare = mprod_product.compare_at_price %}
+          {% assign mprod_price   = mprod_product.price %}
+          {% assign mprod_wow_delay = mprod_shown | times: 100 %}
+          {% assign mprod_secondary_image = mprod_product.images[1] | default: mprod_product.featured_image %}
 
           <div class="mprod-card wow fadeInUp" data-wow-delay="{{ mprod_wow_delay }}ms">
             <div class="mprod-media">
-              <a href="{{ product.url }}" aria-label="{{ product.title }}">
-                {% if product.featured_image %}
+              <a href="{{ mprod_product.url }}" aria-label="{{ mprod_product.title }}">
+                {% if mprod_product.featured_image %}
                   <img
                     class="mprod-img-primary"
-                    src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
-                    alt="{{ product.featured_image.alt | default: product.title | escape }}"
+                    src="{{ mprod_product.featured_image | img_url: '600x600', crop: 'center' }}"
+                    alt="{{ mprod_product.featured_image.alt | default: mprod_product.title | escape }}"
                     loading="lazy"
                     width="600" height="600">
                   {% if mprod_secondary_image %}
                     <img
                       class="mprod-img-secondary"
                       src="{{ mprod_secondary_image | img_url: '600x600', crop: 'center' }}"
-                      alt="{{ mprod_secondary_image.alt | default: product.title | escape }}"
+                      alt="{{ mprod_secondary_image.alt | default: mprod_product.title | escape }}"
                       loading="lazy"
                       width="600" height="600">
                   {% endif %}
@@ -412,11 +454,12 @@
               <button
                 class="mprod-wish-btn"
                 type="button"
-                data-product-id="{{ product.id }}"
-                data-product-title="{{ product.title | escape }}"
-                data-product-image="{{ product.featured_image | img_url: '300x300', crop: 'center' }}"
-                data-product-price="{{ product.price | money_without_currency | remove: ',' }}"
-                aria-label="Add {{ product.title | escape }} to wishlist">
+                data-product-id="{{ mprod_product.id }}"
+                data-product-title="{{ mprod_product.title | escape }}"
+                data-product-image="{{ mprod_product.featured_image | img_url: '300x300', crop: 'center' }}"
+                data-product-price="{{ mprod_product.price | money_without_currency | remove: ',' }}"
+                data-product-url="{{ mprod_product.url }}"
+                aria-label="Add {{ mprod_product.title | escape }} to wishlist">
                 <!-- Empty heart -->
                 <svg class="mprod-wish-empty" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
                   <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
@@ -430,7 +473,7 @@
 
             <div class="mprod-info">
               <div class="mprod-info-row">
-                <a href="{{ product.url }}" class="mprod-title">{{ product.title | split: ' ' | slice: 0, 2 | join: ' ' }}</a>
+                <a href="{{ mprod_product.url }}" class="mprod-title">{{ mprod_product.title | split: ' ' | slice: 0, 2 | join: ' ' }}</a>
               </div>
 
               <div class="mprod-price-row">
@@ -440,13 +483,13 @@
                 {% endif %}
               </div>
 
-              {% if product.available %}
+              {% if mprod_product.available %}
                 <button
                   type="button"
                   class="mprod-shop-btn"
                   data-mprod-add-to-cart
-                  data-variant-id="{{ product.selected_or_first_available_variant.id }}"
-                  data-product-title="{{ product.title | escape }}">{{ section.settings.button_label | default: 'Shop Now' }}</button>
+                  data-variant-id="{{ mprod_product.selected_or_first_available_variant.id }}"
+                  data-product-title="{{ mprod_product.title | escape }}">{{ section.settings.button_label | default: 'Shop Now' }}</button>
               {% else %}
                 <span class="mprod-shop-btn" style="opacity:0.5;cursor:not-allowed;">{{ section.settings.sold_out_label | default: 'Sold Out' }}</span>
               {% endif %}
@@ -455,6 +498,9 @@
 
         {% endfor %}
       </div>
+      {% if mprod_shown == 0 %}
+        <p class="mprod-empty">No related products found.</p>
+      {% endif %}
     {% else %}
       <p class="mprod-empty">Select a collection with products to display this section.</p>
     {% endif %}
@@ -510,6 +556,10 @@
       var title = btnEl.getAttribute('data-product-title');
       var image = btnEl.getAttribute('data-product-image');
       var price = parseFloat(btnEl.getAttribute('data-product-price')) || 0;
+      var url = btnEl.getAttribute('data-product-url') || (window.location.origin + '/products/' + id);
+      if (url.indexOf('http') !== 0) {
+        url = window.location.origin + url;
+      }
 
       var currentlyWishlisted = isInList(id);
       var list = getList();
@@ -529,7 +579,7 @@
           title: title,
           image: image,
           price: Math.round(price),
-          url:   window.location.origin + '/products/' + id  // note: this uses ID, not handle
+          url:   url
         };
         list.push(product);
         saveList(list);
@@ -769,9 +819,13 @@
       "content": "Products"
     },
     {
+      "type": "paragraph",
+      "content": "This section is dynamic: on a product page it auto-shows products from that product's collection, and on a collection page it auto-shows products from that collection. The setting below is only used as a fallback (e.g. on the home page)."
+    },
+    {
       "type": "collection",
       "id": "collection",
-      "label": "Collection"
+      "label": "Fallback collection"
     },
     {
       "type": "range",

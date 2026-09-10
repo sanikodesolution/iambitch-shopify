@@ -11,6 +11,10 @@
 {% assign anim_stagger = section.settings.animation_delay_stagger %}
 {% assign anim_easing = section.settings.animation_easing %}
 
+{% comment %} ── Social icon size (theme-controllable) ── {% endcomment %}
+{% assign social_icon_size = section.settings.social_icon_size | default: 24 %}
+{% assign social_icon_render_size = social_icon_size | times: 2 %}
+
 <section
   class="product__area"
   data-animate-enabled="{{ anim_enabled }}"
@@ -20,19 +24,27 @@
   <!-- Social Icons - Left Side -->
 <div class="product__social animate-item" data-animate-order="0">
   <a href="{{ section.settings.social_facebook }}" class="social__icon" target="_blank" aria-label="Facebook">
-    <img src="{{ 'facebook-02.svg' | asset_url }}" alt="Facebook">
+    {% if section.settings.social_facebook_icon %}
+      <img src="{{ section.settings.social_facebook_icon | image_url: width: social_icon_render_size }}" alt="Facebook" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% else %}
+      <img src="{{ 'facebook-02.svg' | asset_url }}" alt="Facebook" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% endif %}
   </a>
 
   <a href="{{ section.settings.social_twitter }}" class="social__icon" target="_blank" aria-label="Twitter/X">
-    <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram">
-  </a>
-
-  <a href="{{ section.settings.social_youtube }}" class="social__icon" target="_blank" aria-label="YouTube">
-    <img src="{{ 'youtube.svg' | asset_url }}" alt="YouTube">
+    {% if section.settings.social_twitter_icon %}
+      <img src="{{ section.settings.social_twitter_icon | image_url: width: social_icon_render_size }}" alt="Instagram" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% else %}
+      <img src="{{ 'instagram.svg' | asset_url }}" alt="Instagram" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% endif %}
   </a>
 
   <a href="{{ section.settings.social_tiktok }}" class="social__icon" target="_blank" aria-label="TikTok">
-    <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok">
+    {% if section.settings.social_tiktok_icon %}
+      <img src="{{ section.settings.social_tiktok_icon | image_url: width: social_icon_render_size }}" alt="TikTok" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% else %}
+      <img src="{{ 'tiktok.svg' | asset_url }}" alt="TikTok" width="{{ social_icon_size }}" height="{{ social_icon_size }}" style="width: {{ social_icon_size }}px; height: {{ social_icon_size }}px;">
+    {% endif %}
   </a>
 </div>
 
@@ -105,7 +117,7 @@
               {% if product.compare_at_price %}
                 <del>{{ product.compare_at_price | money }}</del>
               {% endif %}
-              <span>{{ product.price | money }}</span>
+              <span id="productPriceValue" data-unit-price="{{ product.selected_or_first_available_variant.price | default: product.price }}">{{ product.price | money }}</span>
             </div>
           </div>
 
@@ -360,13 +372,14 @@
   /* ── Social Icons ── */
   .product__social {
     position: fixed;
-    left: 10%;
+    left: 0;
     top: 40%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     gap: 0;
     background:#263D48;
+    padding: 12px 8px;
     z-index: 10;
   }
 
@@ -376,13 +389,13 @@
     justify-content: center;
     width: 40px;
     height: 40px;
-    background: #0D1117;
-    border: 1px solid #1E2A32;
+    background: #263D48;
+
     transition: background .3s;
     text-decoration: none;
   }
-  .social__icon:hover { background: #1A2530; }
-  .social__icon svg { flex-shrink: 0; }
+  {% comment %} .social__icon:hover { background: #1A2530; }
+  .social__icon svg { flex-shrink: 0; } {% endcomment %}
 
   /* ── Layout ── */
   .product__flex {
@@ -690,36 +703,13 @@
 
 
 
-    @media (max-width: 1600px) {
-    .product__social { left: 0; }
-      .product__social {
-    left: 5%;
-
-  }
-  }
-
-
-  /* ── Responsive ── */
-  @media (max-width: 1430px) {
-    .product__social { left: 0; }
-      .product__social {
-    left: 2%;
-  }
-  }
-
-  /* ── Responsive ── */
-  @media (max-width: 1335px) {
-      .product__social {
-    left: 1%;
-  }
-  }
-
   @media (max-width: 992px) and (min-width: 768px) {
     .product__full__image { min-height: 520px; }
   }
 
   @media (max-width: 768px) {
-    .product__social { display: flex; top: 50%; transform: translateY(0); }
+    /* Social icons hidden on mobile */
+    .product__social { display: none; }
     .product__left { width: 100%; }
     .product__right { width: 100%; }
     .product__full__image { min-height: auto; }
@@ -900,6 +890,50 @@ width:auto;
 </style>
 
 <script>
+  /* Shop's money format string (e.g. "${{amount}}") used to render the
+     live quantity-based price below in the same style as the rest of the store. */
+  var horizonProductMoneyFormat = {{ shop.money_format | json }};
+
+  /* Formats an amount in cents using the shop's money_format, same logic
+     Shopify themes use for AJAX cart/price updates. */
+  function horizonFormatMoney(cents, format) {
+    if (typeof cents === 'string') cents = cents.replace('.', '');
+    var value = '';
+    var placeholderRegex = /\{\{\s*(\w+)\s*\}\}/;
+    var formatString = format || horizonProductMoneyFormat || '${{amount}}';
+
+    function formatWithDelimiters(number, precision, thousands, decimal) {
+      precision = (typeof precision == 'undefined') ? 2 : precision;
+      thousands = (typeof thousands == 'undefined') ? ',' : thousands;
+      decimal   = (typeof decimal == 'undefined') ? '.' : decimal;
+      if (isNaN(number) || number == null) return 0;
+      number = (number / 100.0).toFixed(precision);
+      var parts = number.split('.'),
+          dollars = parts[0].replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1' + thousands),
+          centsPart = parts[1] ? decimal + parts[1] : '';
+      return dollars + centsPart;
+    }
+
+    var match = formatString.match(placeholderRegex);
+    var key = match ? match[1] : 'amount';
+
+    switch (key) {
+      case 'amount_no_decimals':
+        value = formatWithDelimiters(cents, 0);
+        break;
+      case 'amount_with_comma_separator':
+        value = formatWithDelimiters(cents, 2, '.', ',');
+        break;
+      case 'amount_no_decimals_with_comma_separator':
+        value = formatWithDelimiters(cents, 0, '.', ',');
+        break;
+      default:
+        value = formatWithDelimiters(cents, 2);
+    }
+
+    return formatString.replace(placeholderRegex, value);
+  }
+
   /* ══════════════════════════════════════════
      FIX: এই সেকশনটি "dynamic product section" হিসেবে
      পেজ প্রথম লোডের পরেও (Section Rendering API / AJAX /
@@ -1138,6 +1172,7 @@ width:auto;
     const minusBtn      = root.querySelector('.count-minus');
     const plusBtn       = root.querySelector('.count-plus');
     const quantityInput = root.querySelector('.quantity-input');
+    const priceValueEl  = root.querySelector('#productPriceValue');
     let count = 1;
 
     function bumpCount() {
@@ -1147,11 +1182,17 @@ width:auto;
       countEl.classList.add('bump');
     }
 
+    function updateLivePrice(qty) {
+      if (!priceValueEl) return;
+      const unitPriceCents = parseInt(priceValueEl.dataset.unitPrice, 10) || 0;
+      priceValueEl.textContent = horizonFormatMoney(unitPriceCents * qty, horizonProductMoneyFormat);
+    }
+
     if (plusBtn) plusBtn.addEventListener('click', () => {
-      count++; countEl.textContent = count; quantityInput.value = count; bumpCount();
+      count++; countEl.textContent = count; quantityInput.value = count; bumpCount(); updateLivePrice(count);
     });
     if (minusBtn) minusBtn.addEventListener('click', () => {
-      if (count > 1) { count--; countEl.textContent = count; quantityInput.value = count; bumpCount(); }
+      if (count > 1) { count--; countEl.textContent = count; quantityInput.value = count; bumpCount(); updateLivePrice(count); }
     });
 
     // ══════════════════════════════════════════
@@ -1411,10 +1452,37 @@ width:auto;
     { "type": "text", "id": "feature_2", "label": "Feature 2", "default": "Requires 1-2 Thin Coats" },
     { "type": "text", "id": "feature_3", "label": "Feature 3", "default": "Size: 15ML (0.5 oz)" },
     { "type": "text", "id": "feature_4", "label": "Feature 4", "default": "Highly Pigmented Formula" },
+    { "type": "header", "content": "Social Icons" },
     { "type": "url", "id": "social_facebook", "label": "Facebook URL" },
+    {
+      "type": "image_picker",
+      "id": "social_facebook_icon",
+      "label": "Facebook Icon (upload SVG/image)",
+      "info": "Optional. Leave blank to use the default icon."
+    },
     { "type": "url", "id": "social_twitter", "label": "Twitter/X URL" },
-    { "type": "url", "id": "social_youtube", "label": "YouTube URL" },
+    {
+      "type": "image_picker",
+      "id": "social_twitter_icon",
+      "label": "Twitter/X Icon (upload SVG/image)",
+      "info": "Optional. Leave blank to use the default icon."
+    },
     { "type": "url", "id": "social_tiktok", "label": "TikTok URL" },
+    {
+      "type": "image_picker",
+      "id": "social_tiktok_icon",
+      "label": "TikTok Icon (upload SVG/image)",
+      "info": "Optional. Leave blank to use the default icon."
+    },
+    {
+      "type": "range",
+      "id": "social_icon_size",
+      "label": "Social Icon Size (px)",
+      "min": 12,
+      "max": 48,
+      "step": 2,
+      "default": 24
+    },
     { "type": "header", "content": "Animation Settings" },
     {
       "type": "checkbox",

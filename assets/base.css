@@ -75,6 +75,23 @@ select {
   height: 100%;
 }
 
+
+@font-face{font-family:'DegularDisplayBlack';src:url('https://cdn.shopify.com/s/files/1/0714/0084/9482/files/DegularDisplayBlack.woff2?v=1787784332') format('woff2');font-weight:900;font-style:normal;font-display:swap}
+    #trustoo-popup-optIn-title {
+      font-family:'DegularDisplayBlack',sans-serif !important;
+      font-size: 87.56px;
+      line-height: 82% !important;
+    }
+@media screen and (min-width: 400px) and (max-width: 767px) {
+    #trustoo-popup-optIn-title {
+      font-family: 'DegularDisplayBlack',sans-serif !important;
+      line-height: 82% !important;
+      font-family: 60px !important;
+    }
+}
+
+
+
 /* Editorial layout */
 .resource-list:not(.hidden--desktop) .collection-card--flexible-aspect-ratio,
 .resource-list:not(.hidden--desktop) .blog-post-card--flexible-aspect-ratio {
@@ -4229,16 +4246,38 @@ product-recommendations:has([data-has-recommendations='false']) {
   color:#AFC1CA !important;
 }
 
-/* ট্যাবলেট রেঞ্জে প্রোডাক্ট গ্রিড কার্ডের ছবি ক্রপ বন্ধ করা */
+
 @media screen and (min-width: 750px) and (max-width: 989px) {
   .product-grid .card-gallery .product-media-container.media-fit {
     --product-media-fit: contain;
   }
 }
-/* 400px - 767px রেঞ্জে প্রোডাক্ট গ্রিড কার্ডের ছবি ক্রপ বন্ধ করা */
+
 @media screen and (min-width: 400px) and (max-width: 767px) {
   .product-grid .card-gallery .product-media-container.media-fit {
     --product-media-fit: contain;
   }
 }
+
+
+
+.product__rating {
+    display: none !important;
+}
+
+
+
+
+
+
+
+
+
+._modalContainer_hggwu_3 ._modalContent_hggwu_19 ._myCustomDialog_hggwu_26 {
+    width: unset !important;
+}
+
+
+
+
 

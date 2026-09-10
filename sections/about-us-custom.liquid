@@ -325,6 +325,15 @@
     border-radius: 2px;
   }
 
+  /* Fixed at left-center of viewport; stays put on scroll (desktop strip only) */
+  .imbitch-about__social:not(.imbitch-about__social--mobile) {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+  }
+
   .imbitch-about__social-icon {
     display: flex;
     align-items: center;

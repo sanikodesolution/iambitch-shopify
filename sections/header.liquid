@@ -532,6 +532,20 @@
   .cnav-cart-item-variant { color: rgba(255,255,255,0.4); font-size: 12px; margin-bottom: 6px !important; }
   .cnav-cart-item-price { color: rgba(255,255,255,0.75); font-size: 13px; margin-bottom: 10px !important; }
 
+  /* Product-select checkbox (cart drawer) */
+  .cnav-cart-item-select {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 4px;
+    flex-shrink: 0;
+  }
+  .cnav-cart-item-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #fff;
+    cursor: pointer;
+  }
+
   .cnav-cart-item-remove {
     position: absolute;
     top: 14px; right: 0;
@@ -594,6 +608,11 @@
     transition: background 0.2s; border-radius: 2px;
   }
   .cnav-checkout-btn:hover { background: rgba(255,255,255,0.88); }
+  .cnav-checkout-btn:disabled {
+    opacity: 0.45;
+    cursor: default;
+  }
+  .cnav-checkout-btn:disabled:hover { background: #fff; }
 
   /* ============================================================
      WISHLIST DRAWER
@@ -625,12 +644,22 @@
     border-bottom: 1px solid rgba(255,255,255,0.06);
     align-items: center;
   }
+  .cnav-wish-item-link {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+  }
   .cnav-wish-item img {
     width: 64px; height: 64px; border-radius: 6px;
     object-fit: cover; background: #1a1a1a; flex-shrink: 0;
   }
-  .cnav-wish-item-info { flex: 1; }
-  .cnav-wish-item-title { color: #fff; font-size: 13px; font-weight: 500; margin: 0 0 3px; line-height: 1.4; }
+  .cnav-wish-item-info { flex: 1; min-width: 0; }
+  .cnav-wish-item-title { color: #fff; font-size: 13px; font-weight: 500; margin: 0 0 3px; line-height: 1.4; transition: color 0.2s; }
+  .cnav-wish-item-link:hover .cnav-wish-item-title { color: rgba(255,255,255,0.75); }
   .cnav-wish-item-price { color: rgba(255,255,255,0.5); font-size: 12px; margin: 0; }
   .cnav-wish-remove {
     background: none; border: none;
@@ -779,10 +808,10 @@
   <div class="cnav-mega-body">
 
     {%- for link in linklists[section.settings.menu].links -%}
-      <div class="cnav-cat{% if forloop.first %} is-open{% endif %}" data-index="{{ forloop.index }}">
+      <div class="cnav-cat" data-index="{{ forloop.index }}">
         <div class="cnav-cat-header"
              role="button" tabindex="0"
-             aria-expanded="{{ forloop.first }}"
+             aria-expanded="false"
              aria-controls="cnav-sub-{{ forloop.index }}">
           <div class="cnav-cat-thumb">
             {%- assign col = link.object -%}
@@ -817,8 +846,8 @@
       {%- assign _demo_cats = 'Beauty Gels,Poly Gels,Gel polish,Collections,Starter Kits' | split: ',' -%}
       {%- assign _demo_subs = 'Gel Polish|Liner Gels|Hard Gel|Rubber Base|Collections|Dual Forms|Gel Prep|Gel Brushes,Poly Gel Starter|Poly Gel Colors|Poly Gel Tools,Chrome Gel|Glitter Gel|Nude Gel|Neon Gel,Summer Collection|Winter Collection|Seasonal Kits,Beginner Kit|Pro Kit|Complete Kit' | split: ',' -%}
       {%- for cat in _demo_cats -%}
-        <div class="cnav-cat{% if forloop.first %} is-open{% endif %}">
-          <div class="cnav-cat-header" role="button" tabindex="0" aria-expanded="{{ forloop.first }}">
+        <div class="cnav-cat">
+          <div class="cnav-cat-header" role="button" tabindex="0" aria-expanded="false">
             <div class="cnav-cat-thumb">
               <div style="width:44px;height:44px;background:linear-gradient(135deg,#2a1a1a,#503030);"></div>
             </div>
@@ -861,7 +890,7 @@
       <span>Subtotal</span>
       <span id="cnavCartSubtotal">$0.00</span>
     </div>
-    <a href="/checkout" class="cnav-checkout-btn">Checkout</a>
+    <button type="button" id="cnavCheckoutBtn" class="cnav-checkout-btn">Checkout</button>
   </div>
 </div>
 
@@ -903,6 +932,7 @@
   var cartBadge  = document.getElementById('cnavCartBadge');
   var cartLabel  = document.getElementById('cnavCartLabel');
   var megaCartLbl= document.getElementById('cnavMegaCartLabel');
+  var checkoutBtn= document.getElementById('cnavCheckoutBtn');
 
   var wishBtn    = document.getElementById('cnavWishBtn');
   var wishDrawer = document.getElementById('cnavWishDrawer');
@@ -911,6 +941,11 @@
   var wishBadge  = document.getElementById('cnavWishBadge');
 
   var backdrop   = document.getElementById('cnavBackdrop');
+
+  /* ── Selected-for-checkout state ── */
+  var cartSelectedKeys = new Set(); /* line-item keys currently selected */
+  var cartSeenKeys     = new Set(); /* keys we've already assigned a default selection for */
+  var lastCartData      = null;
 
   /* ── Keep --cnav-header-height in sync with the real, rendered
      header height (varies by the padding settings and by device),
@@ -982,7 +1017,8 @@
     }
   }
 
-  /* Initialize any category that starts open (e.g. the first one) */
+  /* Initialize any category that starts open (none, by default —
+     all categories start closed until the user clicks one) */
   document.querySelectorAll('.cnav-cat.is-open').forEach(function (cat) {
     setSubHeight(cat, true);
   });
@@ -1072,16 +1108,45 @@
       });
   }
 
+  /* Recompute the subtotal + checkout button state from the currently
+     selected line items only (not the whole cart). */
+  function updateCartSelectionUI(data) {
+    if (!data || !data.items) return;
+    var total = 0;
+    var anySelected = false;
+    data.items.forEach(function (item) {
+      if (cartSelectedKeys.has(item.key)) {
+        total += item.line_price;
+        anySelected = true;
+      }
+    });
+    cartSubEl.textContent = money(total);
+    if (checkoutBtn) checkoutBtn.disabled = !anySelected;
+  }
+
   function renderCart(data) {
+    lastCartData = data;
+
     if (!data.items || !data.items.length) {
       cartItemsEl.innerHTML = '<div class="cnav-cart-empty">Your cart is empty.</div>';
       cartFooter.style.display = 'none';
       syncCartBadge(0, 0);
       return;
     }
+
+    /* Default-select any line item we haven't seen before (e.g. newly added) */
+    data.items.forEach(function (item) {
+      if (!cartSeenKeys.has(item.key)) {
+        cartSeenKeys.add(item.key);
+        cartSelectedKeys.add(item.key);
+      }
+    });
+
     var html = '';
     data.items.forEach(function (item) {
+      var isChecked = cartSelectedKeys.has(item.key) ? ' checked' : '';
       html += '<div class="cnav-cart-item">';
+      html += '<div class="cnav-cart-item-select"><input type="checkbox" class="cnav-cart-item-checkbox" data-key="' + esc(item.key) + '"' + isChecked + ' aria-label="Select ' + esc(item.title) + '"></div>';
       html += '<img src="' + (item.image || '') + '" alt="' + esc(item.title) + '" width="64" height="64" loading="lazy">';
       html += '<div class="cnav-cart-item-info">';
       html += '<p class="cnav-cart-item-title">' + esc(item.title) + '</p>';
@@ -1102,8 +1167,20 @@
     });
     cartItemsEl.innerHTML = html;
     cartFooter.style.display = 'block';
-    cartSubEl.textContent = money(data.total_price);
+    updateCartSelectionUI(data);
     syncCartBadge(data.item_count, data.total_price);
+
+    cartItemsEl.querySelectorAll('.cnav-cart-item-checkbox').forEach(function (cb) {
+      cb.addEventListener('change', function () {
+        var key = this.dataset.key;
+        if (this.checked) {
+          cartSelectedKeys.add(key);
+        } else {
+          cartSelectedKeys.delete(key);
+        }
+        updateCartSelectionUI(lastCartData);
+      });
+    });
 
     cartItemsEl.querySelectorAll('.cnav-qty-minus').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -1125,6 +1202,24 @@
       btn.addEventListener('click', function () {
         changeCartItem(this.dataset.key, 0);
       });
+    });
+  }
+
+  /* ── Checkout with only the selected products ── */
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener('click', function () {
+      if (!lastCartData || !lastCartData.items || !lastCartData.items.length) return;
+      var parts = [];
+      lastCartData.items.forEach(function (item) {
+        if (cartSelectedKeys.has(item.key)) {
+          parts.push(item.variant_id + ':' + item.quantity);
+        }
+      });
+      if (!parts.length) {
+        alert('চেকআউট করতে অন্তত একটি প্রোডাক্ট সিলেক্ট করুন।');
+        return;
+      }
+      window.location.href = '/cart/' + parts.join(',');
     });
   }
 
@@ -1169,12 +1264,15 @@
     }
     var html = '';
     wishlist.forEach(function (item, i) {
+      var itemUrl = item.url || '#';
       html += '<div class="cnav-wish-item">';
+      html += '<a href="' + esc(itemUrl) + '" class="cnav-wish-item-link">';
       html += '<img src="' + esc(item.image || '') + '" alt="' + esc(item.title) + '" width="64" height="64" loading="lazy">';
       html += '<div class="cnav-wish-item-info">';
       html += '<p class="cnav-wish-item-title">' + esc(item.title) + '</p>';
       html += '<p class="cnav-wish-item-price">' + money(item.price) + '</p>';
       html += '</div>';
+      html += '</a>';
       html += '<button class="cnav-wish-remove" data-i="' + i + '" aria-label="Remove">';
       html += '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
       html += '</button></div>';
@@ -1182,9 +1280,12 @@
     wishItemsEl.innerHTML = html;
     wishItemsEl.querySelectorAll('.cnav-wish-remove').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        wishlist.splice(parseInt(this.dataset.i, 10), 1);
+        var idx = parseInt(this.dataset.i, 10);
+        var removedItem = wishlist[idx];
+        wishlist.splice(idx, 1);
         saveWish();
         renderWish();
+        if (removedItem) syncWishlistButtons(removedItem.id, false);
       });
     });
   }
@@ -1196,6 +1297,24 @@
     } else {
       wishBadge.style.display = 'none';
     }
+  }
+
+  /* Keep any favorite/heart icon on the storefront (product cards,
+     product page, etc.) in sync with the wishlist drawer. Any button
+     marked with data-wishlist-id="{{ product.id }}" on the page will
+     automatically get/lose its active state, and a 'wishlist:changed'
+     event is fired so custom favorite-icon scripts can react too. */
+  function syncWishlistButtons(id, isActive) {
+    document.querySelectorAll('[data-wishlist-id="' + id + '"]').forEach(function (btn) {
+      btn.classList.toggle('is-active', !!isActive);
+      btn.classList.toggle('is-wishlisted', !!isActive);
+      if (btn.hasAttribute('aria-pressed')) {
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      }
+    });
+    document.dispatchEvent(new CustomEvent('wishlist:changed', {
+      detail: { id: id, active: !!isActive, wishlist: wishlist }
+    }));
   }
 
   /* ── Global API ── */
@@ -1214,12 +1333,14 @@
         wishlist.push(product);
         saveWish();
         syncWishBadge();
+        syncWishlistButtons(product.id, true);
       }
     },
     removeFromWishlist: function (id) {
       wishlist = wishlist.filter(function (p) { return p.id !== id; });
       saveWish();
       renderWish();
+      syncWishlistButtons(id, false);
     },
     isInWishlist: function (id) {
       return wishlist.some(function (p) { return p.id === id; });
