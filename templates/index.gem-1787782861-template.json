@@ -1,0 +1,25 @@
+{
+  "sections": {
+    "gp_section_633598987936465472": {
+      "settings": {
+        "checksum": "61780860f84882ece8b5bb840a76e1465ef03708e11618e05f56c9b93e725227_1_1_1_0__1",
+        "gg3bkOYfwL1_srcSet_desktop_src": "https:\/\/cdn.shopify.com\/s\/files\/1\/0714\/0084\/9482\/files\/Logo_stroke-and-fill_2_1_1.svg",
+        "gg6rS229TXI_label": "Subscribe",
+        "ggAg7IB7Xfk_alt": "Alt Image",
+        "ggAg7IB7Xfk_srcSet_desktop_src": "https:\/\/cdn.shopify.com\/s\/files\/1\/0714\/0084\/9482\/files\/Rectangle_6_7c4074ed-5dff-4d77-9d5c-5307a447cde1.png",
+        "ggAg7IB7Xfk_title": "Image Title",
+        "ggAkOSLIjQ8_text": "Opening Soon",
+        "ggFAxgAveza_placeholder": "Enter your email",
+        "ggLcT8AgI5D_text": "<p>Sign up to be the first to hear about exclusive deals, special offers and upcoming collections<\/p>",
+        "ggXs7FtoqFz_text": "<p>Sign up for our newsletter to be the first to know when we launch.<\/p>",
+        "ggr4261EAeN_errorMessage": "Can’t send email. Please try again later.",
+        "ggr4261EAeN_successMessage": "Thanks for contacting us. We'll get back to you as soon as possible.",
+        "section_preload": "true"
+      },
+      "type": "gp-section-633598987936465472"
+    }
+  },
+  "order": [
+    "gp_section_633598987936465472"
+  ]
+}
