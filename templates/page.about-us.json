@@ -1,1 +1,346 @@
-{"sections":{"main":{"type":"main-page","blocks":{"heading":{"type":"text","name":"Title","settings":{"text":"<h1>{{ closest.page.title }}<\/h1>","width":"100%","max_width":"normal","alignment":"left","type_preset":"h2","font":"var(--font-primary--family)","font_size":"","line_height":"normal","letter_spacing":"normal","case":"none","wrap":"pretty","color":"","background":false,"background_color":"#00000026","corner_radius":0,"padding-block-start":0,"padding-block-end":0,"padding-inline-start":0,"padding-inline-end":0},"blocks":{}},"page-content":{"type":"page-content","settings":{},"blocks":{}}},"block_order":["heading","page-content"],"disabled":true,"settings":{"content_direction":"column","gap":32,"color_scheme":"scheme-5","padding-block-start":40,"padding-block-end":80}},"about_us_custom_jGgijR":{"type":"about-us-custom","blocks":{"social_icon_dDzihw":{"type":"social_icon","settings":{"platform":"facebook","icon_image":"shopify:\/\/shop_images\/facebook-02_5ce6a7f5-4775-464a-83c6-0adbc01a8a94.svg","custom_svg":"","icon_color":"#ffffff","icon_size":24,"icon_bg_color":"rgba(0,0,0,0)","icon_padding_top":0,"icon_padding_bottom":0,"icon_padding_left":0,"icon_padding_right":0,"icon_margin_top":0,"icon_margin_bottom":0,"url":"https:\/\/www.facebook.com","label":"Follow us"}},"social_icon_NHiMYU":{"type":"social_icon","settings":{"platform":"instagram","icon_image":"shopify:\/\/shop_images\/instagram_7187a5d1-a39a-41bc-a26b-16f790c6f15b.svg","custom_svg":"","icon_color":"#ffffff","icon_size":24,"icon_bg_color":"rgba(0,0,0,0)","icon_padding_top":0,"icon_padding_bottom":0,"icon_padding_left":0,"icon_padding_right":0,"icon_margin_top":0,"icon_margin_bottom":0,"url":"https:\/\/www.instagram.com\/iambitch.co?igsi=cWZpenZkdTFmcHFh","label":"Follow us"}},"social_icon_cgyTqG":{"type":"social_icon","settings":{"platform":"tiktok","icon_image":"shopify:\/\/shop_images\/tiktok_5917581e-0f79-4da9-8a3b-79c80e677c18.svg","custom_svg":"","icon_color":"#ffffff","icon_size":24,"icon_bg_color":"rgba(0,0,0,0)","icon_padding_top":0,"icon_padding_bottom":0,"icon_padding_left":0,"icon_padding_right":0,"icon_margin_top":0,"icon_margin_bottom":0,"url":"https:\/\/www.tiktok.com\/@iambitch.com","label":"Follow us"}}},"block_order":["social_icon_dDzihw","social_icon_NHiMYU","social_icon_cgyTqG"],"custom_css":["@media (max-width: 767px) {.imbitch-about__social {display: none !important; }}"],"name":"IM BITCH About","settings":{"section_bg_color":"#04060b","section_padding_top":32,"section_padding_bottom":32,"section_padding_left":16,"section_padding_right":16,"show_social_mobile":false,"social_bg_color":"#263d48","social_icon_gap":16,"social_padding_top":12,"social_padding_bottom":12,"social_padding_left":8,"social_padding_right":8,"content_gap":48,"content_margin_left":56,"text_bg_color":"#04060b","text_padding_top":8,"text_padding_bottom":8,"text_padding_left":0,"text_padding_right":0,"image_bg_color":"#04060b","image_padding_top":24,"image_padding_bottom":24,"image_padding_left":16,"image_padding_right":16,"brand_name":"IM BITCH","tagline":"Built by Two Sisters. Made for Bold Women.","body_text":"<p>IM BITCH was created by two sisters in the USA with a dream, a passion for beauty, and a belief that confidence should never be quiet.<\/p><p>We started this brand with one simple idea: nail polish should feel more than just pretty. It should feel expressive, powerful, playful, and personal. Every shade is created to help you show up exactly as you are, whether your mood is soft, fierce, elegant, wild, calm, or completely unstoppable.<\/p><p>IM BITCH is more than a beauty brand. It is a statement.<\/p><p>It is for the women who own their style, protect their energy, and never apologize for being themselves.<\/p><p>From our first shade to every product we release, we focus on beautiful colors, premium presentation, and a brand experience that feels confident, modern, and unforgettable.<\/p><p>Two sisters. One dream. A whole lot of attitude.<\/p><p>Welcome to IM BITCH.<\/p>","about_image":"shopify:\/\/shop_images\/Main_image_frame_1.png","enable_animations":false,"animation_style":"fade-left","animation_duration":800,"animation_stagger":150,"animation_easing":"linear"}},"brand_marquee_HYC6bL":{"type":"brand-marquee","blocks":{"logo_bkfKTE":{"type":"logo","settings":{"logo_image":"shopify:\/\/shop_images\/gempages_432750572815254551-09b32a0d-a2e8-4b33-a417-0b7b1e2ad64c.svg","logo_alt":"","logo_link":""}},"logo_fgcYkH":{"type":"logo","settings":{"logo_image":"shopify:\/\/shop_images\/gempages_432750572815254551-bfc3ae1c-53f4-471b-bff6-1eff91a8eee1.svg","logo_alt":"Vogue","logo_link":""}},"logo_mejbeA":{"type":"logo","settings":{"logo_image":"shopify:\/\/shop_images\/gempages_432750572815254551-401a712a-a014-4895-9657-3853f98170ee.svg","logo_alt":"","logo_link":""}},"logo_iGmV37":{"type":"logo","settings":{"logo_image":"shopify:\/\/shop_images\/gempages_432750572815254551-8cb41412-0e49-4984-b835-306a6a6aec7e.svg","logo_alt":"","logo_link":""}},"logo_kHzcdV":{"type":"logo","settings":{"logo_image":"shopify:\/\/shop_images\/gempages_432750572815254551-4d2f2e0d-3391-4b0a-a832-4faa914ba781.svg","logo_alt":"ELLE","logo_link":""}}},"block_order":["logo_bkfKTE","logo_fgcYkH","logo_mejbeA","logo_iGmV37","logo_kHzcdV"],"name":"Brand Marquee","settings":{"bg_color":"#030407","section_height":100,"padding_top":16,"padding_bottom":16,"padding_left":0,"padding_right":0,"margin_top":0,"margin_bottom":0,"logo_height":32,"logo_max_width":160,"logo_gap":32,"logo_opacity":75,"hover_full_opacity":true,"placeholder_color":"#ffffff","scroll_speed":10,"pause_on_hover":false,"show_fade_edges":true,"fade_width":80,"aria_label":"As seen in"}},"faq_section_Fhw8cm":{"type":"faq-section","blocks":{"faq_item_BBRA6i":{"type":"faq_item","settings":{"question":"What is IM BITCH?","answer":"IM BITCH is a USA-based nail polish brand created by two sisters with a passion for beauty, confidence, and self-expression. Our products are designed for people who love bold colors, premium style, and statement-making nails."}},"faq_item_XjngdW":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}},"faq_item_kcWrgk":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}},"faq_item_cxBqVN":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}},"faq_item_ry6EYJ":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}},"faq_item_T6VCdy":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}},"faq_item_fpEkyE":{"type":"faq_item","settings":{"question":"Where is IM BITCH based?","answer":"We are proudly based in the USA."}}},"block_order":["faq_item_BBRA6i","faq_item_XjngdW","faq_item_kcWrgk","faq_item_cxBqVN","faq_item_ry6EYJ","faq_item_T6VCdy","faq_item_fpEkyE"],"custom_css":["p {margin-top: 16px;}",".faq-item .faq-item__answer-inner {margin-top: 0;}",".faq-item.is-open .faq-item__answer-inner {margin-top: 16px;}",".faq-item__answer-inner {transition: 0.3s;}",".faq-item__question {color: #afc1ca; font-family: \"Gilroy\", sans-serif !important; font-weight: 700 !important; font-style: normal !important; font-size: 18px !important; line-height: 150% !important; letter-spacing: -1.6% !important;}"],"name":"FAQ Section","settings":{"title":"Frequently Asked Questions","subtitle":"Stay ahead of the rest, get the new and now. Shop our newest arrivals.","max_width":1000,"padding_vertical":120,"padding_horizontal":100,"content_gap":40,"header_gap":12,"list_gap":24,"item_padding_vertical":20,"item_padding_horizontal":16,"answer_padding":0,"item_border_color":"#afc1ca","answer_border_color":"#afc1ca","padding_vertical_mobile":60,"padding_horizontal_mobile":24,"content_gap_mobile":32,"header_gap_mobile":10,"list_gap_mobile":10,"item_padding_vertical_mobile":16,"item_padding_horizontal_mobile":16,"answer_padding_mobile":0,"section_animation_style":"slide-up","section_animation_duration":1500,"section_animation_easing":"ease-in","accordion_animation_duration":800,"accordion_animation_easing":"ease-out"}}},"order":["main","about_us_custom_jGgijR","brand_marquee_HYC6bL","faq_section_Fhw8cm"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "blocks": {
+        "heading": {
+          "type": "text",
+          "name": "Title",
+          "settings": {
+            "text": "<h1>{{ closest.page.title }}</h1>",
+            "width": "100%",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-primary--family)",
+            "font_size": "",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "none",
+            "wrap": "pretty",
+            "color": "",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "page-content": {
+          "type": "page-content",
+          "settings": {},
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "heading",
+        "page-content"
+      ],
+      "disabled": true,
+      "settings": {
+        "content_direction": "column",
+        "gap": 32,
+        "color_scheme": "scheme-5",
+        "padding-block-start": 40,
+        "padding-block-end": 80
+      }
+    },
+    "about_us_custom_jGgijR": {
+      "type": "about-us-custom",
+      "blocks": {
+        "social_icon_dDzihw": {
+          "type": "social_icon",
+          "settings": {
+            "platform": "facebook",
+            "icon_image": "shopify://shop_images/facebook-02_5ce6a7f5-4775-464a-83c6-0adbc01a8a94.svg",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_size": 24,
+            "icon_bg_color": "rgba(0,0,0,0)",
+            "icon_padding_top": 0,
+            "icon_padding_bottom": 0,
+            "icon_padding_left": 0,
+            "icon_padding_right": 0,
+            "icon_margin_top": 0,
+            "icon_margin_bottom": 0,
+            "url": "https://www.facebook.com",
+            "label": "Follow us"
+          }
+        },
+        "social_icon_NHiMYU": {
+          "type": "social_icon",
+          "settings": {
+            "platform": "instagram",
+            "icon_image": "shopify://shop_images/instagram_7187a5d1-a39a-41bc-a26b-16f790c6f15b.svg",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_size": 24,
+            "icon_bg_color": "rgba(0,0,0,0)",
+            "icon_padding_top": 0,
+            "icon_padding_bottom": 0,
+            "icon_padding_left": 0,
+            "icon_padding_right": 0,
+            "icon_margin_top": 0,
+            "icon_margin_bottom": 0,
+            "url": "https://www.instagram.com/iambitch.co?igsi=cWZpenZkdTFmcHFh",
+            "label": "Follow us"
+          }
+        },
+        "social_icon_cgyTqG": {
+          "type": "social_icon",
+          "settings": {
+            "platform": "tiktok",
+            "icon_image": "shopify://shop_images/tiktok_5917581e-0f79-4da9-8a3b-79c80e677c18.svg",
+            "custom_svg": "",
+            "icon_color": "#ffffff",
+            "icon_size": 24,
+            "icon_bg_color": "rgba(0,0,0,0)",
+            "icon_padding_top": 0,
+            "icon_padding_bottom": 0,
+            "icon_padding_left": 0,
+            "icon_padding_right": 0,
+            "icon_margin_top": 0,
+            "icon_margin_bottom": 0,
+            "url": "https://www.tiktok.com/@iambitch.com",
+            "label": "Follow us"
+          }
+        }
+      },
+      "block_order": [
+        "social_icon_dDzihw",
+        "social_icon_NHiMYU",
+        "social_icon_cgyTqG"
+      ],
+      "custom_css": [
+        "@media (max-width: 767px) {.imbitch-about__social {display: none !important; }}"
+      ],
+      "name": "IM BITCH About",
+      "settings": {
+        "section_bg_color": "#04060b",
+        "section_padding_top": 32,
+        "section_padding_bottom": 32,
+        "section_padding_left": 16,
+        "section_padding_right": 16,
+        "show_social_mobile": false,
+        "social_bg_color": "#263d48",
+        "social_icon_gap": 16,
+        "social_padding_top": 12,
+        "social_padding_bottom": 12,
+        "social_padding_left": 8,
+        "social_padding_right": 8,
+        "content_gap": 48,
+        "content_margin_left": 56,
+        "text_bg_color": "#04060b",
+        "text_padding_top": 8,
+        "text_padding_bottom": 8,
+        "text_padding_left": 0,
+        "text_padding_right": 0,
+        "image_bg_color": "#04060b",
+        "image_padding_top": 24,
+        "image_padding_bottom": 24,
+        "image_padding_left": 16,
+        "image_padding_right": 16,
+        "brand_name": "IM BITCH",
+        "tagline": "Built by Two Sisters. Made for Bold Women.",
+        "body_text": "<p>IM BITCH was created by two sisters in the USA with a dream, a passion for beauty, and a belief that confidence should never be quiet.</p><p>We started this brand with one simple idea: nail polish should feel more than just pretty. It should feel expressive, powerful, playful, and personal. Every shade is created to help you show up exactly as you are, whether your mood is soft, fierce, elegant, wild, calm, or completely unstoppable.</p><p>IM BITCH is more than a beauty brand. It is a statement.</p><p>It is for the women who own their style, protect their energy, and never apologize for being themselves.</p><p>From our first shade to every product we release, we focus on beautiful colors, premium presentation, and a brand experience that feels confident, modern, and unforgettable.</p><p>Two sisters. One dream. A whole lot of attitude.</p><p>Welcome to IM BITCH.</p>",
+        "about_image": "shopify://shop_images/Main_image_frame_1.png",
+        "enable_animations": false,
+        "animation_style": "fade-left",
+        "animation_duration": 800,
+        "animation_stagger": 150,
+        "animation_easing": "linear"
+      }
+    },
+    "brand_marquee_HYC6bL": {
+      "type": "brand-marquee",
+      "blocks": {
+        "logo_bkfKTE": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/gempages_432750572815254551-09b32a0d-a2e8-4b33-a417-0b7b1e2ad64c.svg",
+            "logo_alt": "",
+            "logo_link": ""
+          }
+        },
+        "logo_fgcYkH": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/gempages_432750572815254551-bfc3ae1c-53f4-471b-bff6-1eff91a8eee1.svg",
+            "logo_alt": "Vogue",
+            "logo_link": ""
+          }
+        },
+        "logo_mejbeA": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/gempages_432750572815254551-401a712a-a014-4895-9657-3853f98170ee.svg",
+            "logo_alt": "",
+            "logo_link": ""
+          }
+        },
+        "logo_iGmV37": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/gempages_432750572815254551-8cb41412-0e49-4984-b835-306a6a6aec7e.svg",
+            "logo_alt": "",
+            "logo_link": ""
+          }
+        },
+        "logo_kHzcdV": {
+          "type": "logo",
+          "settings": {
+            "logo_image": "shopify://shop_images/gempages_432750572815254551-4d2f2e0d-3391-4b0a-a832-4faa914ba781.svg",
+            "logo_alt": "ELLE",
+            "logo_link": ""
+          }
+        }
+      },
+      "block_order": [
+        "logo_bkfKTE",
+        "logo_fgcYkH",
+        "logo_mejbeA",
+        "logo_iGmV37",
+        "logo_kHzcdV"
+      ],
+      "name": "Brand Marquee",
+      "settings": {
+        "bg_color": "#030407",
+        "section_height": 100,
+        "padding_top": 16,
+        "padding_bottom": 16,
+        "padding_left": 0,
+        "padding_right": 0,
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "logo_height": 32,
+        "logo_max_width": 160,
+        "logo_gap": 32,
+        "logo_opacity": 75,
+        "hover_full_opacity": true,
+        "placeholder_color": "#ffffff",
+        "scroll_speed": 10,
+        "pause_on_hover": false,
+        "show_fade_edges": true,
+        "fade_width": 80,
+        "aria_label": "As seen in"
+      }
+    },
+    "faq_section_Fhw8cm": {
+      "type": "faq-section",
+      "blocks": {
+        "faq_item_BBRA6i": {
+          "type": "faq_item",
+          "settings": {
+            "question": "What is IM BITCH?",
+            "answer": "IM BITCH is a USA-based nail polish brand created by two sisters with a passion for beauty, confidence, and self-expression. Our products are designed for people who love bold colors, premium style, and statement-making nails."
+          }
+        },
+        "faq_item_XjngdW": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        "faq_item_kcWrgk": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        "faq_item_cxBqVN": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        "faq_item_ry6EYJ": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        "faq_item_T6VCdy": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        },
+        "faq_item_fpEkyE": {
+          "type": "faq_item",
+          "settings": {
+            "question": "Where is IM BITCH based?",
+            "answer": "We are proudly based in the USA."
+          }
+        }
+      },
+      "block_order": [
+        "faq_item_BBRA6i",
+        "faq_item_XjngdW",
+        "faq_item_kcWrgk",
+        "faq_item_cxBqVN",
+        "faq_item_ry6EYJ",
+        "faq_item_T6VCdy",
+        "faq_item_fpEkyE"
+      ],
+      "custom_css": [
+        "p {margin-top: 16px;}",
+        ".faq-item .faq-item__answer-inner {margin-top: 0;}",
+        ".faq-item.is-open .faq-item__answer-inner {margin-top: 16px;}",
+        ".faq-item__answer-inner {transition: 0.3s;}",
+        ".faq-item__question {color: #afc1ca; font-family: \"Gilroy\", sans-serif !important; font-weight: 700 !important; font-style: normal !important; font-size: 18px !important; line-height: 150% !important; letter-spacing: -1.6% !important;}"
+      ],
+      "name": "FAQ Section",
+      "settings": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Stay ahead of the rest, get the new and now. Shop our newest arrivals.",
+        "max_width": 1000,
+        "padding_vertical": 120,
+        "padding_horizontal": 100,
+        "content_gap": 40,
+        "header_gap": 12,
+        "list_gap": 24,
+        "item_padding_vertical": 20,
+        "item_padding_horizontal": 16,
+        "answer_padding": 0,
+        "item_border_color": "#afc1ca",
+        "answer_border_color": "#afc1ca",
+        "padding_vertical_mobile": 60,
+        "padding_horizontal_mobile": 24,
+        "content_gap_mobile": 32,
+        "header_gap_mobile": 10,
+        "list_gap_mobile": 10,
+        "item_padding_vertical_mobile": 16,
+        "item_padding_horizontal_mobile": 16,
+        "answer_padding_mobile": 0,
+        "section_animation_style": "slide-up",
+        "section_animation_duration": 1500,
+        "section_animation_easing": "ease-in",
+        "accordion_animation_duration": 800,
+        "accordion_animation_easing": "ease-out"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "about_us_custom_jGgijR",
+    "brand_marquee_HYC6bL",
+    "faq_section_Fhw8cm"
+  ]
+}
