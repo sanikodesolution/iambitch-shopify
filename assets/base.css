@@ -4265,6 +4265,16 @@ product-recommendations:has([data-has-recommendations='false']) {
     display: none !important;
 }
 
+/* Product page: title → price = 50px (match ATC → Details) */
+.product__detail__top > h2 {
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+.product__detail__top > .product__price {
+  margin: 0 !important;
+  padding-top: 50px !important;
+}
+
 
 
 

@@ -99,6 +99,13 @@
 
             <h2>{{ product.title }}</h2>
 
+            <div class="product__price">
+              {% if product.compare_at_price %}
+                <del>{{ product.compare_at_price | money }}</del>
+              {% endif %}
+              <span id="productPriceValue" data-unit-price="{{ product.selected_or_first_available_variant.price | default: product.price }}">{{ product.price | money }}</span>
+            </div>
+
             <div class="product__rating">
               <ul>
                 {% for i in (1..5) %}
@@ -111,13 +118,6 @@
               </ul>
               <span class="rating__star">{{ section.settings.product_rating }}</span>
               <p>({{ product.reviews_count }} Reviews)</p>
-            </div>
-
-            <div class="product__price">
-              {% if product.compare_at_price %}
-                <del>{{ product.compare_at_price | money }}</del>
-              {% endif %}
-              <span id="productPriceValue" data-unit-price="{{ product.selected_or_first_available_variant.price | default: product.price }}">{{ product.price | money }}</span>
             </div>
           </div>
 
@@ -455,14 +455,12 @@
   }
 
   .product__detail__top .product__tag {
-    order: 0;
     margin-bottom: 16px;
   }
 
   .product__detail__top h2 {
-    order: 1;
     font-size: 32px;
-    line-height: 48px;
+    line-height: 1.2;
     font-weight: 600;
     color: #fff;
     font-family: var(--font);
@@ -472,7 +470,6 @@
   /* ── Rating ── */
   .product__rating ul { display: flex; gap: 1px; }
   .product__rating {
-    order: 3;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -481,13 +478,13 @@
   .product__rating .rating__star { font-size: 14px; line-height: 16px; color: #fff; font-weight: 600; font-family:var(--font);}
   .product__rating p { font-size: 14px; line-height: 16px; color: #AFC1CA; font-family:var(--font);}
 
-  /* ── Price — 50px below title (same as buy → details) ── */
-  .product__price {
-    order: 2;
-    margin-top: 50px;
+  /* ── Price — 50px below title (same as ATC → Details) ── */
+  .product__detail__top > .product__price {
+    margin: 0;
+    padding-top: 50px;
   }
   .product__price del { display: block; color: #686667; font-size: 14px; line-height: 16px; }
-  .product__price span { font-size: 48px; line-height: 56px; color: #fff; display: block; margin-top: 0;font-family:var(--font);}
+  .product__price span { font-size: 48px; line-height: 1.15; color: #fff; display: block; margin: 0; font-family: var(--font); }
 
   /* ── Color Selection ── */
   .product__color__selection { padding-top: 56px; }
@@ -736,8 +733,8 @@
     .product__tag { font-size: 12px; }
     .product__detail__top { gap: 0; }
     .product__detail__top h2 { font-size: 24px; }
-    .product__price { margin-top: 50px; }
-    .product__price span { font-size: 32px; margin-top: 0; }
+    .product__detail__top > .product__price { padding-top: 50px; }
+    .product__price span { font-size: 32px; margin: 0; }
     .product__color__selection { padding-top: 40px; }
     .product__item__count { width: 100%; }
     .product__item__count .item__count { flex-grow: 1; }
