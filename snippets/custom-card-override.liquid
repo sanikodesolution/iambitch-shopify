@@ -268,20 +268,46 @@
   display: none !important;
 }
 
-/* Single filter only — pin dropdown to the right edge (page/filter row) */
+/*
+  Single filter only:
+  - keep the filter trigger on the RIGHT of the row
+  - open the dropdown right-aligned under it
+*/
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)),
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)),
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets--horizontal,
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form-wrapper,
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form,
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__filters-wrapper,
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) overflow-list::part(list),
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) .facets--horizontal,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) .facets__form-wrapper,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) .facets__form,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) .facets__filters-wrapper,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) overflow-list::part(list) {
+  justify-content: flex-end !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  margin-inline-start: auto !important;
+  margin-inline-end: 0 !important;
+  width: 100% !important;
+}
+
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) .facets__item,
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) .facets__panel,
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details.facets__panel {
   position: relative !important;
+  margin-left: auto !important;
+  margin-right: 0 !important;
 }
 
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
 .facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > .facets__panel-content,
-.collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
-.collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
-.pbanner-filters-slot .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
-.pbanner-filters-slot .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content {
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+.collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+.pbanner-filters-slot:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content {
   left: auto !important;
   right: 0 !important;
   inset-inline-start: auto !important;
@@ -830,6 +856,19 @@
     box-sizing: border-box !important;
   }
 
+  /* Single filter on mobile/tablet: pin filter to the right */
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)),
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets--horizontal,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__filters-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) overflow-list::part(list) {
+    justify-content: flex-end !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
+    margin-inline: 0 0 !important;
+  }
+
   .collection-wrapper .facets-block-wrapper--horizontal:has(.facets__panel[open]) {
     z-index: 60 !important;
   }
@@ -891,6 +930,17 @@
     max-width: 100% !important;
     margin-inline: auto !important;
     overflow: visible !important;
+  }
+
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets--horizontal,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__form,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__filters-wrapper,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) overflow-list::part(list) {
+    justify-content: flex-end !important;
+    margin-inline: 0 0 !important;
+    margin-left: auto !important;
+    margin-right: 0 !important;
   }
 
   .product-grid-container,
