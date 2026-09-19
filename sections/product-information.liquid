@@ -402,6 +402,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
+    gap: 50px;
   }
 
   .product__full__image img {
@@ -411,8 +412,8 @@
     height:697px;
   }
 
-  .product__left { width: 48%; }
-  .product__right { width: 49%; }
+  .product__left { width: calc(50% - 25px); }
+  .product__right { width: calc(50% - 25px); }
 
   .product__detail {
     position: sticky;
@@ -574,7 +575,8 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 16px;
-    margin-block: 48px;
+    margin-top: 50px;
+    margin-bottom: 50px;
   }
 
   .product__buy { flex-grow: 1; }
