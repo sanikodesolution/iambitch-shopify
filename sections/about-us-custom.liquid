@@ -76,15 +76,16 @@
       {% for block in section.blocks %}
         {% if block.type == 'social_icon' %}
           {% liquid
-            assign icon_size    = block.settings.icon_size    | default: 24
-            assign icon_color   = block.settings.icon_color   | default: '#ffffff'
-            assign icon_bg      = block.settings.icon_bg_color
-            assign icon_pt      = block.settings.icon_padding_top    | default: 0
-            assign icon_pb      = block.settings.icon_padding_bottom | default: 0
-            assign icon_pl      = block.settings.icon_padding_left   | default: 0
-            assign icon_pr      = block.settings.icon_padding_right  | default: 0
-            assign icon_mt      = block.settings.icon_margin_top     | default: 0
-            assign icon_mb      = block.settings.icon_margin_bottom  | default: 0
+            assign icon_size        = block.settings.icon_size    | default: 24
+            assign icon_color       = block.settings.icon_color   | default: '#ffffff'
+            assign icon_bg          = block.settings.icon_bg_color
+            assign icon_pt          = block.settings.icon_padding_top    | default: 0
+            assign icon_pb          = block.settings.icon_padding_bottom | default: 0
+            assign icon_pl          = block.settings.icon_padding_left   | default: 0
+            assign icon_pr          = block.settings.icon_padding_right  | default: 0
+            assign icon_mt          = block.settings.icon_margin_top     | default: 0
+            assign icon_mb          = block.settings.icon_margin_bottom  | default: 0
+            assign icon_image_width = icon_size | times: 2
           %}
           <a
             href="{{ block.settings.url }}"
@@ -107,8 +108,19 @@
             "
             {{ block.shopify_attributes }}
           >
-            {% comment %} Custom SVG Code takes priority {% endcomment %}
-            {% if block.settings.custom_svg != blank %}
+            {% comment %} Uploaded Icon Image takes top priority, then Custom SVG Code, then the built-in platform icon {% endcomment %}
+            {% if block.settings.icon_image %}
+              <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                <img
+                  src="{{ block.settings.icon_image | image_url: width: icon_image_width }}"
+                  alt="{{ block.settings.label | default: 'Social icon' }}"
+                  width="{{ icon_size }}"
+                  height="{{ icon_size }}"
+                  loading="lazy"
+                  class="imbitch-about__icon-img"
+                >
+              </span>
+            {% elsif block.settings.custom_svg != blank %}
               <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
                 {{ block.settings.custom_svg }}
               </span>
@@ -201,15 +213,16 @@
           {% for block in section.blocks %}
             {% if block.type == 'social_icon' %}
               {% liquid
-                assign icon_size  = block.settings.icon_size  | default: 24
-                assign icon_color = block.settings.icon_color | default: '#ffffff'
-                assign icon_bg    = block.settings.icon_bg_color
-                assign icon_pt    = block.settings.icon_padding_top    | default: 0
-                assign icon_pb    = block.settings.icon_padding_bottom | default: 0
-                assign icon_pl    = block.settings.icon_padding_left   | default: 0
-                assign icon_pr    = block.settings.icon_padding_right  | default: 0
-                assign icon_mt    = block.settings.icon_margin_top     | default: 0
-                assign icon_mb    = block.settings.icon_margin_bottom  | default: 0
+                assign icon_size        = block.settings.icon_size  | default: 24
+                assign icon_color       = block.settings.icon_color | default: '#ffffff'
+                assign icon_bg          = block.settings.icon_bg_color
+                assign icon_pt          = block.settings.icon_padding_top    | default: 0
+                assign icon_pb          = block.settings.icon_padding_bottom | default: 0
+                assign icon_pl          = block.settings.icon_padding_left   | default: 0
+                assign icon_pr          = block.settings.icon_padding_right  | default: 0
+                assign icon_mt          = block.settings.icon_margin_top     | default: 0
+                assign icon_mb          = block.settings.icon_margin_bottom  | default: 0
+                assign icon_image_width = icon_size | times: 2
               %}
               <a
                 href="{{ block.settings.url }}"
@@ -229,7 +242,18 @@
                   margin-bottom: {{ icon_mb }}px;
                 "
               >
-                {% if block.settings.custom_svg != blank %}
+                {% if block.settings.icon_image %}
+                  <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
+                    <img
+                      src="{{ block.settings.icon_image | image_url: width: icon_image_width }}"
+                      alt="{{ block.settings.label | default: 'Social icon' }}"
+                      width="{{ icon_size }}"
+                      height="{{ icon_size }}"
+                      loading="lazy"
+                      class="imbitch-about__icon-img"
+                    >
+                  </span>
+                {% elsif block.settings.custom_svg != blank %}
                   <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">{{ block.settings.custom_svg }}</span>
                 {% else %}
                   <span class="imbitch-about__icon-inner" style="width: {{ icon_size }}px; height: {{ icon_size }}px;">
@@ -360,6 +384,13 @@
     display: block;
     width: 100%;
     height: 100%;
+  }
+
+  .imbitch-about__icon-img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
 
   /* ── Content + Image Row ── */
@@ -1084,15 +1115,22 @@
           "default": "instagram"
         },
         {
+          "type": "image_picker",
+          "id": "icon_image",
+          "label": "Upload Icon (image or SVG file)",
+          "info": "Upload your own icon file (PNG, JPG, or SVG). If set, this overrides the Custom SVG Code and the built-in platform icon below."
+        },
+        {
           "type": "textarea",
           "id": "custom_svg",
-          "label": "Custom SVG Code (overrides platform icon)",
-          "info": "Paste a full <svg>…</svg> tag here. Leave blank to use the platform icon above."
+          "label": "Custom SVG Code (used only if no icon is uploaded above)",
+          "info": "Paste a full <svg>…</svg> tag here. Leave blank to use the platform icon above. Ignored if an icon image is uploaded."
         },
         {
           "type": "color",
           "id": "icon_color",
           "label": "Icon Color",
+          "info": "Only applies to the built-in platform icons (SVG). Has no effect on an uploaded icon image.",
           "default": "#ffffff"
         },
         {

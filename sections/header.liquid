@@ -215,20 +215,21 @@
     height: auto;
   }
 
-  /* Desktop: keep homepage logo hidden (hero handles branding there) */
-  @media (min-width: 901px) {
-    .cnav-brand-home { display: none; }
-  }
+ /* ============================================================
+   HOMEPAGE LOGO
+   Hide logo ONLY on homepage.
+   Logo remains visible on all other pages.
+============================================================ */
+.cnav-brand-home {
+  display: none !important;
+}
 
-  /* Mobile & tablet: ALWAYS show logo, centered — including on homepage */
-  @media (max-width: 900px) {
-    .cnav-brand-home {
-      display: flex !important;
-    }
-    .cnav-brand-logo {
-      width: {{ section.settings.logo_width_mobile | default: 100 }}px;
-    }
+/* Mobile & tablet logo size */
+@media (max-width: 900px) {
+  .cnav-brand-logo {
+    width: {{ section.settings.logo_width_mobile | default: 100 }}px;
   }
+}
 
   /* RIGHT */
   .cnav-right {
@@ -1394,7 +1395,7 @@
       "type": "image_picker",
       "id": "brand_logo",
       "label": "Logo image",
-      "info": "যদি লোগো আপলোড করা থাকে, তাহলে টেক্সট ব্র্যান্ড নেমের বদলে এই ইমেজটি দেখানো হবে।"
+      "info": "upload logo"
     },
     {
       "type": "range",

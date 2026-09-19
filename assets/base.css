@@ -4279,5 +4279,24 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 
 
+.cnav-inner {
+  max-width: 1248px;
+  padding-inline: 24px !important;
+}
 
+img.product-media__image {
+    filter: brightness(1.15);
+}
+.product__full__image img {
+    object-fit: contain;
+    height: max-content !important;
+    aspect-ratio: 1;
+    filter: brightness(1.15);
+}
+.product__full__image {
+    min-height: auto !important;
+}
 
+.product__image__thumb {
+    gap: 15px !important;
+}
