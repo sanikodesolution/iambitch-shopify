@@ -1,1 +1,36 @@
-{"type":"header","name":"Header","sections":{"header_section":{"type":"header","custom_css":[".cnav-cat {padding-left: 22px !important;}"],"settings":{"brand_logo":"shopify:\/\/shop_images\/iambitch-sitelogo.png","logo_width":60,"logo_width_mobile":50,"brand_tagline":"","brand_name":"","header_padding_top":24,"header_padding_bottom":24,"header_padding_top_mobile":24,"header_padding_bottom_mobile":24,"menu":"im-bitch"}}},"order":["header_section"]}
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "header",
+  "name": "Header",
+  "sections": {
+    "header_section": {
+      "type": "header",
+      "custom_css": [
+        ".cnav-cat {padding-left: 22px !important;}"
+      ],
+      "settings": {
+        "brand_logo": "shopify://shop_images/iambitch-sitelogo.png",
+        "logo_width": 60,
+        "logo_width_mobile": 50,
+        "brand_tagline": "",
+        "brand_name": "",
+        "header_padding_top": 24,
+        "header_padding_bottom": 24,
+        "header_padding_top_mobile": 24,
+        "header_padding_bottom_mobile": 24,
+        "menu": "im-bitch"
+      }
+    }
+  },
+  "order": [
+    "header_section"
+  ]
+}
