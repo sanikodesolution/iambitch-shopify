@@ -268,6 +268,27 @@
   display: none !important;
 }
 
+/* Single filter only — pin dropdown to the right edge (page/filter row) */
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) .facets__item,
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) .facets__panel,
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details.facets__panel {
+  position: relative !important;
+}
+
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
+.facets--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > .facets__panel-content,
+.collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+.collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
+.pbanner-filters-slot .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+.pbanner-filters-slot .facets__filters-wrapper:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content {
+  left: auto !important;
+  right: 0 !important;
+  inset-inline-start: auto !important;
+  inset-inline-end: 0 !important;
+  transform: none !important;
+}
+
 .facets--horizontal .facets__inputs-wrapper,
 .facets--drawer .facets__inputs-wrapper {
   padding: 10px 8px 12px !important;
