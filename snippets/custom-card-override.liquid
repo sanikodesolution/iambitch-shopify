@@ -1301,28 +1301,51 @@
     width: 100% !important;
   }
 
-  /* Fallback: filters visible in collection until moved to banner */
+  /* Fallback: keep filters invisible in collection until JS moves them to the banner
+     (prevents left → right jump on hard refresh) */
   body:not(.iab-filters-in-banner) .collection-wrapper .facets-block-wrapper--horizontal {
-    display: block !important;
-    visibility: visible !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    max-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
     grid-column: 1 / -1 !important;
     width: 100% !important;
-    margin: 0 0 12px !important;
-    padding-inline: var(--page-margin, 40px) !important;
     box-sizing: border-box !important;
-    position: relative;
-    z-index: var(--facets-upper-z-index, 4);
+    position: absolute !important;
+    left: -9999px !important;
   }
 
   body:not(.iab-filters-in-banner) .collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal {
     display: flex !important;
     justify-content: flex-end !important;
-    visibility: visible !important;
     width: 100% !important;
   }
 
   body.iab-filters-in-banner .collection-wrapper .facets-block-wrapper--horizontal {
     display: none !important;
+  }
+
+  /* If relocate JS never runs, reveal filters right-aligned after a moment */
+  body.iab-filters-fallback:not(.iab-filters-in-banner) .collection-wrapper .facets-block-wrapper--horizontal {
+    visibility: visible !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    height: auto !important;
+    max-height: none !important;
+    margin: 0 0 12px !important;
+    padding-inline: var(--page-margin, 40px) !important;
+    overflow: visible !important;
+    position: relative !important;
+    left: auto !important;
+  }
+
+  body.iab-filters-fallback:not(.iab-filters-in-banner) .collection-wrapper .facets-block-wrapper--horizontal .facets--horizontal,
+  body.iab-filters-fallback:not(.iab-filters-in-banner) .collection-wrapper .facets-block-wrapper--horizontal .facets__filters-wrapper {
+    justify-content: flex-end !important;
   }
 
   .collection-wrapper > .facets-toggle {
@@ -2446,14 +2469,28 @@
   });
 
   if (document.readyState === 'loading') {
+    /* Move filters ASAP (before paint when possible) to avoid left→right jump */
     document.addEventListener('DOMContentLoaded', function () {
+      relocateCollectionFilters();
       processAll();
       watchForGridUpdates();
     });
+    /* If banner + facets already parsed, relocate immediately */
+    if (document.querySelector('.pbanner-container--collection') && document.querySelector('.facets-block-wrapper--horizontal')) {
+      relocateCollectionFilters();
+    }
   } else {
+    relocateCollectionFilters();
     processAll();
     watchForGridUpdates();
   }
+
+  /* Safety: never leave desktop filters permanently hidden */
+  setTimeout(function () {
+    if (!document.body.classList.contains('iab-filters-in-banner') && window.matchMedia('(min-width: 990px)').matches) {
+      document.body.classList.add('iab-filters-fallback');
+    }
+  }, 1500);
 
   document.addEventListener('shopify:section:load', function () {
     scheduleProcessAll([0, 100, 300, 600], false);
