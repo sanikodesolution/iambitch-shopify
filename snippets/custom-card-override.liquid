@@ -1026,6 +1026,28 @@
     box-sizing: border-box !important;
   }
 
+  /*
+    Single filter is right-aligned — centering on the trigger overflows the viewport.
+    Pin the panel to the trigger's right edge so it grows left and stays on-screen.
+  */
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) .facets__panel,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details.facets__panel {
+    position: relative !important;
+  }
+
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content,
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component:has(.price-facet),
+  .collection-wrapper .facets-block-wrapper--horizontal:not(:has(.facets__item + .facets__item)) details[open] > floating-panel-component.details-content:has(.price-facet) {
+    left: auto !important;
+    right: 0 !important;
+    inset-inline-start: auto !important;
+    inset-inline-end: 0 !important;
+    transform: none !important;
+    width: min(300px, calc(100vw - 40px)) !important;
+    max-width: calc(100vw - 40px) !important;
+  }
+
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component:has(.price-facet),
   .collection-wrapper .facets-block-wrapper--horizontal details[open] > floating-panel-component.details-content:has(.price-facet) {
     padding: 16px 14px 20px !important;
